@@ -1,0 +1,521 @@
+:root {
+    --primary-red: #A81324;
+    --light-bg: #FCF7F6;
+    --text-dark: #2D2D2D;
+    --text-muted: #666666;
+    --yellow-gradient: linear-gradient(180deg, #FFDE00 0%, #F5C200 100%);
+    --orange-gradient: linear-gradient(135deg, #FF5C43 0%, #EB4C36 100%);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #FAFAFA;
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1000px;
+    background-color: #FFFFFF;
+    border-radius: 24px;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    padding-bottom: 40px;
+}
+
+/* --- HEADER SECTION --- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.back-arrow {
+    font-size: 20px;
+    color: var(--primary-red);
+    font-weight: bold;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-red);
+}
+
+nav {
+    display: flex;
+    gap: 32px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #555555;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: var(--primary-red);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    font-size: 18px;
+}
+
+.badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background-color: var(--primary-red);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #DDD;
+}
+
+/* --- HERO BANNER --- */
+.hero-banner {
+    background: var(--yellow-gradient);
+    margin: 20px 24px;
+    border-radius: 24px;
+    padding: 40px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-banner h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1A1A1A;
+}
+
+.hero-banner p {
+    font-size: 14px;
+    color: #4A4A4A;
+    max-width: 450px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.loyalty-card {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 20px;
+    width: 100%;
+    max-width: 420px;
+    text-align: left;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+.loyalty-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #555555;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.loyalty-status {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin-bottom: 12px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.progress-bar {
+    width: 80%;
+    height: 100%;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.loyalty-hint {
+    font-size: 11px;
+    color: #444444;
+    text-align: center;
+}
+
+.sparkles {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 18px;
+}
+
+/* --- PROMO CODES SECTION --- */
+.section-container {
+    padding: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.view-all {
+    color: var(--primary-red);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.promo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.promo-card {
+    background-color: var(--light-bg);
+    border: 1px solid #F0E2E0;
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.promo-card::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 70px;
+    height: 70px;
+    background: rgba(168, 19, 36, 0.03);
+    border-radius: 50%;
+}
+
+.promo-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(168, 19, 36, 0.06);
+    color: var(--primary-red);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    align-self: flex-start;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.promo-code-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #1A1A1A;
+    letter-spacing: -0.5px;
+}
+
+.promo-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.copy-btn {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid #D2B2AF;
+    color: #A81324;
+    padding: 12px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.copy-btn:hover {
+    background-color: rgba(168, 19, 36, 0.04);
+}
+
+.promo-card.active-promo {
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(168, 19, 36, 0.05);
+}
+
+.promo-card.active-promo .copy-btn {
+    background-color: var(--primary-red);
+    color: white;
+    border: none;
+}
+
+.promo-card.active-promo .copy-btn:hover {
+    background-color: #8F0F1D;
+}
+
+/* --- LOWER PANELS --- */
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 20px;
+}
+
+.apply-panel {
+    background-color: var(--light-bg);
+    border: 1px solid #F0E2E0;
+    border-radius: 20px;
+    padding: 24px;
+}
+
+.panel-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.input-wrapper {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.promo-input {
+    width: 100%;
+    background: white;
+    border: 1px solid #E0C8C5;
+    border-radius: 10px;
+    padding: 14px 100px 14px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    outline: none;
+}
+
+.applied-badge {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #F3E3E5;
+    color: var(--primary-red);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.discount-row {
+    background-color: #E8F7F0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.discount-label {
+    color: #107C41;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.discount-value {
+    color: #107C41;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Referral */
+.referral-panel {
+    background: var(--orange-gradient);
+    border-radius: 20px;
+    padding: 24px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.referral-panel::before {
+    content: '🎁';
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    font-size: 100px;
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.ref-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.ref-desc {
+    font-size: 11px;
+    opacity: 0.9;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.share-box {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    padding: 6px 6px 6px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.share-code {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.share-btn {
+    background-color: white;
+    color: #EB4C36;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.share-btn:hover {
+    background-color: #FFF0EE;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background-color: #333;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+    opacity: 0;
+}
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    .promo-grid { grid-template-columns: repeat(2, 1fr); }
+    .bottom-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+    .promo-grid { grid-template-columns: 1fr; }
+    nav { display: none; }
+    header { padding: 15px 20px; }
+}
+
+/* ==========================================================================
+   FONT AWESOME FONT-FAMILY PROTECTION OVERRIDE
+   ========================================================================== */
+.fa-solid, .fas {
+    font-family: "Font Awesome 6 Free", sans-serif !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+.fa-brands, .fab {
+    font-family: "Font Awesome 6 Brands", sans-serif !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+.fa, .far, .fal, .fad, .fa-regular {
+    font-family: "Font Awesome 6 Free", sans-serif !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}

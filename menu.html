@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yangi taom qo'shish</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./menu.css">
+</head>
+<body>
+
+    <div class="modal-card">
+        
+        <div class="modal-header">
+            <h2>Yangi taom qo'shish</h2>
+            
+            <div class="header-actions">
+                <button type="button" class="theme-btn" id="themeToggleBtn" title="Rejimni o'zgartirish">
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <button type="button" class="close-btn" onclick="window.location.href='xurmoOpa 2.html'">✕</button>
+            </div>
+        </div>
+
+        <form class="modal-form">
+            
+            <div class="form-group">
+                <label class="form-label">Taom rasmi</label>
+                <div class="upload-zone" id="uploadZone">
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                    <div class="upload-icon">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <span class="upload-title" id="uploadTitle">Rasm yuklang</span>
+                    <span class="upload-subtitle">PNG, JPG (max. 5MB)</span>
+                </div>
+            </div>
+
+            <div class="grid-2 form-group">
+                <div>
+                    <label class="form-label">Taom nomi</label>
+                    <input type="text" placeholder="M: Milliy palov" class="form-input" required>
+                </div>
+                <div>
+                    <label class="form-label">Kategoriya</label>
+                    <div class="select-wrapper">
+                        <select class="form-select">
+                            <option>Tanlang</option>
+                            <option value="milliy">Milliy taomlar</option>
+                            <option value="fastfood">Fast Food</option>
+                            <option value="ichimliklar">Ichimliklar</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Tavsif</label>
+                <textarea rows="3" placeholder="Taom haqida batafsil ma'lumot bering..." class="form-textarea"></textarea>
+            </div>
+
+            <div class="grid-4 form-group">
+                <div>
+                    <label class="form-label">Narxi (so'm)</label>
+                    <input type="text" value="45000" class="form-input text-center">
+                </div>
+                <div>
+                    <label class="form-label">Soni</label>
+                    <div class="counter-input">
+                        <button type="button" class="counter-btn" id="minusBtn">-</button>
+                        <span class="counter-value" id="counterValue">10</span>
+                        <button type="button" class="counter-btn" id="plusBtn">+</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label">Tayyorlash (min)</label>
+                    <input type="text" value="45" class="form-input text-center">
+                </div>
+                <div>
+                    <label class="form-label">Tayyor vaqti</label>
+                    <div class="time-wrapper">
+                        <input type="text" placeholder="--:--" class="form-input text-center">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ingredients-card">
+                <div>
+                    <label class="form-label">Masalliqlar</label>
+                    <div class="tags-container" id="tagsContainer">
+                        <span class="tag">
+                            Mol go'shti <button type="button">×</button>
+                        </span>
+                        <span class="tag">
+                            Guruch <button type="button">×</button>
+                        </span>
+                        <input type="text" placeholder="Qo'shish..." class="tag-input" id="tagInput">
+                    </div>
+                </div>
+
+                <div class="allergen-row">
+                    <div>
+                        <h4 class="allergen-title">Allergenlar</h4>
+                        <p class="allergen-desc">Tarkibida allergik masalliqlar bormi?</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="allergenSwitch">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="cancel-btn" onclick="window.location.href='xurmoOpa 2.html'">Bekor qilish</button>
+                <button type="submit" class="submit-btn">
+                    Menyuga qo'shish <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <script src="menu.js"></script>
+
+   
+</body>
+</html>

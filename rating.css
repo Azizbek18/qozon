@@ -1,0 +1,242 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #bcaba4; /* Orqa fon rangi rasmdagidek */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.modal-container {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 440px;
+    border-radius: 16px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    position: relative;
+    text-align: center;
+}
+
+/* Yopish tugmasi x */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #555;
+    cursor: pointer;
+}
+
+.main-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #4a3e3d;
+    margin-top: 4px;
+    margin-bottom: 12px;
+}
+
+/* Mahsulot belgisi (Badge) */
+.product-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: #fdf2ee;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    font-size: 13px;
+}
+
+.food-icon {
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+.product-name {
+    color: #a8583b;
+    font-weight: 600;
+}
+
+.separator {
+    margin: 0 6px;
+    color: #a8583b;
+}
+
+.date {
+    color: #a8583b;
+    font-weight: 500;
+}
+
+/* Bo'lim sarlavhalari */
+.section-title {
+    font-size: 14px;
+    color: #5a4b49;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: #7a6b69;
+    font-weight: 600;
+}
+
+.rating-section {
+    margin-bottom: 22px;
+}
+
+/* Yulduzchalar stili */
+.stars {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.stars i {
+    font-size: 26px;
+    color: #e8c5be;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.1s;
+}
+
+/* Faol yulduzcha holati */
+.stars i.fa-solid {
+    color: #db6c57;
+}
+
+/* Teglar qismi */
+.tags-section {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 10px;
+}
+
+.tag {
+    border: 1px solid #e8dcd9;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #5a4b49;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: #fff;
+}
+
+/* Bosilgandagi tag stili */
+.tag.active {
+    background-color: #db6c57;
+    color: #fff;
+    border-color: #db6c57;
+}
+
+/* Rasm yuklash hududi */
+.upload-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #e8c5be;
+    background-color: #fffaf9;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    color: #7a6b69;
+    font-size: 13px;
+    transition: background-color 0.2s;
+}
+
+.upload-zone:hover {
+    background-color: #fdf2ee;
+}
+
+.upload-icon {
+    font-size: 22px;
+    color: #a89a97;
+    margin-bottom: 8px;
+}
+
+/* Izoh yozish joyi */
+.comment-area {
+    width: 100%;
+    height: 90px;
+    border: 1px solid #e8dcd9;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 13px;
+    resize: none;
+    outline: none;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+.comment-area::placeholder {
+    color: #c2b5b2;
+}
+
+.comment-area:focus {
+    border-color: #db6c57;
+}
+
+/* Yuborish tugmasi */
+.submit-btn {
+    width: 100%;
+    background-color: #dc3545; /* Rasmdagi to'q qizil rang */
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #c82333;
+}
+
+/* ==========================================================================
+   FONT AWESOME FONT-FAMILY PROTECTION OVERRIDE
+   ========================================================================== */
+.fa-solid, .fas {
+    font-family: "Font Awesome 6 Free", sans-serif !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+.fa-brands, .fab {
+    font-family: "Font Awesome 6 Brands", sans-serif !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+.fa, .far, .fal, .fad, .fa-regular {
+    font-family: "Font Awesome 6 Free", sans-serif !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}

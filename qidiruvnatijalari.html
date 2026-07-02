@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon - Qidiruv natijalari</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="qidiruvnatijalari.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo">Qozon</a>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="mainSearchInput" value="Osh" placeholder="Taom yoki oshpaz qidiring...">
+            </div>
+        </div>
+        <div class="nav-menu">
+            <a href="buyordashbord.html" class="nav-link active">Browse</a>
+            <a href="index.html#how-it-works" class="nav-link">How it Works</a>
+            <a href="index.html#chefs" class="nav-link">Our Cooks</a>
+        </div>
+        <div class="nav-actions">
+            <button class="icon-btn">📍</button>
+            <button class="icon-btn cart-btn" id="cartToggleBtn">
+                🛒<span class="cart-badge" id="cartBadgeCount">0</span>
+            </button>
+            <div class="profile-avatar">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="Profile">
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="results-section">
+            <div class="results-header">
+                <h1 class="search-title" id="searchTitle">"Osh" bo'yicha natijalar</h1>
+                <span class="results-count" id="resultsCount">Yuklanmoqda...</span>
+            </div>
+
+            <div class="filter-bar">
+                <div class="sub-tabs">
+                    <button class="sub-tab active" data-type="taomlar">Taomlar</button>
+                    <button class="sub-tab" data-type="oshpazlar">Oshpazlar</button>
+                </div>
+                <div class="sort-dropdown">
+                    <span>Saralash:</span>
+                    <select id="sortSelect">
+                        <option value="mos">Eng mos</option>
+                        <option value="arzon">Arzonroq</option>
+                        <option value="qimmat">Qimmatroq</option>
+                        <option value="reyting">Reyting</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <div class="skeleton-card"><div class="skeleton sk-img"></div><div class="sk-body"><div class="skeleton sk-line" style="width:70%"></div><div class="skeleton sk-line" style="width:50%"></div><div class="skeleton sk-line" style="width:40%"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton sk-img"></div><div class="sk-body"><div class="skeleton sk-line" style="width:65%"></div><div class="skeleton sk-line" style="width:45%"></div><div class="skeleton sk-line" style="width:35%"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton sk-img"></div><div class="sk-body"><div class="skeleton sk-line" style="width:75%"></div><div class="skeleton sk-line" style="width:55%"></div><div class="skeleton sk-line" style="width:30%"></div></div></div>
+            </div>
+        </section>
+
+        <aside class="filters-sidebar">
+            <h2>Filtrlar</h2>
+            <div class="filter-group">
+                <h3>KATEGORIYALAR</h3>
+                <div id="categoryFilters">
+                    <label class="checkbox-container">
+                        <input type="checkbox" name="category" value="palov" checked> Palov (Osh)
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" name="category" value="shorva"> Sho'rva
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" name="category" value="kabob"> Kabob
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" name="category" value="lagmon"> Lagmon
+                    </label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <div class="filter-group-header">
+                    <h3>NARXI (SO'M)</h3>
+                    <span class="price-range-text" id="priceLabel">15k - 50k</span>
+                </div>
+                <input type="range" id="priceSlider" min="15000" max="100000" step="1000" value="100000" class="range-slider">
+            </div>
+            <div class="filter-group">
+                <h3>MASOFA</h3>
+                <div class="distance-selector">
+                    <button class="dist-btn active" data-dist="1">1km</button>
+                    <button class="dist-btn" data-dist="2">2km</button>
+                    <button class="dist-btn" data-dist="3">3km</button>
+                    <button class="dist-btn" data-dist="5">5km+</button>
+                </div>
+            </div>
+            <button class="btn-submit-filter" id="applyFiltersBtn">Saralarni ko'rish</button>
+        </aside>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <span class="footer-logo">Qozon</span>
+                <p class="copyright-text">© 2024 Qozon Marketplace.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-modal-content">
+            <div class="cart-modal-header">
+                <h2>Sizning savatingiz</h2>
+                <button class="close-cart-btn" id="closeCartBtn">&times;</button>
+            </div>
+            <div class="cart-items-list" id="cartItemsList">
+                <p class="empty-cart-msg">Savatingiz hozircha bo'sh.</p>
+            </div>
+            <div class="cart-modal-footer">
+                <div class="total-price-row">
+                    <span>Umumiy tizm:</span>
+                    <span id="cartTotalSum">0 so'm</span>
+                </div>
+                <button class="btn-checkout">Buyurtma berish</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="qidiruvnatijalari.js"></script>
+</body>
+</html>

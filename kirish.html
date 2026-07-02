@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="uz" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>TaomNash</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@300;400;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="./kirish.css">
+</head>
+
+<body>
+  <main class="app">
+    <section class="left" id="lp">
+      <div class="blob bl1"></div>
+      <div class="blob bl2"></div>
+      <div class="blob bl3"></div>
+      <div class="topbar">
+        <div class="tbl">
+          <div class="brand">
+            <h1>Qozon</h1>
+            <p class="sub" data-i18n="tagline"></p>
+          </div>
+        </div>
+        <div class="tbr">
+          <button class="cb" id="thBtn" aria-label="Theme">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="ldd">
+            <button class="cb" id="lnBtn" aria-label="Lang">
+              <i class="fas fa-globe"></i>
+            </button>
+            <div class="lm" id="lMenu"></div>
+          </div>
+          <button class="cb" id="prBtn" aria-label="Profil" style="display: none">
+            <i class="fas fa-user"></i>
+          </button>
+        </div>
+      </div>
+      <div class="lc">
+        <div class="feats-marquee">
+          <div class="feats-track">
+            <!-- First set of features -->
+            <div class="feat"><i class="fas fa-fire"></i><span data-i18n="f1"></span></div>
+            <div class="feat"><i class="fas fa-home"></i><span data-i18n="f2"></span></div>
+            <div class="feat"><i class="fas fa-truck"></i><span data-i18n="f3"></span></div>
+            <div class="feat"><i class="fas fa-percent"></i><span data-i18n="f4"></span></div>
+            <div class="feat"><i class="fas fa-clock"></i><span data-i18n="f5"></span></div>
+            <!-- Duplicate set for infinite loop -->
+            <div class="feat"><i class="fas fa-fire"></i><span data-i18n="f1"></span></div>
+            <div class="feat"><i class="fas fa-home"></i><span data-i18n="f2"></span></div>
+            <div class="feat"><i class="fas fa-truck"></i><span data-i18n="f3"></span></div>
+            <div class="feat"><i class="fas fa-percent"></i><span data-i18n="f4"></span></div>
+            <div class="feat"><i class="fas fa-clock"></i><span data-i18n="f5"></span></div>
+          </div>
+        </div>
+        <div class="cw">
+          <div class="csc" id="cScene"></div>
+        </div>
+        <div class="rev">
+          <div class="revs">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+              class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="revt" data-i18n="rtxt"></p>
+          <p class="reva" data-i18n="rauth"></p>
+        </div>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="sv">12K+</div>
+            <div class="sl" data-i18n="s1"></div>
+          </div>
+          <div class="stat-box">
+            <div class="sv">50+</div>
+            <div class="sl" data-i18n="s2"></div>
+          </div>
+          <div class="stat-box">
+            <div class="sv">4.9</div>
+            <div class="sl" data-i18n="s3"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="right" id="rp">
+      <div class="fc">
+        <div id="pgLogin" class="pg on">
+          <h2 data-i18n="wb"></h2>
+          <div class="role-selector">
+            <button type="button" class="role-btn active" onclick="setRole('mijoz')">Mijoz</button>
+            <button type="button" class="role-btn" onclick="setRole('oshpaz')">Oshpaz</button>
+          </div>
+          <form id="fLogin" novalidate>
+            <div class="ig">
+              <i class="fas fa-envelope fi"></i><input type="email" id="lE" data-i18n-ph="eph" placeholder="email"
+                required />
+            </div>
+            <div class="ig">
+              <i class="fas fa-lock fi"></i><input type="password" id="lP" data-i18n-ph="pph" placeholder="password"
+                required /><button type="button" class="tpw" onclick="tpw('lP', this)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <button type="submit" class="btn1">
+              <span data-i18n="lbtn"></span><i class="fas fa-arrow-right"></i>
+            </button>
+          </form>
+          <p class="swt">
+            <span data-i18n="na"></span>
+            <a onclick="go('pgReg')" data-i18n="rl"></a>
+          </p>
+        </div>
+        <div id="pgReg" class="pg">
+          <h2 data-i18n="rtitle"></h2>
+          <div class="role-selector">
+            <button type="button" class="role-btn active" onclick="setRole('mijoz')">Mijoz</button>
+            <button type="button" class="role-btn" onclick="setRole('oshpaz')">Oshpaz</button>
+          </div>
+          <form id="fReg" novalidate>
+            <div class="irow">
+              <div class="ig">
+                <i class="fas fa-user fi"></i><input type="text" id="rN" data-i18n-ph="nph" placeholder="name"
+                  required />
+              </div>
+              <div class="ig">
+                <i class="fas fa-phone fi"></i><input type="tel" id="rPh" data-i18n-ph="pph2" placeholder="phone"
+                  required />
+              </div>
+            </div>
+            <div class="ig">
+              <i class="fas fa-envelope fi"></i><input type="email" id="rE" data-i18n-ph="eph" placeholder="email"
+                required />
+            </div>
+            <div class="ig">
+              <i class="fas fa-lock fi"></i><input type="password" id="rP" data-i18n-ph="pph" placeholder="password"
+                required /><button type="button" class="tpw" onclick="tpw('rP', this)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="ig">
+              <i class="fas fa-lock fi"></i><input type="password" id="rP2" data-i18n-ph="pph2c" placeholder="confirm"
+                required />
+            </div>
+            <button type="submit" class="btn1">
+              <span data-i18n="rbtn"></span><i class="fas fa-user-plus"></i>
+            </button>
+          </form>
+          <p class="swt">
+            <span data-i18n="ah"></span>
+            <a onclick="go('pgLogin')" data-i18n="ll"></a>
+          </p>
+        </div>
+        <div id="pgVerify" class="pg">
+          <h2 data-i18n="vtitle"></h2>
+          <p class="st" data-i18n="vsub"></p>
+          <div class="timer-info" id="timerInfo">
+            <i class="fas fa-shield-halved"></i>
+            <div>
+              <div class="ti-text" data-i18n="vtimer"></div>
+            </div>
+            <div class="ti-time" id="timerDisplay">5:00</div>
+          </div>
+          <div class="timer-bar">
+            <div class="timer-fill" id="timerFill" style="width: 100%"></div>
+          </div>
+          <div class="codes" id="codeInputs">
+            <input class="ci" type="text" maxlength="1" inputmode="numeric" /><input class="ci" type="text"
+              maxlength="1" inputmode="numeric" /><input class="ci" type="text" maxlength="1"
+              inputmode="numeric" /><input class="ci" type="text" maxlength="1" inputmode="numeric" /><input class="ci"
+              type="text" maxlength="1" inputmode="numeric" /><input class="ci" type="text" maxlength="1"
+              inputmode="numeric" />
+          </div>
+          <div class="rr">
+            <span style="font-size: 11px; color: var(--mt); font-weight: 600" data-i18n="nr"></span><button class="rb"
+              id="resendBtn" disabled>
+              <span data-i18n="resend"></span> (<span id="rt">60</span>s)
+            </button>
+          </div>
+          <button class="btn1" style="margin-top: 14px" onclick="doVerify()">
+            <span data-i18n="vbtn"></span><i class="fas fa-shield-halved"></i>
+          </button>
+        </div>
+        <div id="pgProfile" class="pg">
+          <div class="avsec">
+            <div class="av" onclick="document.getElementById('avIn').click()">
+              <div class="av-d" id="avDisp"><i class="fas fa-user"></i></div>
+              <img class="av-i" id="avImg" alt="avatar" />
+              <div class="av-o"><i class="fas fa-camera"></i></div>
+            </div>
+            <input type="file" id="avIn" accept="image/*" style="display: none" />
+            <p class="av-h" data-i18n="avh"></p>
+          </div>
+          <div class="bonus-card">
+            <div class="bc-label" data-i18n="bonus_l"></div>
+            <div class="bc-val">2,450</div>
+            <div class="bc-desc" data-i18n="bonus_d"></div>
+          </div>
+          <div class="prof-stats">
+            <div class="prof-stat">
+              <div class="psv">24</div>
+              <div class="psl" data-i18n="ps1"></div>
+            </div>
+            <div class="prof-stat">
+              <div class="psv">8</div>
+              <div class="psl" data-i18n="ps2"></div>
+            </div>
+            <div class="prof-stat">
+              <div class="psv">3</div>
+              <div class="psl" data-i18n="ps3"></div>
+            </div>
+          </div>
+          <div id="profileView">
+            <div class="pcard">
+              <div class="pr">
+                <i class="fas fa-user"></i>
+                <div class="pri">
+                  <div class="prl" data-i18n="fn"></div>
+                  <div class="prv" id="pvName">—</div>
+                </div>
+              </div>
+              <div class="pr">
+                <i class="fas fa-envelope"></i>
+                <div class="pri">
+                  <div class="prl">Email</div>
+                  <div class="prv" id="pvEmail">—</div>
+                </div>
+              </div>
+              <div class="pr">
+                <i class="fas fa-phone"></i>
+                <div class="pri">
+                  <div class="prl" data-i18n="ph"></div>
+                  <div class="prv" id="pvPhone">—</div>
+                </div>
+              </div>
+              <div class="pr">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="pri">
+                  <div class="prl" data-i18n="ad"></div>
+                  <div class="prv" id="pvAddr">—</div>
+                </div>
+              </div>
+              <div class="pr">
+                <i class="fas fa-calendar"></i>
+                <div class="pri">
+                  <div class="prl" data-i18n="jd"></div>
+                  <div class="prv" id="pvDate">—</div>
+                </div>
+              </div>
+            </div>
+            <div class="pacts">
+              <button class="btn2" onclick="showEdit()">
+                <i class="fas fa-pen"></i><span data-i18n="ep"></span></button><button class="btn-d"
+                onclick="doLogout()">
+                <i class="fas fa-sign-out-alt"></i><span data-i18n="lo"></span>
+              </button>
+            </div>
+          </div>
+          <form id="editForm" style="display: none">
+            <div class="ig">
+              <i class="fas fa-user fi"></i><input type="text" id="eN" data-i18n-ph="nph" placeholder="name" />
+            </div>
+            <div class="ig">
+              <i class="fas fa-phone fi"></i><input type="tel" id="ePh" data-i18n-ph="pph2" placeholder="phone" />
+            </div>
+            <div class="ig">
+              <i class="fas fa-map-marker-alt fi"></i><input type="text" id="eAd" data-i18n-ph="aph"
+                placeholder="address" />
+            </div>
+            <div class="pacts" style="margin-top: 16px">
+              <button type="button" class="btn2" onclick="cancelEdit()">
+                <i class="fas fa-times"></i><span data-i18n="cancel"></span></button><button type="button" class="btn1"
+                style="width: auto" onclick="saveEdit()">
+                <i class="fas fa-check"></i><span data-i18n="save"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div id="pgMenu" class="pg">
+          <h2 data-i18n="mt"></h2>
+          <p class="st" data-i18n="msub"></p>
+          <div class="promo-banner" onclick="applyPromo()">
+            <div class="pb-content">
+              <div class="pb-tag" data-i18n="promo_tag"></div>
+              <div class="pb-title" data-i18n="promo_title"></div>
+              <div class="pb-desc" data-i18n="promo_desc"></div>
+              <div class="pb-code">TAOMNASH20</div>
+            </div>
+          </div>
+          <div class="cat-filter" id="catFilter"></div>
+          <div class="food-grid" id="foodGrid"></div>
+        </div>
+        <div id="pgCart" class="pg">
+          <h2 data-i18n="ct"></h2>
+          <p class="st" data-i18n="csub"></p>
+          <div id="cartList"></div>
+        </div>
+        <div id="pgWish" class="pg">
+          <h2 data-i18n="wt"></h2>
+          <p class="st" data-i18n="wsub"></p>
+          <div id="wishList"></div>
+        </div>
+        <div id="pgVote" class="pg">
+          <h2 data-i18n="vt"></h2>
+          <p class="st" data-i18n="vsub2"></p>
+          <div id="voteList"></div>
+        </div>
+        <div id="pgComments" class="pg">
+          <h2 data-i18n="cmt"></h2>
+          <p class="st" data-i18n="cmtsub"></p>
+          <div id="commentList"></div>
+          <div style="margin-top: 16px">
+            <div class="ig">
+              <i class="fas fa-comment fi"></i><textarea id="cmtText" data-i18n-ph="cmtph" placeholder="comment"
+                rows="3"></textarea>
+            </div>
+            <div style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-top: 8px;
+                  gap: 8px;
+                  flex-wrap: wrap;
+                ">
+              <div class="stars" id="cmtStars">
+                <button type="button" data-v="1">
+                  <i class="fas fa-star"></i></button><button type="button" data-v="2">
+                  <i class="fas fa-star"></i></button><button type="button" data-v="3">
+                  <i class="fas fa-star"></i></button><button type="button" data-v="4">
+                  <i class="fas fa-star"></i></button><button type="button" data-v="5">
+                  <i class="fas fa-star"></i>
+                </button>
+              </div>
+              <button class="btn1" style="width: auto; padding: 10px 20px; font-size: 12px" onclick="addComment()">
+                <i class="fas fa-paper-plane"></i><span data-i18n="cmtsend"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="pgOrders" class="pg">
+          <h2 data-i18n="ot"></h2>
+          <p class="st" data-i18n="osub"></p>
+          <div id="orderList"></div>
+        </div>
+        <div id="pgTrack" class="pg">
+          <h2 data-i18n="trk"></h2>
+          <p class="st" data-i18n="trksub"></p>
+          <div class="driver-card">
+            <div class="driver-avatar"><i class="fas fa-motorcycle"></i></div>
+            <div class="driver-info">
+              <h4>Jasur T.</h4>
+              <p data-i18n="drv_info"></p>
+            </div>
+            <div class="driver-actions">
+              <button class="call-btn" title="Qo'ng'iroq">
+                <i class="fas fa-phone"></i></button><button title="Xabar"><i class="fas fa-comment"></i></button>
+            </div>
+          </div>
+          <div class="pcard">
+            <div class="track-steps">
+              <div class="track-step done">
+                <div class="track-dot"><i class="fas fa-check"></i></div>
+                <div class="track-label" data-i18n="tr1"></div>
+              </div>
+              <div class="track-step done">
+                <div class="track-dot"><i class="fas fa-check"></i></div>
+                <div class="track-label" data-i18n="tr2"></div>
+              </div>
+              <div class="track-step active">
+                <div class="track-dot"><i class="fas fa-motorcycle"></i></div>
+                <div class="track-label" data-i18n="tr3"></div>
+              </div>
+              <div class="track-step">
+                <div class="track-dot"><i class="fas fa-box"></i></div>
+                <div class="track-label" data-i18n="tr4"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pcard">
+            <div class="pr">
+              <i class="fas fa-receipt"></i>
+              <div class="pri">
+                <div class="prl" data-i18n="trk_order"></div>
+                <div class="prv">#TN-4855</div>
+              </div>
+            </div>
+            <div class="pr">
+              <i class="fas fa-utensils"></i>
+              <div class="pri">
+                <div class="prl" data-i18n="trk_items"></div>
+                <div class="prv">Manti, Somsa</div>
+              </div>
+            </div>
+            <div class="pr">
+              <i class="fas fa-money-bill-wave"></i>
+              <div class="pri">
+                <div class="prl" data-i18n="trk_total"></div>
+                <div class="prv" style="color: var(--ac)">43,000 so'm</div>
+              </div>
+            </div>
+            <div class="pr">
+              <i class="fas fa-clock"></i>
+              <div class="pri">
+                <div class="prl" data-i18n="trk_eta"></div>
+                <div class="prv" style="color: var(--suc)">~15 daqiqa</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="pgSettings" class="pg">
+          <h2 data-i18n="stitle"></h2>
+          <p class="st" data-i18n="ssub"></p>
+          <div class="sett-group">
+            <h3 data-i18n="sg_notif"></h3>
+            <div class="sett-row">
+              <div class="sett-label">
+                <h4 data-i18n="sn_push"></h4>
+                <p data-i18n="sn_push_d"></p>
+              </div>
+              <div class="mini-sw on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="sett-row">
+              <div class="sett-label">
+                <h4 data-i18n="sn_email"></h4>
+                <p data-i18n="sn_email_d"></p>
+              </div>
+              <div class="mini-sw on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="sett-row">
+              <div class="sett-label">
+                <h4 data-i18n="sn_promo"></h4>
+                <p data-i18n="sn_promo_d"></p>
+              </div>
+              <div class="mini-sw" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+          <div class="sett-group">
+            <h3 data-i18n="sg_lang"></h3>
+            <div class="sett-lang-grid" id="settLangGrid"></div>
+          </div>
+          <div class="sett-group">
+            <h3 data-i18n="sg_app"></h3>
+            <div class="sett-row">
+              <div class="sett-label">
+                <h4 data-i18n="sa_clear"></h4>
+                <p data-i18n="sa_clear_d"></p>
+              </div>
+              <button class="btn-d" style="padding: 6px 14px; font-size: 10px" onclick="clearCache()">
+                <i class="fas fa-trash"></i>
+                <span data-i18n="sa_clear_b"></span>
+              </button>
+            </div>
+            <div class="sett-row">
+              <div class="sett-label">
+                <h4 data-i18n="sa_ver"></h4>
+                <p data-i18n="sa_ver_d"></p>
+              </div>
+              <span style="font-size: 11px; font-weight: 800; color: var(--mt)">v2.4.1</span>
+            </div>
+            <div class="sett-row">
+              <div class="sett-label">
+                <h4 data-i18n="sa_about"></h4>
+                <p data-i18n="sa_about_d"></p>
+              </div>
+              <i class="fas fa-chevron-right" style="color: var(--mt); font-size: 11px"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <nav class="bnav" id="bNav">
+    <button class="bnav-item on" data-pg="pgLogin" onclick="navTo(this)">
+      <i class="fas fa-home"></i><span>Bosh</span>
+    </button>
+    <button class="bnav-item" data-pg="pgMenu" onclick="navTo(this)">
+      <i class="fas fa-utensils"></i><span>Menu</span>
+    </button>
+    <button class="bnav-item" data-pg="pgCart" onclick="navTo(this)">
+      <i class="fas fa-shopping-bag"></i><span>Savat</span>
+      <div class="bnav-badge" id="cartBadge" style="display: none">0</div>
+    </button>
+    <button class="bnav-item" data-pg="pgTrack" onclick="navTo(this)">
+      <i class="fas fa-motorcycle"></i><span>Yetkazish</span>
+    </button>
+    <button class="bnav-item" data-pg="pgSettings" onclick="navTo(this)">
+      <i class="fas fa-cog"></i><span>Sozlam</span>
+    </button>
+  </nav>
+  <div class="mov" id="modal">
+    <div class="mb">
+      <button class="mcl" onclick="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  <div id="tc"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./kirish.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xurmo opa - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="xurmoOpa 2.css">
+</head>
+<body class="theme-light"> 
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="profile-section">
+                <img src="./rasm/6666f90260444c8a78cde2d5ec04de7645ff7c19.jpg" alt="Xurmo opa" class="profile-img">
+                <h3 class="profile-name">Xurmo opa</h3>
+                <span class="profile-rating">★ 4.9</span>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="xurmoOpa 2.html" class="menu-item active">
+                    <span class="icon"><img src="./Container (3).svg" alt=""></span> Bosh sahifa
+                </a>
+                <a href="buyordashbord.html" class="menu-item">
+                    <span class="icon"><img src="./Icon (28).svg" alt=""></span> Bugungi menyu
+                </a>
+                <a href="#" class="menu-item">
+                    <span class="icon"><img src="./Icon (29).svg" alt=""></span> Buyurtmalar
+                </a>
+                <a href="daromad.html" class="menu-item">
+                    <span class="icon"><img src="./Icon (30).svg" alt=""></span> Daromad
+                </a>
+                <a href="xurmoOpa.html" class="menu-item">
+                    <span class="icon"><img src="./Icon (31).svg" alt=""></span> Profil
+                </a>
+                <a href="#" class="menu-item">
+                    <span class="icon"><img src="./Icon (32).svg" alt=""></span> Sozlamalar
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="main-header">
+                <div class="welcome-text">
+                    <h2>Xush kelibsiz, Xurmo opa!</h2>
+                    <p>Bugun sizda 8 ta yangi buyurtma bor.</p>
+                </div>
+                <div class="header-actions">
+                    
+                    <div class="theme-switcher-wrapper">
+                        <button type="button" class="theme-btn active" onclick="changeTheme('light', this)" title="Light Mode">
+                            <i class="fa-solid fa-sun"></i>
+                        </button>
+                        <button type="button" class="theme-btn" onclick="changeTheme('dark', this)" title="Dark Mode">
+                            <i class="fa-solid fa-moon"></i>
+                        </button>
+                    </div>
+
+                    <button class="btn-notification">🔔</button>
+                    <a href="./menu.html"><button class="btn-add-menu">＋ Menyu qo'shish</button></a>
+                </div>
+            </header>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon red-bg">📋</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Bugungi buyurtmalar</p>
+                        <h3 class="stat-value">8</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange-bg">💵</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Bugungi tushum</p>
+                        <h3 class="stat-value">224,000 so'm</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon yellow-bg">⭐</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Haftalik reyting</p>
+                        <h3 class="stat-value">4.9</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue-bg">⏳</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Kutilayotgan</p>
+                        <h3 class="stat-value">3</h3>
+                    </div>
+                </div>
+            </section>
+
+            <div class="content-grid">
+                
+                <div class="left-column">
+                    
+                    <section class="card-section">
+                        <div class="section-header">
+                            <h3>Faol buyurtmalar</h3>
+                            <span class="live-badge">Live</span>
+                        </div>
+                        
+                        <div class="order-list">
+                            <div class="order-item">
+                                <div class="order-user-avatar">👤</div>
+                                <div class="order-details">
+                                    <h4 class="h4">Azizbek R.</h4>
+                                    <p>2x Osh, 1x Choy • 12:45</p>
+                                </div>
+                                <span class="status-badge status-preparing">Tayyorlanmoqda</span>
+                                <button class="btn-phone">📞</button>
+                            </div>
+                            
+                            <div class="order-item">
+                                <div class="order-user-avatar">👤</div>
+                                <div class="order-details">
+                                    <h4 class="h4">Madina S.</h4>
+                                    <p>3x Somsa, 2x Sho'rva • 12:52</p>
+                                </div>
+                                <select class="status-dropdown">
+                                    <option>Tayyor</option>
+                                    <option>Yo'lda</option>
+                                </select>
+                                <button class="btn-phone">📞</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card-section" style="margin-top: 20px;">
+                        <div class="section-header">
+                            <h3>Bugungi menyu</h3>
+                            <a href="#" class="see-all">Hammasini ko'rish ›</a>
+                        </div>
+                        
+                        <div class="menu-list">
+                            <div class="menu-item-row">
+                                <div class="drag-handle">:::</div>
+                                <img src="https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=50&h=50" alt="Palov" class="menu-item-img">
+                                <div class="menu-item-details">
+                                    <h4>Palov (Osh)</h4>
+                                    <p>25,000 so'm / portsitya</p>
+                                </div>
+                                <div class="counter-container">
+                                    <button class="counter-btn">−</button>
+                                    <span class="counter-val">12</span>
+                                    <button class="counter-btn">＋</button>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="menu-item-row">
+                                <div class="drag-handle">:::</div>
+                                <img src="./rasm/8a92d5c249f7df571f615f94a6fdf16220d33775.jpg" alt="Somsa" class="menu-item-img">
+                                <div class="menu-item-details">
+                                    <h4>Somsa (Go'shtli)</h4>
+                                    <p>6,000 so'm / dona</p>
+                                </div>
+                                <div class="counter-container">
+                                    <button class="counter-btn">−</button>
+                                    <span class="counter-val">45</span>
+                                    <button class="counter-btn">＋</button>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="menu-item-row">
+                                <div class="drag-handle">:::</div>
+                                <img src="https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=50&h=50" alt="Sho'rva" class="menu-item-img">
+                                <div class="menu-item-details">
+                                    <h4>Sho'rva</h4>
+                                    <p>18,000 so'm / portsitya</p>
+                                </div>
+                                <div class="counter-container">
+                                    <button class="counter-btn">−</button>
+                                    <span class="counter-val">8</span>
+                                    <button class="counter-btn">＋</button>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+
+                <div class="right-column">
+                    
+                    <div class="income-card">
+                        <p class="income-title">Haftalik daromad</p>
+                        <p class="income-subtitle">Jami tushum (shu hafta)</p>
+                        <h3 class="income-value">1,568,000 <span>so'm</span></h3>
+                        
+                        <div class="chart-container">
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 60px;"></div>
+                                <span class="chart-label">Du</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 90px;"></div>
+                                <span class="chart-label">Se</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 40px;"></div>
+                                <span class="chart-label">Ch</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 75px;"></div>
+                                <span class="chart-label">Pa</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 100px;"></div>
+                                <span class="chart-label">Ju</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 50px;"></div>
+                                <span class="chart-label">Sh</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 55px;"></div>
+                                <span class="chart-label">Ya</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-details" onclick="window.location.href='daromad.html'">Batafsil hisobot</button>
+                    </div>
+
+                    <div class="review-card">
+                        <h4 class="review-title">Oxirgi sharhlar</h4>
+                        <div class="review-box">
+                            <div class="review-header">
+                                <span class="review-user">Abror J.</span>
+                                <span class="review-stars">★★★★★</span>
+                            </div>
+                            <p class="review-text">"Oshingizga gap yo'q! Go'shti yumshoqqina ekan, baraka toping."</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div id="toast-container"></div>
+        </main>
+    </div>
+
+    <script src="./xurmoopa2.js"></script>
+
+    
+</body>
+</html>

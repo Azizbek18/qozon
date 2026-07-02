@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon - Sevimlilar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./sevimlilar.css">
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">qozon</a>
+        <nav>
+            <a href="index.html#how-it-works">Qanday ishlaydi</a>
+            <a href="index.html#chefs">Oshpazlar</a>
+            <a href="buyordashbord.html">Menyu</a>
+            <a href="#">Blog</a>
+        </nav>
+        <div class="header-actions">
+            <a href="kirish.html" class="btn-login">Kirish</a>
+            <a href="buyordashbord.html" class="btn-order">Buyurtma berish</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="title-section">
+            <div>
+                <h1>Sevimlilar</h1>
+                <p>O'zingizga yoqqan lazzatlarni saqlang</p>
+            </div>
+            <div class="fav-icon-main">❤️</div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="oshpazlar">Oshpazlar</div>
+            <div class="tab" data-tab="taomlar">Taomlar</div>
+            <div class="tab" data-tab="yaqinda">Yaqinda ko'rilgan</div>
+        </div>
+
+        <!-- Oshpazlar paneli -->
+        <div class="tab-panel cards-grid active" id="oshpazlar">
+            <div class="chef-card" data-chef-id="zuhra-opa" data-chef-name="Zuhra opa" onclick="handleChefCardClick(event,this,'xurmoOpa.html')" style="cursor:pointer;">
+                <div class="image-container">
+                    <div class="chef-img" style="background:url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=150') center/cover;"></div>
+                    <div class="badge-online">&#8226; Ochiq</div>
+                    <div class="chef-fav-count" id="chef-count-zuhra-opa" style="display:none;"></div>
+                </div>
+                <div class="chef-info">
+                    <div class="chef-header">
+                        <div>
+                            <div class="chef-name">Zuhra opa</div>
+                            <div class="chef-title">Usta oshpaz &#8226; 15 yil tajriba</div>
+                            <div class="rating"><span class="star">&#9733;</span> 4.9 <span class="count">(124)</span></div>
+                        </div>
+                        <button class="fav-btn chef-fav-btn" id="fav-zuhra-opa" data-chef-id="zuhra-opa" onclick="event.stopPropagation();toggleChefFav(this,'zuhra-opa','Zuhra opa')">&#129293;</button>
+                    </div>
+                    <div class="today-dish">
+                        <div class="label">Bugungi taom</div>
+                        <div class="dish-name">Tandir kabob va palov</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chef-card" data-chef-id="rustam-amaki" data-chef-name="Rustam Amaki" onclick="handleChefCardClick(event,this,'xurmoOpa.html')" style="cursor:pointer;">
+                <div class="image-container">
+                    <div class="chef-img" style="background:url('https://images.unsplash.com/photo-1583394838336-acd977736f90?w=150') center/cover;"></div>
+                    <div class="badge-online">&#8226; Ochiq</div>
+                    <div class="chef-fav-count" id="chef-count-rustam-amaki" style="display:none;"></div>
+                </div>
+                <div class="chef-info">
+                    <div class="chef-header">
+                        <div>
+                            <div class="chef-name">Rustam Amaki</div>
+                            <div class="chef-title">Go&#39;shtli taomlar ustasi</div>
+                            <div class="rating"><span class="star">&#9733;</span> 5.0 <span class="count">(248)</span></div>
+                        </div>
+                        <button class="fav-btn chef-fav-btn" id="fav-rustam-amaki" data-chef-id="rustam-amaki" onclick="event.stopPropagation();toggleChefFav(this,'rustam-amaki','Rustam Amaki')">&#129293;</button>
+                    </div>
+                    <div class="today-dish">
+                        <div class="label">Bugungi taom</div>
+                        <div class="dish-name">Qozon kabob (Maxsus)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Taomlar paneli — Supabase dan yuklanadi -->
+        <div class="tab-panel cards-grid" id="taomlar">
+            <!-- Skeleton loaders -->
+            <div class="skeleton-card" id="sk1">
+                <div class="skeleton sk-img"></div>
+                <div class="sk-lines">
+                    <div class="skeleton sk-line" style="width:60%"></div>
+                    <div class="skeleton sk-line" style="width:40%"></div>
+                    <div class="skeleton sk-line" style="width:50%"></div>
+                    <div class="skeleton sk-line" style="width:30%; margin-top:auto"></div>
+                </div>
+            </div>
+            <div class="skeleton-card" id="sk2">
+                <div class="skeleton sk-img"></div>
+                <div class="sk-lines">
+                    <div class="skeleton sk-line" style="width:55%"></div>
+                    <div class="skeleton sk-line" style="width:35%"></div>
+                    <div class="skeleton sk-line" style="width:45%"></div>
+                    <div class="skeleton sk-line" style="width:25%; margin-top:auto"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yaqinda ko'rilganlar -->
+        <div class="tab-panel cards-grid" id="yaqinda">
+            <div class="state-msg">Yaqinda ko'rilgan oshpazlar yoki taomlar mavjud emas.</div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-brand">
+            <div class="f-logo">qozon</div>
+            <p>Mazali va barakali uy taomlari platformasi.</p>
+        </div>
+        <div class="footer-links">
+            <h3>Menu</h3>
+            <ul>
+                <li><a href="#">Biz haqimizda</a></li>
+                <li><a href="#">Bog'lanish</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h3>Yordam</h3>
+            <ul>
+                <li><a href="#">Maxfiylik siyosati</a></li>
+                <li><a href="#">Foydalanish shartlari</a></li>
+            </ul>
+        </div>
+        <div class="footer-subscribe">
+            <h3>Obuna bo'ling</h3>
+            <div class="subscribe-form">
+                <input type="email" placeholder="Email">
+                <button>➔</button>
+            </div>
+            <div class="copyright">© 2024 Qozon. Mazali va barakali.</div>
+        </div>
+    </footer>
+
+    <script src="./sevimlilar.js"></script>
+</body>
+</html>

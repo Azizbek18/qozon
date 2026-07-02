@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtma Baholash</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./rating.css">
+</head>
+<body>
+
+    <div class="modal-container">2
+        <button class="close-btn">&times;</button>
+
+        <h2 class="main-title">Buyurtma qanday bo'ldi?</h2>
+
+        <div class="product-badge">
+            <span class="food-icon">🍲</span>
+            <span class="product-name">To'y oshi</span>
+            <span class="separator">•</span>
+            <span class="date">12-Oktyabr</span>
+        </div>
+
+        <div class="rating-section">
+            <p class="section-title">Taom sifati</p>
+            <div class="stars" id="food-rating">
+                <i class="fa-regular fa-star" data-value="1"></i>
+                <i class="fa-regular fa-star" data-value="2"></i>
+                <i class="fa-regular fa-star" data-value="3"></i>
+                <i class="fa-regular fa-star" data-value="4"></i>
+                <i class="fa-regular fa-star" data-value="5"></i>
+            </div>
+        </div>
+
+        <div class="rating-section">
+            <p class="section-title">Oshpaz xizmati</p>
+            <div class="stars" id="chef-rating">
+                <i class="fa-regular fa-star" data-value="1"></i>
+                <i class="fa-regular fa-star" data-value="2"></i>
+                <i class="fa-regular fa-star" data-value="3"></i>
+                <i class="fa-regular fa-star" data-value="4"></i>
+                <i class="fa-regular fa-star" data-value="5"></i>
+            </div>
+        </div>
+
+        <div class="tags-section">
+            <p class="section-title text-uppercase">Nimalar yoqdi?</p>
+            <div class="tags-container">
+                <span class="tag">Juda mazali</span>
+                <span class="tag">Vaqtida</span>
+                <span class="tag">Issiq keldi</span>
+                <span class="tag">Chiroyli qadoq</span>
+                <span class="tag">Katta porsiya</span>
+            </div>
+        </div>
+
+        <label class="upload-zone" for="image-input">
+            <i class="fa-solid fa-camera-retro upload-icon"></i>
+            <span>Taom rasmini yuklang</span>
+            <input type="file" id="image-input" accept="image/*" style="display: none;">
+        </label>
+
+        <textarea class="comment-area" placeholder="O'z fikringizni yozib qoldiring (ixtiyoriy)..."></textarea>
+
+        <button class="submit-btn">Yuborish</button>
+    </div>
+
+    <script src="rating.js"></script>
+</body>
+</html>

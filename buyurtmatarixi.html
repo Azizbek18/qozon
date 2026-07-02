@@ -1,0 +1,1636 @@
+<!doctype html>
+<html lang="uz" data-theme="light">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mama's Kitchen — Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="./buyurtmatarixi.css">
+  </head>
+
+  <body>
+    <!-- 3D FON -->
+    <div class="bg-3d">
+      <div class="orb"></div>
+      <div class="orb"></div>
+      <div class="orb"></div>
+    </div>
+
+    <div class="app-layout">
+      <!-- SIDEBAR OVERLAY -->
+      <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        onclick="toggleSidebar()"
+      ></div>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-icon"><i class="fas fa-utensils"></i></div>
+          <div>
+            <div class="brand-text">Mama's Kitchen</div>
+            <div class="brand-sub">Admin panel</div>
+          </div>
+        </div>
+        <nav class="sidebar-nav" id="sidebarNav">
+          <div class="nav-label">Asosiy menu</div>
+          <a
+            class="nav-item active"
+            data-page="dashboard"
+            href="#"
+            onclick="
+              navigateTo('dashboard');
+              return false;
+            "
+          >
+            <i class="fas fa-th-large"></i><span>Dashboard</span>
+          </a>
+          <a
+            class="nav-item"
+            data-page="orders"
+            href="#"
+            onclick="
+              navigateTo('orders');
+              return false;
+            "
+          >
+            <i class="fas fa-shopping-bag"></i><span>Buyurtmalar</span
+            ><span class="badge" id="ordersBadge">12</span>
+          </a>
+          <a
+            class="nav-item"
+            data-page="products"
+            href="#"
+            onclick="
+              navigateTo('products');
+              return false;
+            "
+          >
+            <i class="fas fa-box-open"></i><span>Mahsulotlar</span>
+          </a>
+          <a
+            class="nav-item"
+            data-page="notifications"
+            href="#"
+            onclick="
+              navigateTo('notifications');
+              return false;
+            "
+          >
+            <i class="fas fa-bell"></i><span>Bildirishnomalar</span
+            ><span class="badge" id="notifBadge">8</span>
+          </a>
+          <div class="nav-label">Tizim</div>
+          <a
+            class="nav-item"
+            data-page="reviews"
+            href="#"
+            onclick="
+              navigateTo('reviews');
+              return false;
+            "
+          >
+            <i class="fas fa-star"></i><span>Sharhlar</span>
+          </a>
+          <a
+            class="nav-item"
+            data-page="analytics"
+            href="#"
+            onclick="
+              navigateTo('analytics');
+              return false;
+            "
+          >
+            <i class="fas fa-chart-line"></i><span>Statistika</span>
+          </a>
+          <a
+            class="nav-item"
+            data-page="settings"
+            href="#"
+            onclick="
+              navigateTo('settings');
+              return false;
+            "
+          >
+            <i class="fas fa-cog"></i><span>Sozlamalar</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="version">Mama's Kitchen v2.4.1</div>
+        </div>
+      </aside>
+
+      <!-- ASOSIY KONTENT -->
+      <div class="main-content">
+        <!-- HEADER -->
+        <header class="header">
+          <div class="header-left">
+            <button
+              class="hamburger"
+              onclick="toggleSidebar()"
+              aria-label="Menu"
+            >
+              <i class="fas fa-bars"></i>
+            </button>
+            <div>
+              <h1 id="pageTitle">Dashboard</h1>
+              <div class="breadcrumb">
+                <a href="#">Bosh sahifa</a>
+                <i class="fas fa-chevron-right" style="font-size: 9px"></i>
+                <span id="breadcrumbCurrent">Dashboard</span>
+              </div>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="lang-switcher">
+              <button
+                class="lang-btn active"
+                data-lang="uz"
+                onclick="switchLang('uz')"
+              >
+                O'Z
+              </button>
+              <button
+                class="lang-btn"
+                data-lang="ru"
+                onclick="switchLang('ru')"
+              >
+                RU
+              </button>
+              <button
+                class="lang-btn"
+                data-lang="en"
+                onclick="switchLang('en')"
+              >
+                EN
+              </button>
+            </div>
+            <button
+              class="theme-toggle"
+              id="themeToggle"
+              onclick="toggleTheme()"
+              aria-label="Mavzu"
+            >
+              <i class="fas fa-moon"></i>
+            </button>
+            <div class="profile-wrapper">
+              <div
+                class="profile-btn"
+                onclick="handleProfileClick()"
+                id="profileBtnEl"
+              >
+                <div class="avatar" id="headerAvatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-info">
+                  <div class="profile-name" id="headerName">
+                    Profilga kirish
+                  </div>
+                  <div class="profile-role">Mama's Kitchen</div>
+                </div>
+              </div>
+              <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-header">
+                  <div class="d-avatar" id="dropdownAvatar">
+                    <i class="fas fa-user"></i>
+                  </div>
+                  <div class="d-info">
+                    <div class="d-name" id="dropdownName"></div>
+                    <div class="d-email" id="dropdownEmail"></div>
+                  </div>
+                </div>
+                <button class="dropdown-item" onclick="openEditModal()">
+                  <i class="fas fa-user-edit"></i
+                  ><span>Profilni o'zgartirish</span>
+                </button>
+                <button
+                  class="dropdown-item"
+                  onclick="
+                    navigateTo('settings');
+                    closeDropdown();
+                  "
+                >
+                  <i class="fas fa-cog"></i><span>Sozlamalar</span>
+                </button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item danger" onclick="logout()">
+                  <i class="fas fa-sign-out-alt"></i><span>Chiqish</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- SAHIFA KONTENTLARI -->
+        <div class="page-content">
+          <!-- DASHBOARD -->
+          <div class="page-panel active" id="page-dashboard">
+            <div class="stat-grid">
+              <div class="stat-card animate-in">
+                <div class="sc-icon blue">
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="sc-value">156</div>
+                <div class="sc-label">Jami buyurtmalar</div>
+                <div class="sc-change up">
+                  <i class="fas fa-arrow-up"></i> 12.5%
+                </div>
+              </div>
+              <div class="stat-card animate-in">
+                <div class="sc-icon green">
+                  <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="sc-value">24.8M</div>
+                <div class="sc-label">Jami daromad</div>
+                <div class="sc-change up">
+                  <i class="fas fa-arrow-up"></i> 8.3%
+                </div>
+              </div>
+              <div class="stat-card animate-in">
+                <div class="sc-icon orange">
+                  <i class="fas fa-box-open"></i>
+                </div>
+                <div class="sc-value">48</div>
+                <div class="sc-label">Jami mahsulotlar</div>
+                <div class="sc-change up">
+                  <i class="fas fa-arrow-up"></i> 3
+                </div>
+              </div>
+              <div class="stat-card animate-in">
+                <div class="sc-icon red"><i class="fas fa-users"></i></div>
+                <div class="sc-value">1,204</div>
+                <div class="sc-label">Jami mijozlar</div>
+                <div class="sc-change down">
+                  <i class="fas fa-arrow-down"></i> 2.1%
+                </div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Buyurtma ID</th>
+                    <th>Mijoz</th>
+                    <th>Summa</th>
+                    <th>Holat</th>
+                    <th>Sana</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardOrdersBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- BUYURTMALAR -->
+          <div class="page-panel" id="page-orders">
+            <div class="page-header">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input
+                  type="text"
+                  id="orderSearch"
+                  placeholder="Qidirish..."
+                  oninput="renderOrders()"
+                />
+              </div>
+              <div class="actions">
+                <select
+                  class="setting-select"
+                  id="orderFilter"
+                  onchange="renderOrders()"
+                >
+                  <option value="all">Hammasi</option>
+                  <option value="pending">Kutilmoqda</option>
+                  <option value="preparing">Tayyorlanmoqda</option>
+                  <option value="delivered">Yetkazildi</option>
+                  <option value="cancelled">Bekor qilindi</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Buyurtma ID</th>
+                    <th>Mijoz</th>
+                    <th>Telefon</th>
+                    <th>Summa</th>
+                    <th>Holat</th>
+                    <th>Sana</th>
+                    <th>Harakatlar</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- MAHSULOTLAR -->
+          <div class="page-panel" id="page-products">
+            <div class="page-header">
+              <h2>Mahsulotlar</h2>
+              <div class="actions">
+                <button class="btn btn-primary" onclick="openAddProductModal()">
+                  <i class="fas fa-plus"></i> Mahsulot qo'shish
+                </button>
+              </div>
+            </div>
+            <div class="product-grid" id="productsGrid"></div>
+          </div>
+
+          <!-- BILDIRISHNOMALAR -->
+          <div class="page-panel" id="page-notifications">
+            <div class="page-header">
+              <h2>Bildirishnomalar</h2>
+              <div class="actions">
+                <button class="btn btn-outline btn-sm" onclick="markAllRead()">
+                  <i class="fas fa-check-double"></i> Hammasini o'qilgan deb
+                  belgilash
+                </button>
+              </div>
+            </div>
+            <div class="notif-list" id="notifList"></div>
+          </div>
+
+          <!-- SHARHLAR -->
+          <div class="page-panel" id="page-reviews">
+            <div class="page-header">
+              <h2>Sharhlar</h2>
+            </div>
+            <div id="reviewsList"></div>
+          </div>
+
+          <!-- STATISTIKA -->
+          <div class="page-panel" id="page-analytics">
+            <div class="page-header">
+              <h2>Statistika</h2>
+            </div>
+            <div class="stat-grid">
+              <div class="stat-card animate-in">
+                <div class="sc-icon blue"><i class="fas fa-chart-bar"></i></div>
+                <div class="sc-value">7,840</div>
+                <div class="sc-label">Haftalik buyurtmalar</div>
+                <div class="sc-change up">
+                  <i class="fas fa-arrow-up"></i> 15%
+                </div>
+              </div>
+              <div class="stat-card animate-in">
+                <div class="sc-icon green"><i class="fas fa-wallet"></i></div>
+                <div class="sc-value">5.2M</div>
+                <div class="sc-label">Haftalik daromad</div>
+                <div class="sc-change up">
+                  <i class="fas fa-arrow-up"></i> 22%
+                </div>
+              </div>
+              <div class="stat-card animate-in">
+                <div class="sc-icon orange"><i class="fas fa-fire"></i></div>
+                <div class="sc-value">Osh</div>
+                <div class="sc-label">Eng mashhur mahsulot</div>
+                <div class="sc-change up">
+                  <i class="fas fa-arrow-up"></i> 340 ta
+                </div>
+              </div>
+              <div class="stat-card animate-in">
+                <div class="sc-icon red"><i class="fas fa-clock"></i></div>
+                <div class="sc-value">28 min</div>
+                <div class="sc-label">O'rtacha yetkazish vaqti</div>
+                <div class="sc-change down">
+                  <i class="fas fa-arrow-down"></i> 5 min
+                </div>
+              </div>
+            </div>
+            <div class="settings-section">
+              <h3><i class="fas fa-chart-bar"></i> Haftalik grafik</h3>
+              <div class="chart-bar-wrap" id="chartBars"></div>
+            </div>
+          </div>
+
+          <!-- SOZLAMALAR -->
+          <div class="page-panel" id="page-settings">
+            <div class="page-header">
+              <h2>Sozlamalar</h2>
+            </div>
+
+            <!-- Profil ma'lumotlari -->
+            <div class="settings-section">
+              <h3><i class="fas fa-user-circle"></i> Profil ma'lumotlari</h3>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Ism va familiya</div>
+                  <div class="sr-desc" id="settingsName">Kiritilmagan</div>
+                </div>
+                <button
+                  class="btn btn-outline btn-sm"
+                  onclick="openEditModal()"
+                >
+                  <i class="fas fa-edit"></i> O'zgartirish
+                </button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Email</div>
+                  <div class="sr-desc" id="settingsEmail">Kiritilmagan</div>
+                </div>
+                <span
+                  class="status-badge delivered"
+                  id="settingsEmailStatus"
+                  style="display: none"
+                  ><i class="fas fa-check-circle"></i> Tasdiqlangan</span
+                >
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Telefon raqami</div>
+                  <div class="sr-desc" id="settingsPhone">Kiritilmagan</div>
+                </div>
+                <span
+                  class="status-badge delivered"
+                  id="settingsPhoneStatus"
+                  style="display: none"
+                  ><i class="fas fa-check-circle"></i> Tasdiqlangan</span
+                >
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Tug'ilgan sana</div>
+                  <div class="sr-desc" id="settingsBirth">Kiritilmagan</div>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Jins</div>
+                  <div class="sr-desc" id="settingsGender">Kiritilmagan</div>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Manzil</div>
+                  <div class="sr-desc" id="settingsAddress">Kiritilmagan</div>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Bio</div>
+                  <div class="sr-desc" id="settingsBio">Kiritilmagan</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Xavfsizlik -->
+            <div class="settings-section">
+              <h3><i class="fas fa-shield-alt"></i> Xavfsizlik</h3>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Parol o'zgartirish</div>
+                  <div class="sr-desc">Hisobingiz parolini yangilang</div>
+                </div>
+                <button
+                  class="btn btn-outline btn-sm"
+                  onclick="openPasswordModal()"
+                >
+                  <i class="fas fa-key"></i> O'zgartirish
+                </button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Ikki faktorli autentifikatsiya</div>
+                  <div class="sr-desc">
+                    Qo'shimcha xavfsizlik qatlamini yoqing
+                  </div>
+                </div>
+                <button
+                  class="toggle-switch"
+                  id="twoFaToggle"
+                  onclick="toggleSwitch(this)"
+                  data-setting="twoFa"
+                ></button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Faol sessiyalar</div>
+                  <div class="sr-desc">Hozirda 1 ta qurilmada faol</div>
+                </div>
+                <button
+                  class="btn btn-danger btn-sm"
+                  onclick="
+                    showToast(
+                      'info',
+                      'Sessiyalar',
+                      'Barcha sessiyalar tugatildi',
+                    )
+                  "
+                >
+                  <i class="fas fa-sign-out-alt"></i> Tugatish
+                </button>
+              </div>
+            </div>
+
+            <!-- Bildirishnomalar -->
+            <div class="settings-section">
+              <h3><i class="fas fa-bell"></i> Bildirishnoma sozlamalari</h3>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Yangi buyurtma bildirishnomasi</div>
+                  <div class="sr-desc">Yangi buyurtma kelganda xabar oling</div>
+                </div>
+                <button
+                  class="toggle-switch active"
+                  onclick="toggleSwitch(this)"
+                  data-setting="newOrderNotif"
+                ></button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Ovozli bildirishnoma</div>
+                  <div class="sr-desc">Bildirishnoma kelganda ovoz chiqsin</div>
+                </div>
+                <button
+                  class="toggle-switch"
+                  onclick="toggleSwitch(this)"
+                  data-setting="soundNotif"
+                ></button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Email bildirishnoma</div>
+                  <div class="sr-desc">Email orqali ham xabar oling</div>
+                </div>
+                <button
+                  class="toggle-switch active"
+                  onclick="toggleSwitch(this)"
+                  data-setting="emailNotif"
+                ></button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">SMS bildirishnoma</div>
+                  <div class="sr-desc">SMS orqali ham xabar oling</div>
+                </div>
+                <button
+                  class="toggle-switch"
+                  onclick="toggleSwitch(this)"
+                  data-setting="smsNotif"
+                ></button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Push bildirishnomalar</div>
+                  <div class="sr-desc">Brauzer push xabarlarni yoqish</div>
+                </div>
+                <button
+                  class="toggle-switch"
+                  onclick="toggleSwitch(this)"
+                  data-setting="pushNotif"
+                ></button>
+              </div>
+            </div>
+
+            <!-- Restoran -->
+            <div class="settings-section">
+              <h3><i class="fas fa-store"></i> Restoran sozlamalari</h3>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Restoran nomi</div>
+                  <div class="sr-desc">Ko'rsatiladigan nom</div>
+                </div>
+                <input
+                  type="text"
+                  class="form-input"
+                  style="max-width: 220px"
+                  value="Mama's Kitchen"
+                  id="restNameInput"
+                />
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Valyuta</div>
+                  <div class="sr-desc">Narxlar ko'rsatiladigan valyuta</div>
+                </div>
+                <select
+                  class="setting-select"
+                  id="currencySelect"
+                  onchange="saveCurrency()"
+                >
+                  <option value="UZS">UZS (so'm)</option>
+                  <option value="USD">USD ($)</option>
+                  <option value="RUB">RUB (rubl)</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Yetkazib berish narxi</div>
+                  <div class="sr-desc">Standart yetkazib berish to'lovi</div>
+                </div>
+                <input
+                  type="number"
+                  class="form-input"
+                  style="max-width: 140px"
+                  value="15000"
+                  id="deliveryFeeInput"
+                />
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Minimal buyurtma summasi</div>
+                  <div class="sr-desc">Eng kam buyurtma miqdori</div>
+                </div>
+                <input
+                  type="number"
+                  class="form-input"
+                  style="max-width: 140px"
+                  value="30000"
+                  id="minOrderInput"
+                />
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Ish vaqti</div>
+                  <div class="sr-desc">Restoran ish vaqti</div>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center">
+                  <input
+                    type="time"
+                    class="form-input"
+                    style="max-width: 120px"
+                    value="09:00"
+                    id="workStart"
+                  />
+                  <span style="color: var(--fg-m); font-weight: 700">—</span>
+                  <input
+                    type="time"
+                    class="form-input"
+                    style="max-width: 120px"
+                    value="23:00"
+                    id="workEnd"
+                  />
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Yetkazib berish radiusi</div>
+                  <div class="sr-desc">
+                    Maksimal yetkazib berish masofasi (km)
+                  </div>
+                </div>
+                <input
+                  type="number"
+                  class="form-input"
+                  style="max-width: 100px"
+                  value="15"
+                  id="deliveryRadius"
+                />
+              </div>
+            </div>
+
+            <!-- Ko'rinish -->
+            <div class="settings-section">
+              <h3><i class="fas fa-palette"></i> Ko'rinish</h3>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Qorong'u rejim</div>
+                  <div class="sr-desc">Tungi rejimni yoqish</div>
+                </div>
+                <button
+                  class="toggle-switch"
+                  id="darkModeToggle"
+                  onclick="
+                    toggleTheme();
+                    this.classList.toggle('active');
+                  "
+                  data-setting="darkMode"
+                ></button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Til</div>
+                  <div class="sr-desc">Interfeys tilini tanlang</div>
+                </div>
+                <select
+                  class="setting-select"
+                  id="langSelect"
+                  onchange="switchLang(this.value)"
+                >
+                  <option value="uz">O'zbekcha</option>
+                  <option value="ru">Русский</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Sahifadagi elementlar soni</div>
+                  <div class="sr-desc">
+                    Bir sahifada ko'rsatiladigan buyurtmalar soni
+                  </div>
+                </div>
+                <select class="setting-select" id="perPageSelect">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Maxfiylik -->
+            <div class="settings-section">
+              <h3><i class="fas fa-user-shield"></i> Maxfiylik</h3>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Profilni ko'rish</div>
+                  <div class="sr-desc">Profilni barcha ko'ra oladi</div>
+                </div>
+                <select class="setting-select" id="profileVisibility">
+                  <option value="public">Ommaviy</option>
+                  <option value="friends">Do'stlar</option>
+                  <option value="private">Shaxsiy</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Onlayn holatni ko'rsatish</div>
+                  <div class="sr-desc">Boshqalar sizni onlayn ko'rsin</div>
+                </div>
+                <button
+                  class="toggle-switch active"
+                  onclick="toggleSwitch(this)"
+                  data-setting="showOnline"
+                ></button>
+              </div>
+              <div class="setting-row">
+                <div class="sr-info">
+                  <div class="sr-title">Telegram bog'lash</div>
+                  <div class="sr-desc">
+                    Telegram bot orqali buyurtmalarni boshqaring
+                  </div>
+                </div>
+                <button
+                  class="btn btn-outline btn-sm"
+                  onclick="
+                    showToast(
+                      'info',
+                      'Telegram',
+                      'Bog\'lash funksiyasi tez orada',
+                    )
+                  "
+                >
+                  <i class="fab fa-telegram"></i> Bog'lash
+                </button>
+              </div>
+            </div>
+
+            <!-- Xavfli zona -->
+            <div class="settings-section">
+              <div class="danger-zone">
+                <div class="dz-title">
+                  <i class="fas fa-exclamation-triangle"></i> Xavfli zona
+                </div>
+                <div class="dz-desc">
+                  Quyidagi amallarni qaytarib bo'lmaydi. Ehtiyot bo'ling.
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                    margin-top: 4px;
+                  "
+                >
+                  <button
+                    class="btn btn-danger btn-sm"
+                    onclick="confirmClearData()"
+                  >
+                    <i class="fas fa-trash-alt"></i> Barcha ma'lumotlarni
+                    o'chirish
+                  </button>
+                  <button
+                    class="btn btn-danger btn-sm"
+                    onclick="confirmDeleteAccount()"
+                  >
+                    <i class="fas fa-user-times"></i> Hisobni o'chirish
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+          <div class="footer-left">
+            <span>2024 Mama's Kitchen. Barcha huquqlar himoyalangan.</span>
+          </div>
+          <div class="footer-links">
+            <a href="#">Yordam</a>
+            <a href="#">Maxfiylik</a>
+            <a href="#">Foydalanish shartlari</a>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- TOAST KONTEYNERI -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ==========================================
+         LOGIN MODALI (QADAMLI: Ma'lumot → Email kod → Telefon kod)
+         ========================================== -->
+    <div class="modal-overlay" id="loginModal">
+      <div class="modal modal-xl">
+        <!-- Qadam indikatori -->
+        <div class="steps-bar" id="loginSteps">
+          <div class="step-item active" data-step="1">
+            <div class="step-circle">1</div>
+            <div class="step-label">Ma'lumotlar</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step-item" data-step="2">
+            <div class="step-circle">2</div>
+            <div class="step-label">Email tasdiqlash</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step-item" data-step="3">
+            <div class="step-circle">3</div>
+            <div class="step-label">Telefon tasdiqlash</div>
+          </div>
+        </div>
+
+        <!-- 1-QADAM: Asosiy ma'lumotlar -->
+        <div class="login-step" id="loginStep1">
+          <div style="text-align: center; margin-bottom: 24px">
+            <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 4px">
+              Ro'yxatdan o'tish
+            </h3>
+            <p style="font-size: 13px; color: var(--fg-m)">
+              Barcha maydonlarni to'ldiring
+            </p>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ism</label>
+              <input
+                type="text"
+                class="form-input"
+                id="regFirstName"
+                placeholder="Masalan: Sardor"
+              />
+              <div class="form-error" id="errFirstName">
+                Ism kiritilishi shart
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Familiya</label>
+              <input
+                type="text"
+                class="form-input"
+                id="regLastName"
+                placeholder="Masalan: Karimov"
+              />
+              <div class="form-error" id="errLastName">
+                Familiya kiritilishi shart
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-input"
+              id="regEmail"
+              placeholder="sardor@example.com"
+            />
+            <div class="form-error" id="errEmail">To'g'ri email kiriting</div>
+            <div class="form-hint">Kod bu emailga yuboriladi</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefon raqami</label>
+            <input
+              type="tel"
+              class="form-input"
+              id="regPhone"
+              placeholder="+998 90 123 45 67"
+            />
+            <div class="form-error" id="errPhone">
+              To'g'ri telefon raqam kiriting
+            </div>
+            <div class="form-hint">Kod bu raqamga SMS bilan yuboriladi</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Parol</label>
+              <input
+                type="password"
+                class="form-input"
+                id="regPassword"
+                placeholder="Kamida 6 belgi"
+              />
+              <div class="form-error" id="errPassword">
+                Parol kamida 6 belgidan iborat bo'lishi kerak
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Parolni takrorlang</label>
+              <input
+                type="password"
+                class="form-input"
+                id="regPassword2"
+                placeholder="Parolni qayta kiriting"
+              />
+              <div class="form-error" id="errPassword2">
+                Parollar mos kelmadi
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tug'ilgan sana</label>
+              <input type="date" class="form-input" id="regBirth" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jins</label>
+              <select class="setting-select" style="width: 100%" id="regGender">
+                <option value="">Tanlang</option>
+                <option value="male">Erkak</option>
+                <option value="female">Ayol</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" onclick="goToEmailStep()">
+              Keyingisi — Email tasdiqlash <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2-QADAM: Email kod tasdiqlash -->
+        <div class="login-step" id="loginStep2" style="display: none">
+          <div style="text-align: center; margin-bottom: 8px">
+            <div
+              style="
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                background: rgba(59, 130, 246, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 16px;
+                font-size: 28px;
+                color: #3b82f6;
+              "
+            >
+              <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 6px">
+              Email tasdiqlash
+            </h3>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--fg-m);
+                max-width: 340px;
+                margin: 0 auto;
+              "
+            >
+              <span id="emailDisplay">sardor@example.com</span> manziliga 6
+              xonali kod yuborildi
+            </p>
+          </div>
+          <div class="otp-row" id="emailOtpRow">
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="email"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="email"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="email"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="email"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="email"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="email"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+          </div>
+          <div class="otp-timer" id="emailTimer">
+            Kodni qayta yuborish: <span id="emailTimerSec">60</span> soniya
+          </div>
+          <div
+            style="text-align: center; margin-top: 6px; display: none"
+            id="emailResendWrap"
+          >
+            <button
+              class="resend-btn"
+              id="emailResendBtn"
+              onclick="resendEmailCode()"
+            >
+              Kodni qayta yuborish
+            </button>
+          </div>
+          <div class="form-error" id="errEmailOtp" style="text-align: center">
+            Noto'g'ri kod, qayta urinib ko'ring
+          </div>
+          <div class="modal-footer" style="margin-top: 20px">
+            <button class="btn btn-outline" onclick="goBackToStep(1)">
+              <i class="fas fa-arrow-left"></i> Orqaga
+            </button>
+            <button
+              class="btn btn-primary"
+              id="emailVerifyBtn"
+              onclick="verifyEmailCode()"
+            >
+              Tasdiqlash <i class="fas fa-check"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-QADAM: Telefon kod tasdiqlash -->
+        <div class="login-step" id="loginStep3" style="display: none">
+          <div style="text-align: center; margin-bottom: 8px">
+            <div
+              style="
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                background: rgba(16, 185, 129, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 16px;
+                font-size: 28px;
+                color: #10b981;
+              "
+            >
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 6px">
+              Telefon tasdiqlash
+            </h3>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--fg-m);
+                max-width: 340px;
+                margin: 0 auto;
+              "
+            >
+              <span id="phoneDisplay">+998 90 123 45 67</span> raqamiga SMS kod
+              yuborildi
+            </p>
+          </div>
+          <div class="otp-row" id="phoneOtpRow">
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="phone"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="phone"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="phone"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="phone"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="phone"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+            <input
+              type="text"
+              class="otp-input"
+              maxlength="1"
+              data-otp="phone"
+              oninput="handleOtpInput(this)"
+              onkeydown="handleOtpKeydown(event, this)"
+            />
+          </div>
+          <div class="otp-timer" id="phoneTimer">
+            Kodni qayta yuborish: <span id="phoneTimerSec">60</span> soniya
+          </div>
+          <div
+            style="text-align: center; margin-top: 6px; display: none"
+            id="phoneResendWrap"
+          >
+            <button
+              class="resend-btn"
+              id="phoneResendBtn"
+              onclick="resendPhoneCode()"
+            >
+              Kodni qayta yuborish
+            </button>
+          </div>
+          <div class="form-error" id="errPhoneOtp" style="text-align: center">
+            Noto'g'ri kod, qayta urinib ko'ring
+          </div>
+          <div class="modal-footer" style="margin-top: 20px">
+            <button class="btn btn-outline" onclick="goBackToStep(2)">
+              <i class="fas fa-arrow-left"></i> Orqaga
+            </button>
+            <button
+              class="btn btn-success"
+              id="phoneVerifyBtn"
+              onclick="verifyPhoneCode()"
+            >
+              <i class="fas fa-check-circle"></i> Tasdiqlash va kirish
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         PROFIL TAHRIRLASH MODALI (KENGAYTIRILGAN)
+         ========================================== -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal modal-xl">
+        <div class="modal-header">
+          <h3>
+            <i
+              class="fas fa-user-edit"
+              style="color: var(--accent); margin-right: 8px"
+            ></i>
+            Profilni o'zgartirish
+          </h3>
+          <button class="modal-close" onclick="closeModal('editModal')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Avatar yuklash -->
+        <div class="avatar-upload">
+          <div
+            class="avatar-preview"
+            id="editAvatarPreview"
+            onclick="document.getElementById('avatarInput').click()"
+          >
+            <i class="fas fa-user" id="editAvatarIcon"></i>
+            <img id="editAvatarImg" src="" alt="" style="display: none" />
+            <div class="upload-icon"><i class="fas fa-camera"></i></div>
+          </div>
+          <input
+            type="file"
+            class="file-input"
+            id="avatarInput"
+            accept="image/*"
+            onchange="handleAvatarUpload(event)"
+          />
+          <div class="upload-text">
+            Rasm yuklash uchun bosing (JPG, PNG, max 5MB)
+          </div>
+        </div>
+
+        <!-- Shaxsiy ma'lumotlar -->
+        <div style="margin-bottom: 20px">
+          <div
+            style="
+              font-size: 13px;
+              font-weight: 800;
+              color: var(--accent);
+              margin-bottom: 12px;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            "
+          >
+            <i class="fas fa-id-card" style="margin-right: 6px"></i> Shaxsiy
+            ma'lumotlar
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ism</label>
+              <input type="text" class="form-input" id="editFirstName" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Familiya</label>
+              <input type="text" class="form-input" id="editLastName" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tug'ilgan sana</label>
+              <input type="date" class="form-input" id="editBirth" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jins</label>
+              <select
+                class="setting-select"
+                style="width: 100%"
+                id="editGender"
+              >
+                <option value="">Tanlang</option>
+                <option value="male">Erkak</option>
+                <option value="female">Ayol</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Manzil</label>
+            <input
+              type="text"
+              class="form-input"
+              id="editAddress"
+              placeholder="Shahar, ko'cha, uy"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bio (haqimda)</label>
+            <textarea
+              class="form-textarea"
+              id="editBio"
+              placeholder="O'zingiz haqingizda qisqacha yozing..."
+              style="min-height: 90px"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Aloqa ma'lumotlari -->
+        <div style="margin-bottom: 20px">
+          <div
+            style="
+              font-size: 13px;
+              font-weight: 800;
+              color: var(--accent);
+              margin-bottom: 12px;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            "
+          >
+            <i class="fas fa-address-book" style="margin-right: 6px"></i> Aloqa
+            ma'lumotlari
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <div style="display: flex; gap: 8px">
+              <input
+                type="email"
+                class="form-input"
+                id="editEmail"
+                style="flex: 1"
+              />
+              <button
+                class="btn btn-outline btn-sm"
+                onclick="
+                  showToast(
+                    'info',
+                    'Email',
+                    'Email o\'zgartirilganda qayta tasdiqlash kerak bo\'ladi',
+                  )
+                "
+              >
+                <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefon raqami</label>
+            <div style="display: flex; gap: 8px">
+              <input
+                type="tel"
+                class="form-input"
+                id="editPhone"
+                style="flex: 1"
+              />
+              <button
+                class="btn btn-outline btn-sm"
+                onclick="
+                  showToast(
+                    'info',
+                    'Telefon',
+                    'Telefon o\'zgartirilganda qayta tasdiqlash kerak bo\'ladi',
+                  )
+                "
+              >
+                <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Qo'shimcha telefon</label>
+            <input
+              type="tel"
+              class="form-input"
+              id="editPhone2"
+              placeholder="+998 XX XXX XX XX (ixtiyoriy)"
+            />
+          </div>
+        </div>
+
+        <!-- Ijtimoiy tarmoqlar -->
+        <div style="margin-bottom: 20px">
+          <div
+            style="
+              font-size: 13px;
+              font-weight: 800;
+              color: var(--accent);
+              margin-bottom: 12px;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            "
+          >
+            <i class="fas fa-share-alt" style="margin-right: 6px"></i> Ijtimoiy
+            tarmoqlar
+          </div>
+          <div class="form-group">
+            <label class="form-label"
+              ><i
+                class="fab fa-telegram"
+                style="color: #0088cc; margin-right: 6px"
+              ></i>
+              Telegram</label
+            >
+            <input
+              type="text"
+              class="form-input"
+              id="editTelegram"
+              placeholder="@username"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label"
+              ><i
+                class="fab fa-instagram"
+                style="color: #e4405f; margin-right: 6px"
+              ></i>
+              Instagram</label
+            >
+            <input
+              type="text"
+              class="form-input"
+              id="editInstagram"
+              placeholder="@username"
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('editModal')">
+            Bekor qilish
+          </button>
+          <button class="btn btn-primary" onclick="saveProfile()">
+            <i class="fas fa-save"></i> Barcha o'zgarishlarni saqlash
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAROL O'ZGARTIRISH MODALI -->
+    <div class="modal-overlay" id="passwordModal">
+      <div class="modal" style="max-width: 440px">
+        <div class="modal-header">
+          <h3>
+            <i
+              class="fas fa-key"
+              style="color: var(--accent); margin-right: 8px"
+            ></i>
+            Parol o'zgartirish
+          </h3>
+          <button class="modal-close" onclick="closeModal('passwordModal')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Joriy parol</label>
+          <input
+            type="password"
+            class="form-input"
+            id="currentPassword"
+            placeholder="Hozirgi parolingiz"
+          />
+          <div class="form-error" id="errCurrentPwd">Joriy parol noto'g'ri</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Yangi parol</label>
+          <input
+            type="password"
+            class="form-input"
+            id="newPassword"
+            placeholder="Kamida 6 belgi"
+          />
+          <div class="form-error" id="errNewPwd">
+            Parol kamida 6 belgidan iborat bo'lishi kerak
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Yangi parolni takrorlang</label>
+          <input
+            type="password"
+            class="form-input"
+            id="newPassword2"
+            placeholder="Yangi parolni qayta kiriting"
+          />
+          <div class="form-error" id="errNewPwd2">Parollar mos kelmadi</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('passwordModal')">
+            Bekor qilish
+          </button>
+          <button class="btn btn-primary" onclick="changePassword()">
+            <i class="fas fa-check"></i> Saqlash
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAHSULOT QO'SHISH MODALI -->
+    <div class="modal-overlay" id="addProductModal">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h3>Mahsulot qo'shish</h3>
+          <button class="modal-close" onclick="closeModal('addProductModal')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Mahsulot nomi</label>
+            <input
+              type="text"
+              class="form-input"
+              id="prodName"
+              placeholder="Mahsulot nomi"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kategoriya</label>
+            <select
+              class="setting-select"
+              style="width: 100%"
+              id="prodCategory"
+            >
+              <option value="Taomlar">Taomlar</option>
+              <option value="Ichimliklar">Ichimliklar</option>
+              <option value="Desertlar">Desertlar</option>
+              <option value="Salatlar">Salatlar</option>
+              <option value="Nonushta">Nonushta</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Narx</label>
+            <input
+              type="number"
+              class="form-input"
+              id="prodPrice"
+              placeholder="0"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rasm URL</label>
+            <input
+              type="text"
+              class="form-input"
+              id="prodImage"
+              placeholder="https://..."
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tavsif</label>
+          <textarea
+            class="form-textarea"
+            id="prodDesc"
+            placeholder="Mahsulot haqida..."
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-outline"
+            onclick="closeModal('addProductModal')"
+          >
+            Bekor qilish
+          </button>
+          <button class="btn btn-primary" onclick="addProduct()">
+            Saqlash
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUYURTMA HOLAT MODALI -->
+    <div class="modal-overlay" id="statusModal">
+      <div class="modal" style="max-width: 400px">
+        <div class="modal-header">
+          <h3>Holatni o'zgartirish</h3>
+          <button class="modal-close" onclick="closeModal('statusModal')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Yangi holat</label>
+          <select
+            class="setting-select"
+            style="width: 100%"
+            id="newStatusSelect"
+          >
+            <option value="pending">Kutilmoqda</option>
+            <option value="preparing">Tayyorlanmoqda</option>
+            <option value="delivered">Yetkazildi</option>
+            <option value="cancelled">Bekor qilindi</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('statusModal')">
+            Bekor qilish
+          </button>
+          <button class="btn btn-primary" onclick="saveStatus()">
+            Saqlash
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASDIQLASH DIALOGI -->
+    <div class="confirm-overlay" id="confirmOverlay">
+      <div class="confirm-box">
+        <div class="confirm-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="confirm-title" id="confirmTitle">Tasdiqlash</div>
+        <div class="confirm-desc" id="confirmDesc">
+          Haqiqatan ham davom etmoqchimisiz?
+        </div>
+        <div class="confirm-actions">
+          <button class="btn btn-outline" onclick="closeConfirm()">
+            Bekor qilish
+          </button>
+          <button class="btn btn-danger" id="confirmAction">Tasdiqlash</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT — TO'LIQ LOGIKA
+         ========================================== -->
+    <script src="./buyurtmatarixi.js"></script>
+  </body>
+</html>

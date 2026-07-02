@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon — Mahallangizdagi eng mazali uy taomi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body class="loader-active">
+
+    <!-- Page-level grain texture overlay -->
+    <div class="grain-overlay" aria-hidden="true"></div>
+
+    <!-- ==================== LOADER ==================== -->
+    <div id="site-loader" class="loader-overlay">
+        <div class="loader-content">
+            <div class="pot-animation">
+                <span class="steam steam-1">💨</span>
+                <span class="steam steam-2">💨</span>
+                <span class="pot">🍲</span>
+            </div>
+            <h1 class="loader-title">QOZON GA XUSH KELIBSIZ</h1>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-bar-shine"></div>
+                </div>
+            </div>
+            <div class="loader-dots">
+                <span></span><span></span><span></span>
+            </div>
+            <p class="loader-text">Sayt yuklanmoqda...</p>
+        </div>
+    </div>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" id="main-header">
+        <a href="index.html" class="header-logo" style="text-decoration: none;">
+            <span class="logo-emoji">🍲</span>
+            <span class="logo-text">qozon</span>
+        </a>
+        <nav class="header-nav" id="mobile-menu">
+            <ul>
+                <li><a href="#how-it-works" class="nav-link">Qanday ishlaydi</a></li>
+                <li><a href="#chefs" class="nav-link">Oshpazlar</a></li>
+                <li><a href="#menu" class="nav-link">Menyu</a></li>
+                <li><a href="#blog" class="nav-link">Blog</a></li>
+                <li class="mobile-only-item" id="mobile-login-item">
+                    <a href="kirish.html" class="nav-link login-mobile-link">Kirish &rarr;</a>
+                </li>
+                <li class="mobile-only-item" id="mobile-profile-item" style="display: none;">
+                    <a href="kirish.html" class="nav-link profile-mobile-link">
+                        <img src="https://img.icons8.com/fluency/48/user-male-circle.png" alt="Profile" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 6px;">
+                        Profil
+                    </a>
+                </li>
+                <li class="mobile-only-item" id="mobile-order-item" style="margin-top: 15px; width: 100%; display: none;">
+                    <button class="order-btn mobile-order-btn" onclick="window.location.href='buyordashbord.html'" style="width: 100%; justify-content: center;">Buyurtma berish</button>
+                </li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <!-- Logged out: show only Kirish -->
+            <a href="kirish.html" class="login-link" id="header-login-btn">Kirish &rarr;</a>
+            
+            <!-- Logged in: show Profil and Buyurtma berish -->
+            <a href="kirish.html" class="profile-link" id="header-profile-btn" style="display: none;">
+                <img src="https://img.icons8.com/fluency/48/user-male-circle.png" alt="Profile" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 6px;">
+                <span>Profil</span>
+            </a>
+            <button class="order-btn" id="header-order-btn" onclick="window.location.href='buyordashbord.html'" style="display: none;">Buyurtma berish</button>
+        </div>
+        <button class="hamburger-menu" id="mobile-menu-toggle" aria-label="Menyuni ochish">
+            <span class="bar bar-1"></span>
+            <span class="bar bar-2"></span>
+            <span class="bar bar-3"></span>
+        </button>
+    </header>
+
+    <main>
+        <!-- ==================== HERO (SEC-1) ==================== -->
+        <section class="hero-section">
+            <!-- Decorative floating shapes -->
+            <div class="hero-decor" aria-hidden="true">
+                <div class="hero-shape hero-shape-1"></div>
+                <div class="hero-shape hero-shape-2"></div>
+                <div class="hero-shape hero-shape-3"></div>
+                <div class="hero-shape hero-shape-4"></div>
+                <div class="hero-shape hero-shape-5"></div>
+            </div>
+            <div class="hero-left fade-up">
+                <button class="hero-badge">
+                    <span class="badge-shine"></span>
+                    🏠 MAHALLLADAGI ENG YAXSHI OSHXONA
+                </button>
+                <h1 class="text-gradient">Uyda pishirilgan, yurakdan tayyorlangan</h1>
+                <p class="hero-desc">Sog'lom va mazali taomlar endi qo'shningizning oshxonasidan to'g'ridan-to'g'ri stolingizga. O'zingizga qadrdon bo'lgan haqiqiy uy ta'mini his qiling.</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="window.location.href='buyordashbord.html'">
+                        <span>Bugungi menyuni ko'rish</span>
+                        <img src="https://img.icons8.com/fluency/48/bento.png" alt="Bento" style="width: 22px; height: 22px; vertical-align: middle; margin-left: 6px;">
+                    </button>
+                    <button class="btn-secondary btn-ripple" onclick="window.location.href='oshpazlarOnboard.html'">Men oshpaz bo'laman →</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item scale-in">
+                        <h2>340+</h2>
+                        <p>uy oshpazi</p>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item scale-in" style="animation-delay: 0.1s;">
+                        <h2>12</h2>
+                        <p>mahalla</p>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item scale-in" style="animation-delay: 0.2s;">
+                        <h2>4.8 ⭐</h2>
+                        <p>o'rtacha baho</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-right fade-in">
+                <div class="hero-img-wrapper">
+                    <img src="./Container (1).svg" alt="Qozon platformasi" class="hero-img">
+                </div>
+            </div>
+        </section>
+
+        <!-- Section divider: wave -->
+        <div class="section-divider wave-divider" aria-hidden="true">
+            <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+                <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+            </svg>
+        </div>
+
+        <!-- ==================== HOW IT WORKS (SEC-2) ==================== -->
+        <section class="how-section" id="how-it-works">
+            <div class="countdown-badge">
+                <img src="https://img.icons8.com/fluency/48/hourglass.png" alt="Yangi menyu taymeri" style="width:18px; height:18px; vertical-align:middle; margin-right:6px;">YANGI MENYU: <span id="countdown-timer">00:00:00</span>
+            </div>
+            <h2 class="fade-up">Qanday ishlaydi?</h2>
+            <p class="section-subtitle fade-up">Sizning sevimli taomingizgacha atigi 3 qadam</p>
+            <div class="steps-grid">
+                <div class="step-card fade-up">
+                    <div class="step-number">01</div>
+                    <span class="step-icon"><img src="https://img.icons8.com/fluency/48/marker.png" alt="Mahalla"></span>
+                    <h3>Mahallangizni tanlang</h3>
+                    <p>Yaqin atrofdagi oshpazlarni topish uchun manzilingizni kiriting.</p>
+                </div>
+                <div class="step-connector" aria-hidden="true">
+                    <div class="connector-line"></div>
+                    <div class="connector-dot"></div>
+                </div>
+                <div class="step-card fade-up" style="animation-delay: 0.15s;">
+                    <div class="step-number">02</div>
+                    <span class="step-icon"><img src="https://img.icons8.com/fluency/48/restaurant-menu.png" alt="Jonli menyu"></span>
+                    <h3>Bugungi menyuni ko'ring</h3>
+                    <p>Har kuni oshpazlarimiz tomonidan tayyorlanadigan yangi va xilma-xil taomlar.</p>
+                </div>
+                <div class="step-connector" aria-hidden="true">
+                    <div class="connector-line"></div>
+                    <div class="connector-dot"></div>
+                </div>
+                <div class="step-card fade-up" style="animation-delay: 0.3s;">
+                    <div class="step-number">03</div>
+                    <span class="step-icon"><img src="https://img.icons8.com/fluency/48/delivery.png" alt="Yetkazib berish"></span>
+                    <h3>Buyurtma va olish</h3>
+                    <p>Issiq holida uyingizga yetkazamiz yoki o'zingiz olib ketishingiz mumkin.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section divider: curve -->
+        <div class="section-divider curve-divider" aria-hidden="true">
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none">
+                <path d="M0,0 L0,30 Q720,60 1440,30 L1440,0 Z" fill="#ffffff"/>
+            </svg>
+        </div>
+
+        <!-- ==================== CHEFS (SEC-3) ==================== -->
+        <section class="chefs-section" id="chefs">
+            <div class="chefs-bg-pattern" aria-hidden="true"></div>
+            <h2 class="fade-up">Saralangan Oshpazlar</h2>
+            <p class="section-subtitle fade-up">Oshxonasi bilan mashhur bo'lgan qo'shnilaringiz</p>
+            <div class="chefs-grid"></div>
+            <button id="load-more-chefs" class="load-more-btn fade-up" style="display:none;">
+                <span class="btn-text">Ko'proq ko'rish</span>
+                <svg class="btn-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 4 6 7 9 4"></polyline></svg>
+            </button>
+        </section>
+
+        <!-- Section divider: wave -->
+        <div class="section-divider wave-divider wave-divider-reverse" aria-hidden="true">
+            <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+                <path d="M0,40 C360,0 720,80 1080,40 C1260,20 1380,30 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+            </svg>
+        </div>
+
+        <!-- ==================== LIVE MENU (SEC-4) ==================== -->
+        <section class="menu-section" id="menu">
+            <h2 class="fade-up">Bugungi Jonli Menyu</h2>
+            <p class="section-subtitle fade-up">Hozirda pishirilayotgan issiq taomlar</p>
+            <div class="categories-container fade-up">
+                <div class="categories-slider">
+                    <button class="category-btn active" data-filter="all">
+                        <img class="category-icon-img" src="https://img.icons8.com/fluency/48/restaurant.png" alt="Hammasi">
+                        <span>Hammasi</span>
+                    </button>
+                    <button class="category-btn" data-filter="suyuq">
+                        <img class="category-icon-img" src="https://img.icons8.com/fluency/48/soup-plate.png" alt="Suyuq taomlar">
+                        <span>Suyuq taomlar</span>
+                    </button>
+                    <button class="category-btn" data-filter="quyuq">
+                        <img class="category-icon-img" src="https://img.icons8.com/fluency/48/rice-bowl.png" alt="Quyuq taomlar">
+                        <span>Quyuq taomlar</span>
+                    </button>
+                    <button class="category-btn" data-filter="somsa-non">
+                        <img class="category-icon-img" src="https://img.icons8.com/fluency/48/bread.png" alt="Somsa &amp; Non">
+                        <span>Somsa &amp; Non</span>
+                    </button>
+                    <button class="category-btn" data-filter="salatlar">
+                        <img class="category-icon-img" src="https://img.icons8.com/fluency/48/salad.png" alt="Salatlar">
+                        <span>Salatlar</span>
+                    </button>
+                </div>
+            </div>
+            <div class="menu-grid"></div>
+            <div class="see-more-container">
+                <button id="see-more-btn" class="see-more-btn fade-up">
+                    <span class="btn-text">Ko'proq ko'rish</span>
+                    <svg class="btn-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 4 6 7 9 4"></polyline></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section divider: curve -->
+        <div class="section-divider curve-divider" aria-hidden="true">
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none">
+                <path d="M0,0 L0,30 Q720,60 1440,30 L1440,0 Z" fill="#ffffff"/>
+            </svg>
+        </div>
+
+        <!-- ==================== TRUST (SEC-5) ==================== -->
+        <section class="trust-section">
+            <div class="trust-bg-pattern" aria-hidden="true"></div>
+            <div class="trust-grid">
+                <div class="trust-card fade-up">
+                    <div class="trust-icon-wrap">
+                        <span class="trust-icon"><img src="https://img.icons8.com/fluency/48/ok.png" alt="Tekshirilgan oshpazlar"></span>
+                    </div>
+                    <h4>Tekshirilgan oshpazlar</h4>
+                    <p>Har bir oshpaz sanitariya va sifat tekshiruvidan o'tadi.</p>
+                </div>
+                <div class="trust-card fade-up" style="animation-delay: 0.1s;">
+                    <div class="trust-icon-wrap">
+                        <span class="trust-icon"><img src="https://img.icons8.com/fluency/48/star.png" alt="Haqiqiy sharhlar"></span>
+                    </div>
+                    <h4>Haqiqiy sharhlar</h4>
+                    <p>Faqat buyurtma bergan foydalanuvchilar baho bera oladi.</p>
+                </div>
+                <div class="trust-card fade-up" style="animation-delay: 0.2s;">
+                    <div class="trust-icon-wrap">
+                        <span class="trust-icon"><img src="https://img.icons8.com/fluency/48/leaf.png" alt="Sarxillik kafolati"></span>
+                    </div>
+                    <h4>Sarxillik kafolati</h4>
+                    <p>Taomlar faqat buyurtma tushgandan so'ng yangi pishiriladi.</p>
+                </div>
+                <div class="trust-card fade-up" style="animation-delay: 0.3s;">
+                    <div class="trust-icon-wrap">
+                        <span class="trust-icon"><img src="https://img.icons8.com/fluency/48/wallet.png" alt="To'lov qaytarish"></span>
+                    </div>
+                    <h4>To'lov qaytarish</h4>
+                    <p>Sifat kutilganidek bo'lmasa, pulingizni qaytarib beramiz.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section divider: wave -->
+        <div class="section-divider wave-divider" aria-hidden="true">
+            <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+                <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+            </svg>
+        </div>
+
+        <!-- ==================== EARN (SEC-6) ==================== -->
+        <section class="earn-section">
+            <div class="earn-bg-pattern" aria-hidden="true"></div>
+            <div class="earn-inner">
+                <div class="earn-text fade-up">
+                    <h2>O'z oshxonangizdan daromad qiling</h2>
+                    <p>Uyda pishirishga qiziqasizmi? Qozon orqali qo'shnilaringizga mazali taomlar ulashing va pul ishlang.</p>
+                    <button class="earn-btn btn-ripple" onclick="window.location.href='oshpazlarOnboard.html'">Oshpaz bo'lib ro'yxatdan o'tish</button>
+                </div>
+                <div class="calculator-card glass-card fade-up">
+                    <h3 class="calc-title">Daromad kalkulyatori</h3>
+                    <div class="calc-row">
+                        <span class="calc-label">Kunlik buyurtmalar soni</span>
+                        <span class="calc-value" id="current-orders">25 ta</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="5" max="50" value="25" class="range-slider" id="order-slider">
+                    </div>
+                    <div class="range-limits">
+                        <span>5 ta</span>
+                        <span>50 ta</span>
+                    </div>
+                    <div class="calc-divider"></div>
+                    <div class="calc-result">
+                        <div class="result-label">Oylik daromadingiz</div>
+                        <div class="result-amount" id="result-display">8,500,000 UZS+</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section divider: wave -->
+        <div class="section-divider wave-divider wave-divider-reverse" aria-hidden="true">
+            <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+                <path d="M0,40 C360,0 720,80 1080,40 C1260,20 1380,30 1440,40 L1440,80 L0,80 Z" fill="#fffbf9"/>
+            </svg>
+        </div>
+
+        <!-- ==================== MAP ==================== -->
+        <section class="location-section">
+            <div class="location-header fade-up">
+                <h2>Biz qayerdamiz?</h2>
+                <p>Toshkentning 12 ta tumanida xizmat ko'rsatamiz</p>
+            </div>
+            <div class="map-container fade-in">
+                <iframe
+                    class="google-map-iframe"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.457193630653!2d69.25141077656206!3d41.29023250181518!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8ad000000001%3A0xe506822c608f6c31!2sPDP%20Junior!5e0!3m2!1suz!2s!4v1718180000000!5m2!1suz!2s"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Qozon xizmat ko'rsatish hududlari">
+                </iframe>
+                <div class="map-vignette" aria-hidden="true"></div>
+                <div class="map-overlay">
+                    <div class="location-badge">
+                        <span class="pin-icon pulse-ring-wrap">
+                            <span class="pulse-ring" aria-hidden="true"></span>
+                            <i class="fa-solid fa-location-dot"></i>
+                        </span>
+                        <span>Qozon</span>
+                    </div>
+                </div>
+                <!-- Decorative map corners -->
+                <div class="map-corner map-corner-tl" aria-hidden="true"></div>
+                <div class="map-corner map-corner-tr" aria-hidden="true"></div>
+                <div class="map-corner map-corner-bl" aria-hidden="true"></div>
+                <div class="map-corner map-corner-br" aria-hidden="true"></div>
+            </div>
+        </section>
+
+        <!-- Section divider: wave -->
+        <div class="section-divider wave-divider" aria-hidden="true" style="background: var(--bg-warm); margin-bottom: -1px;">
+            <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+                <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+            </svg>
+        </div>
+
+        <!-- ==================== CTA (SEC-8) ==================== -->
+        <section class="cta-section">
+            <div class="cta-bg-animated" aria-hidden="true"></div>
+            <div class="cta-particles" aria-hidden="true">
+                <span class="cta-particle cta-particle-1">🍖</span>
+                <span class="cta-particle cta-particle-2">🥘</span>
+                <span class="cta-particle cta-particle-3">🍚</span>
+                <span class="cta-particle cta-particle-4">🫓</span>
+                <span class="cta-particle cta-particle-5">🍲</span>
+                <span class="cta-particle cta-particle-6">🥗</span>
+                <span class="cta-particle cta-particle-7">🧆</span>
+                <span class="cta-particle cta-particle-8">🥙</span>
+            </div>
+            <h2 class="cta-title fade-up">Sog'ingan ta'mingiz bir tugma masofasida</h2>
+            <p class="cta-subtitle fade-up">Sevimli oshpazlaringizdan issiqgina milliy va yevropa taomlari. Hoziroq buyurtma bering va uyingizgacha yetkazib beramiz!</p>
+            <div class="cta-buttons fade-up">
+                <button class="cta-btn-primary btn-shimmer" onclick="window.location.href='buyordashbord.html'"><i class="fa-solid fa-bag-shopping"></i> Hoziroq buyurtma bering</button>
+                <a href="https://play.google.com/store/games?hl=en" target="_blank" rel="noopener">
+                    <button class="cta-btn-secondary btn-shimmer"><i class="fa-solid fa-mobile-screen-button"></i> Ilovani yuklash</button>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="main-footer">
+        <div class="footer-gradient-border" aria-hidden="true"></div>
+        <div class="footer-container">
+            <div class="footer-column brand-info">
+                <div class="footer-logo">
+                    <span class="footer-logo-icon"><i class="fa-solid fa-fire-burner"></i></span>
+                    <h2>qozon</h2>
+                </div>
+                <p class="brand-desc">Mahallangizdagi eng mazali uy taomlarini yetkazib beruvchi platforma.</p>
+                <div class="social-links">
+                    <a href="#" class="social-btn" aria-label="Vebsayt"><i class="fa-solid fa-globe"></i></a>
+                    <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="social-btn" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Kompaniya</h3>
+                <ul>
+                    <li><a href="#">Biz haqimizda</a></li>
+                    <li><a href="#">Oshpazlarimiz</a></li>
+                    <li><a href="#">Vakansiyalar</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Yordam</h3>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Bog'lanish</a></li>
+                    <li><a href="#">Maxfiylik siyosati</a></li>
+                    <li><a href="#">Foydalanish shartlari</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Hoziroq qo'shiling</h3>
+                <p class="sub-text">Yangiliklar va chegirmalardan xabardor bo'ling.</p>
+                <form class="subscribe-form">
+                    <input type="email" placeholder="Emailingiz" required>
+                    <button type="submit" class="sub-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Qozon. Mazali va barakali. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+
+    <div class="menu-overlay" id="mobile-menu-overlay"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./script.js"></script>
+    <script>
+        // Fail-safe backup loader remover
+        (function() {
+            var hide = function() {
+                var loader = document.getElementById('site-loader');
+                if (loader && !loader.dataset.animated) {
+                    loader.dataset.animated = 'true';
+                    setTimeout(function() {
+                        loader.style.opacity = '0';
+                        loader.style.visibility = 'hidden';
+                        document.body.classList.remove('loader-active');
+                    }, 1000);
+                }
+            };
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                hide();
+            } else {
+                document.addEventListener('DOMContentLoaded', hide);
+            }
+            window.addEventListener('load', hide);
+            // Absolute backup: 4 seconds maximum
+            setTimeout(hide, 4000);
+        })();
+    </script>
+</body>
+
+</html>

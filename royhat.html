@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qozon — Ro'yxatdan o'tish</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./royhat.css" />
+  </head>
+  <body>
+    <div class="reg-container">
+      <div class="reg-banner">
+        <div class="reg-logo">qozon</div>
+
+        <div class="reg-features">
+          <div class="reg-feat-item">
+            <i class="fa-solid fa-circle-check reg-feat-icon"></i>
+            <div class="reg-feat-text">
+              <h3>Yangi va issiq taomlar</h3>
+              <p>
+                Har bir buyurtma faqat oshpazlarimiz tomonidan buyurtma
+                olingandan so'ng tayyorlanadi.
+              </p>
+            </div>
+          </div>
+
+          <div class="reg-feat-item">
+            <i class="fa-solid fa-utensils reg-feat-icon"></i>
+            <div class="reg-feat-text">
+              <h3>Uy sharoitidagi lazzat</h3>
+              <p>
+                Restoranlardan charchaganlar uchun haqiqiy uy taomlari
+                platformasi.
+              </p>
+            </div>
+          </div>
+
+          <div class="reg-feat-item">
+            <i class="fa-solid fa-truck reg-feat-icon"></i>
+            <div class="reg-feat-text">
+              <h3>Tezkor yetkazib berish</h3>
+              <p>
+                Oshpaz qozonni o'chirishi bilan kurerimiz eshingiz oldida
+                bo'ladi.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reg-testimonial">
+          <div class="reg-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="reg-review">
+            "Qozon orqali buyurtma berish xuddi onamning uyiga borgandek his
+            beradi. Taomlar doim issiq va juda mazali. Oshpazlarning mehri
+            sezilib turadi!"
+          </p>
+          <div class="reg-user">
+            <img
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop"
+              alt="Malika"
+              class="reg-avatar"
+            />
+            <div class="reg-user-info">
+              <h4>Malika Ahmadova</h4>
+              <p>Doimiy mijoz</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-form-side">
+        <div class="reg-form-wrapper">
+          <div class="theme-toggle-container">
+            <button class="theme-toggle-btn" id="themeToggle">
+              <i class="fa-solid fa-moon"></i>
+            </button>
+          </div>
+          <h2>Xush kelibsiz!</h2>
+          <p class="reg-subtitle">
+            Ro'yxatdan o'tish uchun quyidagi ma'lumotlarni to'ldiring.
+          </p>
+
+          <div class="reg-tabs">
+            <div class="reg-tab-box active" data-role="user">
+              <div class="reg-tab-icon">
+                <i class="fa-solid fa-cart-shopping"></i>
+              </div>
+              <span>Xaridor</span>
+            </div>
+            <div class="reg-tab-box" data-role="chef">
+              <div class="reg-tab-icon"><i class="fa-solid fa-store"></i></div>
+              <span>Oshpaz</span>
+            </div>
+          </div>
+
+          <form id="mainRegisterForm">
+            <div class="reg-group">
+              <label>To'liq ismingiz</label>
+              <input
+                type="text"
+                id="regFullName"
+                placeholder="Masalan: Abror Alimov"
+                required
+              />
+            </div>
+
+            <div class="reg-group">
+              <label>Elektron pochta</label>
+              <div class="input-wrapper">
+                <i class="fa-regular fa-envelope input-icon"></i>
+                <input
+                  type="email"
+                  id="regEmail"
+                  placeholder="misol@qozon.uz"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="reg-group">
+              <label>Parol yaratish</label>
+              <div class="reg-pass-wrapper">
+                <input
+                  type="password"
+                  id="regPassword"
+                  placeholder="********"
+                  required
+                />
+                <i class="fa-regular fa-eye reg-eye" id="regToggleEye"></i>
+              </div>
+            </div>
+
+            <div class="reg-terms">
+              <input type="checkbox" id="regTermsCheck" required />
+              <label for="regTermsCheck">
+                Men <a href="#">Foydalanish shartlari</a> va
+                <a href="#">Maxfiylik siyosati</a> bilan tanishib chiqdim va
+                roziman.
+              </label>
+            </div>
+
+            <button type="submit" class="reg-submit-btn">
+              Davom etish <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </form>
+
+          <p class="reg-login-link">
+            Hisobingiz bormi? <a href="index.html">Kirish</a>
+          </p>
+
+          <div class="reg-divider">
+            <span>Yoki quyidagilar bilan</span>
+          </div>
+
+          <div class="reg-social-row">
+            <button type="button" class="reg-social-btn" id="regGoogleBtn">
+              <svg viewBox="0 0 24 24" width="16" height="16">
+                <path
+                  fill="#4285F4"
+                  d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.61c-.29 1.53-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.65-5.17 3.65-8.58z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.15C3.18 21.88 7.31 24 12 24z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.32 14.24A7.16 7.16 0 0 1 5 12c0-.79.13-1.57.32-2.34V6.51H1.21A11.94 11.94 0 0 0 0 12c0 1.92.45 3.74 1.21 5.39l4.11-3.15z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 5.39l4.11 3.15c.94-2.85 3.57-4.96 6.68-4.96z"
+                />
+              </svg>
+              Google
+            </button>
+            <button type="button" class="reg-social-btn" id="regFacebookBtn">
+              <i
+                class="fa-brands fa-square-facebook"
+                style="color: #1877f2; font-size: 18px"
+              ></i>
+              Facebook
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./royhat.js"></script>
+  </body>
+</html>

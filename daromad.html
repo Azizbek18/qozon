@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon - Daromad Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="daromad.css">
+</head>
+<body>
+
+<!-- HEADER WITH BURGER MENU -->
+<header class="header">
+    <div class="header-container">
+        <a href="index.html" class="logo">qozon</a>
+        
+        <!-- Burger tugmasi (faqat mobilda ko'rinadi) -->
+        <button class="burger-btn" id="burger-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Navigatsiya va tugma bloki -->
+        <div class="nav-wrapper" id="mobile-menu">
+            <nav class="nav-links">
+                <a href="index.html#how-it-works">Qanday ishlaydi</a>
+                <a href="index.html#chefs">Oshpazlar</a>
+                <a href="buyordashbord.html">Menyu</a>
+                <a href="daromad.html" class="active">Daromad</a>
+            </nav>
+            <button class="btn-order" onclick="window.location.href='buyordashbord.html'">Buyurtma berish</button>
+        </div>
+    </div>
+</header>
+
+    <main class="main-container">
+        
+        <div class="dashboard-grid-top">
+            
+            <div class="left-column">
+                <div class="card balance-card">
+                    <p class="card-label">Umumiy balans</p>
+                    <h2 class="balance-amount">3,240,000 <span>so'm</span></h2>
+                    <div class="badge">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +32.5% o'tgan oyga nisbatan
+                    </div>
+                    <button class="btn-withdraw">
+                        <i class="fa-solid fa-wallet"></i> Pul yechib olish
+                    </button>
+                </div>
+
+                <div class="card calculator-card">
+                    <h3>Daromad kalkulyatori</h3>
+                    <div class="calc-row">
+                        <span>Kunlik buyurtma soni</span>
+                        <span class="calc-value" id="order-count-val">15</span>
+                    </div>
+                    <input type="range" id="order-slider" min="1" max="50" value="15" class="slider">
+                    
+                    <div class="estimated-box">
+                        <p>Taxminiy oylik daromad:</p>
+                        <h4 id="estimated-income">4,500,000 so'm</h4>
+                    </div>
+                </div>
+            </div>
+
+          <div class="card stats-card">
+    <div class="stats-header">
+        <h3 id="stats-title">Haftalik statistika</h3>
+        <div class="toggle-buttons">
+            <button class="btn-toggle active">Hafta</button>
+            <button class="btn-toggle">Oy</button>
+        </div>
+    </div>
+    <div class="chart-container">
+        <div class="chart-placeholder" id="chart-bars-wrapper"></div>
+    </div>
+</div>
+
+            <div class="right-column">
+                <div class="card popular-card">
+                    <h3><i class="fa-regular fa-star" style="color: #e2b13c;"></i> Eng ommabop taomlar</h3>
+                    <div class="food-list">
+                        <div class="food-item">
+                            <span class="rank rank-1">1</span>
+                            <div class="food-info">
+                                <strong>Choyxona Palov</strong>
+                                <p>142 ta buyurtma</p>
+                            </div>
+                            <i class="fa-solid fa-trophy trophy-1"></i>
+                        </div>
+                        <div class="food-item">
+                            <span class="rank rank-2">2</span>
+                            <div class="food-info">
+                                <strong>Somsa (Go'shtli)</strong>
+                            </div>
+                            <i class="fa-solid fa-trophy trophy-2"></i>
+                        </div>
+                        <div class="food-item">
+                            <span class="rank rank-3">3</span>
+                            <div class="food-info">
+                                <strong>Manti (Qovoq bilan)</strong>
+                            </div>
+                            <i class="fa-solid fa-trophy trophy-3"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card invite-card">
+                    <h3>Oshpaz do'stingizni taklif qiling</h3>
+                    <p>Har bir yangi oshpaz uchun 100,000 so'm bonus oling.</p>
+                    <div class="referral-code-box">
+                        <span id="ref-code">QOZON-ASH-2024</span>
+                        <button id="btn-copy" title="Nusxalash"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="dashboard-grid-bottom">
+            
+            <div class="card transactions-card">
+                <div class="trans-header">
+                    <h3>So'nggi amaliyotlar</h3>
+                    <a href="#" class="view-all">Barchasini ko'rish</a>
+                </div>
+                <div class="trans-list">
+                    <div class="trans-item">
+                        <div class="user-avatar">JT</div>
+                        <div class="trans-details">
+                            <strong>Jasur T. <span class="light-text">buyurtmasidan</span></strong>
+                            <p>Bugun, 14:20 • #QZ-0021</p>
+                        </div>
+                        <div class="trans-amount positive">
+                            +25,200 so'm
+                            <span class="fee">Komissiya: -2,800</span>
+                        </div>
+                    </div>
+                    <div class="trans-item">
+                        <div class="user-avatar">MR</div>
+                        <div class="trans-details">
+                            <strong>Malika R. <span class="light-text">buyurtmasidan</span></strong>
+                            <p>Bugun, 11:45 • #QZ-8815</p>
+                        </div>
+                        <div class="trans-amount positive">
+                            +18,900 so'm
+                            <span class="fee">Komissiya: -2,100</span>
+                        </div>
+                    </div>
+                    <div class="trans-item">
+                        <div class="icon-avatar withdraw"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+                        <div class="trans-details">
+                            <strong>Pul yechib olish</strong>
+                            <p>Kecha, 18:30 • Kartaga (8600 ... 4412)</p>
+                        </div>
+                        <div class="trans-amount negative">
+                            -1,500,000 so'm
+                            <span class="status-success">Muvaffaqiyatli</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card payment-card">
+                <h3>To'lov usullari</h3>
+                <div class="cards-stack">
+                    <div class="payment-bank-card uzcard active">
+                        <div class="card-top">
+                            <span>UZCARD</span>
+                            <i class="fa-solid fa-wifi"></i>
+                        </div>
+                        <div class="card-number">8600 00** **** 4412</div>
+                        <div class="card-bottom">
+                            <span>XALQ BANKI</span>
+                            <div class="checked-circle"><i class="fa-solid fa-check"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="payment-bank-card humo">
+                        <div class="humo-mini-info">
+                            <span class="humo-badge">HUMO</span>
+                            <div class="humo-details">
+                                <strong>9860 12** **** 1109</strong>
+                                <p>TBC Bank</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+
+                    <button class="btn-add-card">
+                        <i class="fa-solid fa-circle-plus"></i> Yangi karta qo'shish
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2>qozon</h2>
+                <p>© 2024 Qozon. Mazali va barakali.</p>
+            </div>
+            <div class="footer-links-group">
+                <h4>Platforma</h4>
+                <a href="#">Biz haqimizda</a>
+                <a href="#">Oshpazlar uchun</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="footer-links-group">
+                <h4>Yordam</h4>
+                <a href="#">Bog'lanish</a>
+                <a href="#">FAQ</a>
+                <a href="#">Xavfsizlik</a>
+            </div>
+            <div class="footer-links-group">
+                <h4>Huquqiy</h4>
+                <a href="#">Maxfiylik siyosati</a>
+                <a href="#">Foydalanish shartlari</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="daromad.js"></script>
+</body>
+</html>

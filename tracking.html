@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon - Buyurtma Kuzatuvi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="tracking.css">
+</head>
+<body>
+
+    <header class="sub-header">
+        <div class="sub-header-container">
+            <div class="back-section">
+                <a href="buyordashbord.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
+                <span class="page-title">Buyurtma Kuzatuvi</span>
+            </div>
+            <a href="#" class="help-icon" title="Yordam"><i class="fa-regular fa-circle-question"></i></a>
+        </div>
+    </header>
+
+    <main class="tracking-container">
+        <div class="tracking-grid">
+            
+            <div class="tracking-left">
+                
+                <div class="track-card status-card">
+                    <h3>Buyurtma Holati</h3>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item completed">
+                            <div class="timeline-dot-wrapper">
+                                <div class="dot"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <span class="status-name">Qabul qilindi</span>
+                                <span class="status-time">12:45</span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item completed">
+                            <div class="timeline-dot-wrapper">
+                                <div class="dot"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <span class="status-name">Tayyorlanmoqda</span>
+                                <span class="status-time">13:05</span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item active">
+                            <div class="timeline-dot-wrapper">
+                                <div class="dot"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <span class="status-name">Yo'lda</span>
+                                <span class="status-time highlight">Kutilmoqda: 13:35</span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item pending">
+                            <div class="timeline-dot-wrapper">
+                                <div class="dot"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <span class="status-name">Yetkazib berildi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="track-card food-detail-card">
+                    <div class="food-info-row">
+                        <div class="food-img-placeholder">
+                            <i class="fa-solid fa-bowl-rice"></i>
+                        </div>
+                        <div class="food-text">
+                            <span class="food-title">To'y Oshi (Maxsus)</span>
+                            <span class="chef-name">Oshpaz: Malika opa</span>
+                        </div>
+                    </div>
+                    <div class="time-row">
+                        <span class="time-label">Taxminiy vaqt</span>
+                        <span class="time-value">13:35</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tracking-right">
+                
+                <div class="map-wrapper">
+                    <div class="map-placeholder">
+                        
+                        <div class="map-marker chef-marker" style="top: 25%; left: 50%;">
+                            <span class="marker-label">Malika opa</span>
+                            <div class="marker-pin"><i class="fa-solid fa-location-dot"></i></div>
+                        </div>
+
+                        <div class="moving-courier" style="top: 45%; left: 66%;">
+                            <i class="fa-solid fa-motorcycle"></i>
+                        </div>
+
+                        <div class="map-marker user-marker" style="top: 60%; left: 80%;">
+                            <span class="marker-label">Sizning manzilingiz</span>
+                            <div class="marker-pin"><i class="fa-solid fa-location-pin"></i></div>
+                        </div>
+
+                        <svg class="map-route-line">
+                            <line x1="50%" y1="25%" x2="80%" y2="60%" />
+                        </svg>
+
+                        <div class="map-controls">
+                            <button class="ctrl-btn"><i class="fa-solid fa-plus"></i></button>
+                            <button class="ctrl-btn"><i class="fa-solid fa-minus"></i></button>
+                            <button class="ctrl-btn target-btn"><i class="fa-solid fa-crosshairs"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="track-card courier-card">
+                    <div class="courier-profile">
+                        <div class="courier-avatar">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <div class="courier-info">
+                            <span class="role-label">Kuryer</span>
+                            <span class="courier-name">Dilshod</span>
+                            <span class="courier-rating"><i class="fa-solid fa-star"></i> 4.9 <span class="order-count">(120+ buyurtma)</span></span>
+                        </div>
+                    </div>
+                    <div class="courier-actions">
+                        <button class="btn-action btn-sms"><i class="fa-regular fa-comment-dots"></i> SMS</button>
+                        <button class="btn-action btn-call"><i class="fa-solid fa-phone"></i> Qo'ng'iroq</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="mini-footer">
+        <div class="mini-footer-container">
+            <div class="footer-left-links">
+                <span class="brand">Qozon</span>
+                <a href="#">Biz haqimizda</a>
+                <a href="#">Maxfiylik siyosati</a>
+                <a href="#">Xavfsizlik standartlari</a>
+            </div>
+            <div class="footer-copyright">
+                © 2024 Qozon Marketplace. Made with love for home cooking.
+            </div>
+        </div>
+    </footer>
+
+    <script src="tracking.js"></script>
+</body>
+</html>

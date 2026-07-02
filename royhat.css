@@ -1,0 +1,895 @@
+/* --- 1. DIZAYN TIZIMI VA O'ZGARUVCHILAR --- */
+:root {
+    --primary-color: #cb2c3e;
+    --primary-hover: #b02334;
+    --primary-glow: rgba(203, 44, 62, 0.08);
+    --bg-light: #fffcf9;
+    --text-dark: #1a1a1a;
+    --text-muted: #6c757d;
+    --input-bg: #ffffff;
+    --input-border: #efe3dc;
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tungi rejim o'zgaruvchilari (Global boshqaruv uchun) */
+body.dark-mode {
+    --bg-light: #121212;
+    --text-dark: #ffffff;
+    --text-muted: #a0a0a0;
+    --input-bg: #1e1e1e;
+    --input-border: #333333;
+}
+
+/* --- 2. ASOSIY GLOBAL STILLAR --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+    /* Umumiy brauzer skrollini o'chiramiz */
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Asosiy konteyner */
+.reg-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-light);
+    box-shadow: 0 25px 60px rgba(110, 23, 15, 0.06);
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+/* --- 3. CHAP TOMON (MUTLAQ QOTIB TURUVCHI BANNER) --- */
+.reg-banner {
+    flex: 1;
+    background: radial-gradient(circle at top left, #b02334 0%, #6e170f 100%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.reg-banner::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: rgba(252, 163, 102, 0.08);
+    border-radius: 50%;
+    bottom: -50px;
+    left: -50px;
+    filter: blur(40px);
+    pointer-events: none;
+}
+
+.reg-logo {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    letter-spacing: -0.5px;
+}
+
+.reg-features {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.reg-feat-item {
+    display: flex;
+    gap: 18px;
+    transition: transform 0.3s ease;
+}
+
+.reg-feat-item:hover {
+    transform: translateX(5px);
+}
+
+.reg-feat-icon {
+    color: #fca366;
+    font-size: 22px;
+    margin-top: 2px;
+    background: rgba(252, 163, 102, 0.1);
+    padding: 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    width: 42px;
+    flex-shrink: 0;
+}
+
+.reg-feat-text h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+.reg-feat-text p {
+    font-size: 13.5px;
+    opacity: 0.85;
+    line-height: 1.6;
+}
+
+/* Testimonial oyna */
+.reg-testimonial {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 22px;
+    margin-top: auto;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.reg-stars {
+    color: #ffb800;
+    font-size: 12px;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+}
+
+.reg-review {
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin-bottom: 14px;
+}
+
+.reg-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.reg-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.reg-user-info h4 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.reg-user-info p {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* --- 4. O'NG TOMON (FORMA VA SKROLL QISMI) --- */
+.reg-form-side {
+    flex: 1.2;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 24px;
+    background-color: var(--bg-light);
+    overflow-y: auto;
+    height: 100vh;
+    transition: var(--transition-smooth);
+}
+
+/* Skrollbarni chiroyli qilish */
+.reg-form-side::-webkit-scrollbar {
+    width: 6px;
+}
+
+.reg-form-side::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.reg-form-side::-webkit-scrollbar-thumb {
+    background: var(--input-border);
+    border-radius: 4px;
+}
+
+.reg-form-side::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+.reg-form-wrapper {
+    width: 100%;
+    max-width: 520px;
+    margin-bottom: 40px;
+}
+
+.reg-form-wrapper h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.reg-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+/* --- 5. INTERFEYS ELEMENTLARI (TABLAR VA INPUTLAR) --- */
+.reg-tabs {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.reg-tab-box {
+    flex: 1;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition-smooth);
+}
+
+.reg-tab-box:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(203, 44, 62, 0.05);
+}
+
+.reg-tab-icon {
+    width: 44px;
+    height: 44px;
+    background: #fff0ea;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary-color);
+    font-size: 16px;
+    transition: var(--transition-smooth);
+}
+
+body.dark-mode .reg-tab-box:not(.active) .reg-tab-icon {
+    background: #2d2d2d;
+    color: #fca366;
+}
+
+.reg-tab-box span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* Tab aktiv holati */
+.reg-tab-box.active {
+    border-color: var(--primary-color);
+    background: #fff8f8;
+    box-shadow: 0 8px 25px rgba(203, 44, 62, 0.08);
+}
+
+body.dark-mode .reg-tab-box.active {
+    background: #1a1011;
+}
+
+.reg-tab-box.active .reg-tab-icon {
+    background: var(--primary-color);
+    color: white;
+}
+
+.reg-tab-box.active span {
+    color: var(--primary-color);
+}
+
+/* Input guruhlari strukturasi */
+.reg-group {
+    margin-bottom: 18px;
+}
+
+.reg-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+/* YANGI: Mukammal ikonkalik input wrapper tizimi */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 16px 20px 16px 50px;
+    border: 2px solid var(--input-border);
+    border-radius: 14px;
+    font-size: 15px;
+    background-color: var(--input-bg);
+    color: var(--text-dark);
+    outline: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-wrapper input::placeholder {
+    color: #adb5bd;
+}
+
+body.dark-mode .input-wrapper input::placeholder {
+    color: #757575;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 5px var(--primary-glow);
+    transform: translateY(-1px);
+}
+
+.input-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9c9c9c;
+    font-size: 16px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9c9c9c;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+    padding: 4px;
+}
+
+.toggle-password:hover {
+    color: var(--primary-color);
+    transform: translateY(-50%) scale(1.15);
+}
+
+.input-wrapper input:focus~.input-icon {
+    color: var(--primary-color);
+    transform: translateY(-50%) scale(1.1) rotate(-5deg);
+}
+
+.input-wrapper input:focus~.toggle-password {
+    color: var(--text-dark);
+}
+
+/* Telefon raqam inputi uchun maxsus wrapper moslashuvi */
+.reg-phone-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    background: var(--input-bg);
+    transition: var(--transition-smooth);
+    width: 100%;
+    position: relative;
+}
+
+.reg-phone-wrapper .input-icon {
+    position: absolute;
+    left: 16px;
+}
+
+.reg-prefix {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    padding-left: 42px;
+    /* Ikonkadan keyin joylashishi uchun */
+    user-select: none;
+}
+
+.reg-phone-wrapper input {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background: transparent !important;
+    padding: 14px 16px 14px 6px !important;
+}
+
+.reg-phone-wrapper:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.reg-phone-wrapper:focus-within .input-icon {
+    color: var(--primary-color);
+}
+
+/* --- 6. BONUS VA PASTKI ELEMENTLARI --- */
+.reg-sms-box {
+    background: #fff5f5;
+    border: 1px dashed rgba(203, 44, 62, 0.2);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    transition: var(--transition-smooth);
+}
+
+body.dark-mode .reg-sms-box {
+    background: #1a1011;
+    border-color: rgba(203, 44, 62, 0.4);
+}
+
+.reg-sms-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.reg-sms-title i {
+    color: var(--primary-color);
+}
+
+.reg-sms-left p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    padding-left: 24px;
+    line-height: 1.4;
+}
+
+/* IOS uslubidagi Toggle Switch */
+.reg-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.reg-switch input {
+    display: none;
+}
+
+.reg-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e2d9d5;
+    transition: .3s ease;
+    border-radius: 22px;
+}
+
+body.dark-mode .reg-slider {
+    background-color: #333333;
+}
+
+.reg-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s ease;
+    border-radius: 50%;
+}
+
+.reg-switch input:checked+.reg-slider {
+    background-color: var(--primary-color);
+}
+
+.reg-switch input:checked+.reg-slider:before {
+    transform: translateX(18px);
+}
+
+/* Shartlar */
+.reg-terms {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 24px;
+}
+
+.reg-terms input {
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    accent-color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.reg-terms a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.reg-submit-btn {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 20px rgba(203, 44, 62, 0.15);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reg-submit-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(203, 44, 62, 0.25);
+}
+
+.reg-submit-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 3px 10px rgba(203, 44, 62, 0.15);
+}
+
+.reg-login-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 16px;
+}
+
+.reg-login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+/* Ajratuvchi chiziq */
+.reg-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.reg-divider::before,
+.reg-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.reg-divider span {
+    padding: 0 12px;
+    font-size: 13px;
+    color: #adb5bd;
+}
+
+/* Ijtimoiy tarmoqlar */
+.reg-social-row {
+    display: flex;
+    gap: 14px;
+}
+
+.reg-social-btn {
+    flex: 1;
+    background: var(--input-bg);
+    border: 2px solid var(--input-border);
+    padding: 14px 20px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reg-social-btn:hover {
+    background-color: #fff8f6;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.reg-social-btn:active {
+    transform: translateY(1px);
+}
+
+
+body.dark-mode .reg-social-btn:hover {
+    background-color: #2d2d2d;
+}
+
+/* Tungi rejim tugmasi paneli */
+.theme-toggle-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.theme-toggle-btn {
+    background: var(--input-border);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #6e170f;
+    transition: var(--transition-smooth);
+}
+
+body.dark-mode .theme-toggle-btn {
+    color: #fca366;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+    background: var(--primary-color);
+    color: white;
+}
+
+/* --- 7. RESPONSIVE (MOBIL QISMI) --- */
+@media (max-width: 992px) {
+
+    html,
+    body {
+        overflow: auto;
+    }
+
+    .reg-container {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .reg-banner {
+        display: none;
+    }
+
+    .reg-form-side {
+        padding: 30px 20px;
+        overflow: visible;
+        height: auto;
+    }
+}
+
+/* "image_e0d1d8.png" dagi muammoni hal qilish uchun */
+.reg-group input {
+    width: 100%;
+    /* Kenglikni to'liq qilish */
+    padding: 16px 20px;
+    /* Ichki joyni (padding) oshirish */
+    border: 1px solid #efe3dc;
+    border-radius: 12px;
+    /* Burchaklarni yumaloqlash */
+    font-size: 15px;
+    /* Matn o'lchamini normallashtirish */
+    outline: none;
+    background-color: white;
+    /* Yoki dark mode uchun o'zgaruvchi */
+    color: #212529;
+    box-sizing: border-box;
+    /* Kenglikni to'g'ri hisoblash uchun */
+}
+
+/* Agar dark mode bo'lsa, rangni to'g'rilash */
+body.dark-mode .reg-group input {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+.reg-container {
+    /* ... avvalgi kodlar ... */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    /* Yumshoq, chuqur soya */
+}
+
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --input-bg: #ffffff;
+}
+
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #f0f0f0;
+    --input-bg: #2c2c2c;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: 0.3s;
+}
+
+.form-wrapper {
+    background-color: var(--bg-color);
+}   
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+:root {
+    --bg-body: #f4f7fe;
+    --bg-container: #ffffff;
+    --text-main: #333;
+}
+
+body.dark-mode {
+    --bg-body: #121212;
+    --bg-container: #1e1e1e;
+    --text-main: #ffffff;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+}
+/* 
+.reg-form-wrapper {
+    background-color: var(--bg-container);
+    padding: 20px;
+} */
+
+.reg-pass-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.reg-eye {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+}
+
+.reg-tab-box {
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.reg-tab-box.active {
+    border-color: #d32f2f;
+    background-color: #fff5f5;
+}
+
+.theme-toggle-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* body.dark-mode .reg-form-wrapper {
+    background-color: #1e1e1e;
+} */
+
+
+
+
+
+
+
+.theme-toggle-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.theme-toggle-btn {
+    background: #f0f0f0;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    transition: var(--transition-smooth);
+}
+
+/* Dark mode button styling */
+body.dark-mode .theme-toggle-btn {
+    background: #333;
+    color: #fca366;
+}
+
+.theme-toggle-btn:hover {
+    transform: rotate(20deg);
+}
+
+/* ==========================================================================
+   FONT AWESOME FONT-FAMILY PROTECTION OVERRIDE
+   ========================================================================== */
+.fa-solid, .fas {
+    font-family: "Font Awesome 6 Free", sans-serif !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+.fa-brands, .fab {
+    font-family: "Font Awesome 6 Brands", sans-serif !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+.fa, .far, .fal, .fad, .fa-regular {
+    font-family: "Font Awesome 6 Free", sans-serif !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}

@@ -1,0 +1,414 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon — Oshpaz Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #fff8f0; min-height: 100vh; }
+
+        /* HEADER */
+        .chef-header {
+            background: #fff;
+            border-bottom: 2px solid #f0e8e0;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(45,27,14,0.06);
+        }
+        .chef-header h1 { font-size: 20px; font-weight: 800; color: #2d1b0e; }
+        .chef-header h1 span { color: #e63946; }
+        .live-badge {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(230,57,70,0.08);
+            border: 1px solid rgba(230,57,70,0.2);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px; font-weight: 700; color: #e63946;
+        }
+        .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #e63946; animation: blink 1.2s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+        /* MAIN */
+        .chef-main { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+        .section-title {
+            font-size: 18px; font-weight: 800; color: #2d1b0e;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+        }
+        .count-badge {
+            background: #e63946; color: #fff;
+            font-size: 12px; font-weight: 700;
+            width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ORDER CARDS */
+        .orders-grid { display: flex; flex-direction: column; gap: 16px; }
+        .order-card {
+            background: #fff;
+            border-radius: 20px;
+            border: 2px solid #f0e8e0;
+            padding: 20px 24px;
+            box-shadow: 0 4px 20px rgba(45,27,14,0.06);
+            transition: all 0.2s ease;
+            animation: slideIn 0.35s ease;
+        }
+        @keyframes slideIn { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+        .order-card:hover { border-color: #e63946; box-shadow: 0 8px 28px rgba(230,57,70,0.12); }
+
+        .order-card-header {
+            display: flex; align-items: flex-start;
+            justify-content: space-between; gap: 12px;
+            margin-bottom: 16px;
+        }
+        .order-id {
+            font-size: 13px; font-weight: 700; color: #e63946;
+            background: rgba(230,57,70,0.08);
+            padding: 4px 10px; border-radius: 8px;
+        }
+        .order-time { font-size: 12px; color: #a3907c; }
+
+        .order-food-row {
+            display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+        }
+        .order-food-img {
+            width: 64px; height: 64px; border-radius: 14px;
+            object-fit: cover; border: 2px solid #f0e8e0; flex-shrink: 0;
+        }
+        .order-food-info h3 { font-size: 16px; font-weight: 700; color: #2d1b0e; }
+        .order-food-info p { font-size: 13px; color: #8b7355; margin-top: 2px; }
+        .order-food-info .price { font-size: 15px; font-weight: 700; color: #e63946; margin-top: 4px; }
+
+        .order-customer {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 12px;
+            background: #fff8f0; margin-bottom: 16px;
+        }
+        .customer-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #e63946; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 800; flex-shrink: 0;
+        }
+        .customer-info { flex: 1; }
+        .customer-info strong { font-size: 14px; color: #2d1b0e; }
+        .customer-info span { display: block; font-size: 12px; color: #8b7355; }
+
+        /* STATUS ACTIONS */
+        .status-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .status-btn {
+            flex: 1; min-width: 100px; padding: 10px 14px;
+            border: none; border-radius: 12px; cursor: pointer;
+            font-size: 13px; font-weight: 700;
+            transition: all 0.15s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .status-btn:active { transform: scale(0.97); }
+        .btn-accept {
+            background: #e63946; color: #fff;
+            border-bottom: 3px solid #9b1d20;
+            box-shadow: 0 3px 0 #9b1d20;
+        }
+        .btn-accept:hover { background: #b52d38; }
+        .btn-preparing {
+            background: #ff9f43; color: #fff;
+            border-bottom: 3px solid #e17c2f;
+            box-shadow: 0 3px 0 #e17c2f;
+        }
+        .btn-preparing:hover { background: #f0872e; }
+        .btn-ready {
+            background: #1e8449; color: #fff;
+            border-bottom: 3px solid #145a32;
+            box-shadow: 0 3px 0 #145a32;
+        }
+        .btn-ready:hover { background: #196f3d; }
+        .btn-cancel {
+            background: #f5f0eb; color: #8b7355;
+            border-bottom: 3px solid #d9cfc5;
+            box-shadow: 0 3px 0 #d9cfc5;
+        }
+        .btn-cancel:hover { background: #ede8e2; }
+        .btn-done {
+            background: #f5f0eb; color: #a3907c;
+            cursor: not-allowed; pointer-events: none;
+            border-bottom: 3px solid #d9cfc5;
+        }
+
+        /* CURRENT STATUS BADGE */
+        .current-status {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .status-pending   { background: rgba(163,144,124,0.1); color: #8b7355; }
+        .status-accepted  { background: rgba(230,57,70,0.1);   color: #e63946; }
+        .status-preparing { background: rgba(255,159,67,0.1);  color: #e17c2f; }
+        .status-ready     { background: rgba(30,132,73,0.1);   color: #1e8449; }
+        .status-picked_up,.status-delivered { background: rgba(30,132,73,0.15); color: #1e8449; }
+        .status-cancelled { background: rgba(163,144,124,0.1); color: #8b7355; text-decoration: line-through; }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center; padding: 60px 20px;
+            color: #a3907c;
+        }
+        .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+        .empty-state h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .empty-state p { font-size: 14px; }
+
+        /* LOADING */
+        .loading-spinner {
+            text-align: center; padding: 40px;
+            color: #e63946; font-size: 14px; font-weight: 600;
+        }
+        .loading-spinner i { font-size: 28px; animation: spin 1s linear infinite; display: block; margin-bottom: 12px; }
+        @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+        /* SQL ALERT */
+        .sql-alert {
+            background: rgba(230,57,70,0.06);
+            border: 1.5px dashed rgba(230,57,70,0.4);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+        .sql-alert h4 { color: #e63946; font-size: 15px; margin-bottom: 10px; }
+        .sql-alert pre {
+            background: #fff; border-radius: 10px; padding: 14px;
+            font-size: 12px; color: #2d1b0e; overflow-x: auto;
+            border: 1px solid #f0e8e0; line-height: 1.6;
+        }
+        .sql-alert p { font-size: 13px; color: #8b7355; margin-top: 10px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .chef-main { padding: 20px 16px; }
+            .status-btn { font-size: 12px; padding: 9px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="chef-header">
+    <h1>Qozon <span>Oshpaz</span> Paneli</h1>
+    <div class="live-badge">
+        <div class="live-dot"></div>
+        LIVE
+    </div>
+</header>
+
+<main class="chef-main">
+
+    <!-- Supabase jadval yo'q bo'lsa ko'rsatiladigan SQL yo'riqnoma -->
+    <div class="sql-alert" id="sqlAlert" style="display:none">
+        <h4>⚠️ Supabase da "orders" jadvali yaratilmagan</h4>
+        <p>Quyidagi SQL ni Supabase Dashboard → SQL Editor ga joylashtiring:</p>
+        <pre>create table if not exists orders (
+  id uuid primary key default gen_random_uuid(),
+  order_number text,
+  customer_name text default 'Mehmon',
+  customer_phone text,
+  food_id integer,
+  food_name text,
+  food_image text,
+  chef_name text,
+  quantity integer default 1,
+  price integer default 0,
+  total_price integer default 0,
+  status text default 'pending',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+alter table orders enable row level security;
+create policy "allow_all" on orders for all using (true) with check (true);
+alter publication supabase_realtime add table orders;</pre>
+        <p>Keyin sahifani yangilang. Buyurtmalar real-time ko'rinadi.</p>
+    </div>
+
+    <div class="section-title">
+        <i class="fas fa-shopping-bag" style="color:#e63946"></i>
+        Kelgan buyurtmalar
+        <span class="count-badge" id="pendingCount">0</span>
+    </div>
+
+    <div class="orders-grid" id="ordersGrid">
+        <div class="loading-spinner">
+            <i class="fas fa-circle-notch"></i>
+            Buyurtmalar yuklanmoqda...
+        </div>
+    </div>
+</main>
+
+<script>
+const SUPABASE_URL = 'https://usoekoycypxbcxzwoaea.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
+
+const STATUS_LABELS = {
+    pending:   '⏳ Kutilmoqda',
+    accepted:  '✅ Qabul qilindi',
+    preparing: '👨‍🍳 Tayyorlanmoqda',
+    ready:     '📦 Tayyor',
+    picked_up: '🚶 Olib ketildi',
+    delivered: '✅ Yetkazildi',
+    cancelled: '❌ Bekor qilindi'
+};
+
+let ordersCache = [];
+
+async function loadOrders() {
+    const grid = document.getElementById('ordersGrid');
+    try {
+        const resp = await fetch(
+            SUPABASE_URL + '/rest/v1/orders?select=*&order=created_at.desc&limit=30',
+            { headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY } }
+        );
+
+        if (resp.status === 400 || resp.status === 404) {
+            document.getElementById('sqlAlert').style.display = 'block';
+            grid.innerHTML = '';
+            return;
+        }
+
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+        const orders = await resp.json();
+        ordersCache = orders;
+        renderOrders(orders);
+        document.getElementById('sqlAlert').style.display = 'none';
+    } catch(err) {
+        console.error(err);
+        document.getElementById('sqlAlert').style.display = 'block';
+        grid.innerHTML = '';
+    }
+}
+
+function renderOrders(orders) {
+    const grid = document.getElementById('ordersGrid');
+    const activeOrders = orders.filter(o => !['delivered', 'picked_up', 'cancelled'].includes(o.status));
+    const doneOrders = orders.filter(o => ['delivered', 'picked_up', 'cancelled'].includes(o.status));
+
+    document.getElementById('pendingCount').textContent = activeOrders.filter(o => o.status === 'pending').length;
+
+    if (orders.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><h3>Buyurtma yo\'q</h3><p>Yangi buyurtmalar bu yerda ko\'rinadi</p></div>';
+        return;
+    }
+
+    let html = '';
+
+    // Faol buyurtmalar
+    if (activeOrders.length > 0) {
+        html += '<div style="font-size:13px;font-weight:700;color:#8b7355;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em">Faol buyurtmalar</div>';
+        activeOrders.forEach(order => { html += renderCard(order); });
+    }
+
+    // Yakunlangan buyurtmalar
+    if (doneOrders.length > 0) {
+        html += '<div style="font-size:13px;font-weight:700;color:#8b7355;margin:20px 0 8px;text-transform:uppercase;letter-spacing:0.05em">Yakunlangan</div>';
+        doneOrders.forEach(order => { html += renderCard(order); });
+    }
+
+    grid.innerHTML = html;
+}
+
+function renderCard(order) {
+    const statusClass = 'status-' + order.status;
+    const statusLabel = STATUS_LABELS[order.status] || order.status;
+    const timeStr = new Date(order.created_at).toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit'});
+    const dateStr = new Date(order.created_at).toLocaleDateString('uz-UZ', {day:'numeric', month:'short'});
+    const initial = (order.customer_name || 'M')[0].toUpperCase();
+    const totalFormatted = new Intl.NumberFormat('ru-RU').format(order.total_price || 0);
+    const isDone = ['delivered', 'picked_up', 'cancelled'].includes(order.status);
+
+    let actionBtns = '';
+    if (!isDone) {
+        if (order.status === 'pending') {
+            actionBtns = `
+                <button class="status-btn btn-accept" onclick="changeStatus('${order.id}', 'accepted')"><i class="fas fa-check"></i> Qabul qilish</button>
+                <button class="status-btn btn-cancel" onclick="changeStatus('${order.id}', 'cancelled')"><i class="fas fa-times"></i> Bekor</button>
+            `;
+        } else if (order.status === 'accepted') {
+            actionBtns = `<button class="status-btn btn-preparing" onclick="changeStatus('${order.id}', 'preparing')"><i class="fas fa-fire"></i> Tayyorlashni boshlash</button>`;
+        } else if (order.status === 'preparing') {
+            actionBtns = `<button class="status-btn btn-ready" onclick="changeStatus('${order.id}', 'ready')"><i class="fas fa-box"></i> Tayyor!</button>`;
+        } else if (order.status === 'ready') {
+            actionBtns = `<button class="status-btn btn-done"><i class="fas fa-clock"></i> Olib ketilishini kutmoqda</button>`;
+        }
+    }
+
+    return `
+        <div class="order-card" id="card-${order.id}">
+            <div class="order-card-header">
+                <span class="order-id">${order.order_number || '#???'}</span>
+                <span class="order-time">${dateStr} ${timeStr}</span>
+            </div>
+
+            <div class="order-food-row">
+                <img class="order-food-img" src="${order.food_image || './Traditional Uzbek Plov (1).svg'}" alt="Taom"
+                    onerror="this.src='./Traditional Uzbek Plov (1).svg'">
+                <div class="order-food-info">
+                    <h3>${order.food_name || 'Noma\'lum taom'}</h3>
+                    <p>${order.quantity} porsiya × ${new Intl.NumberFormat('ru-RU').format(order.price || 0)} so'm</p>
+                    <div class="price">${totalFormatted} so'm</div>
+                </div>
+            </div>
+
+            <div class="order-customer">
+                <div class="customer-avatar">${initial}</div>
+                <div class="customer-info">
+                    <strong>${order.customer_name || 'Mehmon'}</strong>
+                    <span>${order.customer_phone || ''}</span>
+                </div>
+            </div>
+
+            <div class="current-status ${statusClass}">${statusLabel}</div>
+
+            ${actionBtns ? '<div class="status-actions">' + actionBtns + '</div>' : ''}
+        </div>
+    `;
+}
+
+async function changeStatus(orderId, newStatus) {
+    const btn = event.target.closest('.status-btn');
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
+
+    try {
+        const resp = await fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + orderId, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                apikey: SUPABASE_KEY,
+                Authorization: 'Bearer ' + SUPABASE_KEY
+            },
+            body: JSON.stringify({ status: newStatus, updated_at: new Date().toISOString() })
+        });
+
+        if (resp.ok) {
+            // Lokal cache yangilash
+            const order = ordersCache.find(o => o.id === orderId);
+            if (order) order.status = newStatus;
+            renderOrders(ordersCache);
+        }
+    } catch(err) {
+        console.error(err);
+        if (btn) { btn.disabled = false; btn.style.opacity = ''; }
+    }
+}
+
+// Sahifa ochilganda yuklash
+loadOrders();
+
+// Har 5 soniyada yangilash
+setInterval(loadOrders, 5000);
+</script>
+</body>
+</html>

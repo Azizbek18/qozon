@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon — Osh buyurtma qilish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="food.detalis.css">
+</head>
+<body class="theme-light">
+
+    <div id="toast-container"></div>
+
+    <div id="ingredient-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" id="ing-modal-close">&times;</span>
+            <div class="modal-img-wrapper">
+                <img id="modal-img" src="" alt="Masalliq">
+            </div>
+            <h3 id="modal-title">Masalliq nomi</h3>
+            <p id="modal-desc">Masalliq haqida batafsil ma'lumot.</p>
+            <div class="modal-price-tag">
+                <span>Qo'shimcha narxi:</span>
+                <span id="modal-ing-price">0 so'm</span>
+            </div>
+            <button id="modal-cart-btn" class="modal-action-btn">Savatga qo'shish 🛍️</button>
+        </div>
+    </div>
+
+    <div id="cart-items-modal" class="modal-overlay">
+        <div class="modal-content cart-modal-content">
+            <span class="modal-close" id="cart-modal-close">&times;</span>
+            <h3 class="cart-modal-title">Savatchangiz 🛒</h3>
+            
+            <div id="cart-items-list" class="cart-items-list">
+                <p class="empty-cart-text">Savatingiz hozircha bo'sh.</p>
+            </div>
+
+            <div class="cart-total-footer">
+                <span>Jami summa:</span>
+                <span id="cart-modal-total-price">36,000 so'm</span>
+            </div>
+            <button id="checkout-btn" class="modal-action-btn direct-buy-btn">Buyurtmani rasmiylashtirish ⚡</button>
+        </div>
+    </div>
+
+    <div class="product-detail-container">
+        
+        <div class="image-banner-wrapper">
+            <button class="circle-btn back-arrow" onclick="window.location.href='buyordashbord.html'">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
+            <button class="circle-btn bookmark-icon" id="favToggleBtn" title="Sevimlilarga qoshish" onclick="toggleDetailFav()">
+                <svg id="favIconOutline" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <svg id="favIconFilled" width="22" height="22" viewBox="0 0 24 24" fill="#e63946" stroke="#e63946" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </button>
+            <img id="foodImage" src="./image copy 2.png" alt="Taom rasmi" class="main-food-img">
+            
+            <div class="embedded-switcher">
+                <div class="embedded-slider"></div>
+                <button class="embed-opt active" onclick="changeTheme('light', this)">☀️</button>
+                <button class="embed-opt" onclick="changeTheme('dark', this)">🌙</button>
+            </div>
+
+            <div class="badge-left" id="foodPortions">🔥 6 ta qoldi</div>
+        </div>
+
+        <div class="content-body">
+            <div class="details-grid-wrapper">
+                <div class="details-main-col">
+                    <div class="title-price-row">
+                        <div class="food-title-group">
+                            <h1 id="foodName">Fergana uslubida osh</h1>
+                            <div class="rating-info">
+                                <span class="star" id="foodRating">⭐ 4.9</span>
+                                <span class="reviews-count" id="foodReviews">(120+ baho)</span>
+                            </div>
+                        </div>
+                        <div class="price-group">
+                            <span class="current-price" id="foodPrice">28,000 so'm</span>
+                            <span class="old-price" id="foodOldPrice">35,000 so'm</span>
+                        </div>
+                    </div>
+
+                    <div class="chef-card" id="chefCard" style="cursor: pointer;">
+                        <img class="chef-avatar-img" id="chefAvatar" src="Cook Xurmo opa.svg" alt="Oshpaz avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px;">
+                        <div class="chef-info">
+                            <h3 id="chefName">Xurmo opa</h3>
+                            <p class="certified" id="chefVerified"><span style="color: #2b8a3e; font-weight: bold;">✓</span> Sertifikatlangan</p>
+                        </div>
+                        <span class="arrow-right">❯</span>
+                    </div>
+
+                    <div class="section-block">
+                        <h4 class="block-title">TARKIBI</h4>
+                        <div class="tags-container">
+                            <span class="tag clickable" data-ing="rice">Devzira guruch</span>
+                            <span class="tag clickable" data-ing="meat">Qo'y go'shti</span>
+                            <span class="tag clickable" data-ing="carrot">Sariq sabzi</span>
+                            <span class="tag clickable" data-ing="cumin">Zira</span>
+                        </div>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-box">
+                            <span class="box-label">Allergenlar</span>
+                            <span class="box-value">Mavjud emas</span>
+                        </div>
+                        <div class="info-box">
+                            <span class="box-label">Kaloriya</span>
+                            <span class="box-value">640 kkal</span>
+                        </div>
+                    </div>
+
+                    <div class="section-block">
+                        <h4 class="block-title">OLIB KETISH VAQTI</h4>
+                        <div class="time-delivery-box">
+                            <span class="clock-icon">🕒</span>
+                            <p>Bugun, 12:00 — 14:00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-side-col">
+                    <div class="section-block">
+                        <h4 class="block-title">MANZIL</h4>
+                        <p class="address-text" id="chefAddress">Toshkent sh., Yunusobod tumani, 4-mavze, 12-uy</p>
+                        <div id="map" class="live-map-container" style="width: 100%; height: 200px; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; z-index: 1;"></div>
+                    </div>
+
+                    <!-- ===== REVIEWS SECTION ===== -->
+                    <div class="section-block reviews-section">
+                        <div class="reviews-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h4 class="block-title" style="margin-bottom: 0 !important;">Fikr-mulohazalar</h4>
+                            <span class="reviews-overall-rating" style="font-weight: 700; color: #1a1a1a; font-size: 14px;">⭐ 4.9</span>
+                        </div>
+                        <div class="reviews-tabs" style="display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;">
+                            <button class="review-tab active">Barchasi</button>
+                            <button class="review-tab">Eng yangi</button>
+                            <button class="review-tab">Foto bilan</button>
+                            <button class="review-tab">5 ★</button>
+                        </div>
+                        <div class="reviews-list" id="reviewsList">
+                            <!-- Review 1 -->
+                            <div class="review-card">
+                                <div class="review-card-header">
+                                    <div class="review-user-avatar" style="background: #ffe3e3; color: #c92c36;">A</div>
+                                    <div class="review-user-info">
+                                        <h5 class="review-user-name">Aziza Karimoza</h5>
+                                        <span class="review-time">2 soat avval</span>
+                                    </div>
+                                    <div class="review-stars">★★★★★</div>
+                                </div>
+                                <p class="review-text">Osh juda mazali ekan! Guruchi dona-dona bo'lib pishgan, go'shti esa og'izda erib ketyapti. Xurmo opaga rahmat!</p>
+                            </div>
+                            <!-- Review 2 -->
+                            <div class="review-card">
+                                <div class="review-card-header">
+                                    <div class="review-user-avatar" style="background: #e3f2fd; color: #1e88e5;">J</div>
+                                    <div class="review-user-info">
+                                        <h5 class="review-user-name">Javohir T.</h5>
+                                        <span class="review-time">Kecha</span>
+                                    </div>
+                                    <div class="review-stars">★★★★☆</div>
+                                </div>
+                                <p class="review-text">Yaxshi, lekin biroz yog'liroq ekan. Ammo ta'mi a'lo!</p>
+                            </div>
+                            <!-- Review 3 -->
+                            <div class="review-card">
+                                <div class="review-card-header">
+                                    <div class="review-user-avatar" style="background: #e8f5e9; color: #43a047;">S</div>
+                                    <div class="review-user-info">
+                                        <h5 class="review-user-name">Sardor</h5>
+                                        <span class="review-time">3 kun avval</span>
+                                    </div>
+                                    <div class="review-stars">★★★★★</div>
+                                </div>
+                                <p class="review-text">Haqiqiy Farg'ona oshi. Qayta-qayta buyurtma beraman!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== STICKY ACTION BAR ===== -->
+        <div class="sticky-action-bar">
+            <div class="action-bar-inner">
+                <div class="counter-container">
+                    <button class="counter-btn minus-btn">—</button>
+                    <span class="counter-value">2</span>
+                    <button class="counter-btn plus-btn">+</button>
+                </div>
+                <button class="buy-btn" id="main-cart-action-btn">
+                    <div class="buy-btn-price">
+                        <span class="buy-btn-label">Jami:</span>
+                        <span class="calculated-sum" id="live-calculated-sum">56,000 so'm</span>
+                    </div>
+                    <div class="buy-btn-text">
+                        <span>Buyurtma berish</span>
+                        <span class="buy-btn-icon">👜</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="main.js"></script>
+</body>
+</html>

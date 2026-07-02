@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtma Rasmiylashtirish — Qozon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="chekout.css">
+</head>
+<body class="theme-light">
+
+    <div id="toast-container"></div>
+
+    <div class="checkout-page-container">
+        <!-- HEADER -->
+        <header class="checkout-header">
+            <button class="back-action-btn" onclick="window.location.href='buyordashbord.html'">
+                <i class="fas fa-chevron-left"></i> Orqaga qaytish
+            </button>
+            <a href="buyordashbord.html" class="logo-link">
+                <span class="logo-icon">🔥</span>
+                <span class="logo-text">qozon</span>
+            </a>
+            
+            <div class="theme-toggle-switch" onclick="toggleCheckoutTheme()">
+                <div class="theme-slider"></div>
+                <span class="theme-icon sun-icon">☀️</span>
+                <span class="theme-icon moon-icon">🌙</span>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT -->
+        <main class="checkout-main-grid">
+            
+            <!-- LEFT COLUMN: OPTIONS -->
+            <div class="checkout-details-column">
+                <h1 class="checkout-page-title">Buyurtmani rasmiylashtirish</h1>
+
+                <!-- 1. Tafsilotlar -->
+                <section class="checkout-card-section">
+                    <h3 class="checkout-card-title"><i class="fas fa-utensils"></i> Buyurtma tarkibi</h3>
+                    <div id="checkout-items-list" class="checkout-items-wrapper">
+                        <!-- Dynamic items will load here -->
+                    </div>
+                </section>
+
+                <!-- 2. Qabul qilish usuli -->
+                <section class="checkout-card-section">
+                    <h3 class="checkout-card-title"><i class="fas fa-truck"></i> Yetkazib berish usuli</h3>
+                    <div class="delivery-selector-grid">
+                        <div class="method-select-card active" id="method-pickup">
+                            <div class="method-icon-wrap">🚶</div>
+                            <div class="method-meta">
+                                <h4>O'zingiz olib keting</h4>
+                                <p>Oshpaz manzilidan bepul</p>
+                            </div>
+                            <div class="method-badge">Tavsiya etiladi</div>
+                        </div>
+                        <div class="method-select-card" id="method-delivery">
+                            <div class="method-icon-wrap">🛵</div>
+                            <div class="method-meta">
+                                <h4>Yetkazib berish</h4>
+                                <p>15,000 so'm (20-30 daqiqa)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Qabul qilish vaqti -->
+                <section class="checkout-card-section">
+                    <h3 class="checkout-card-title"><i class="fas fa-clock"></i> Qabul qilish vaqti</h3>
+                    <div class="time-picker-row">
+                        <button class="time-slot-pill">12:00</button>
+                        <button class="time-slot-pill">12:30</button>
+                        <button class="time-slot-pill active">13:00</button>
+                        <button class="time-slot-pill">13:30</button>
+                        <button class="time-slot-pill">14:00</button>
+                    </div>
+                </section>
+
+                <!-- 4. To'lov turi -->
+                <section class="checkout-card-section">
+                    <h3 class="checkout-card-title"><i class="fas fa-wallet"></i> To'lov turi</h3>
+                    <div class="payment-selector-list">
+                        <label class="payment-option-row">
+                            <input type="radio" name="payment" value="card">
+                            <div class="payment-icon">💳</div>
+                            <div class="payment-details">
+                                <span class="payment-name">Karta orqali onlayn</span>
+                                <span class="payment-desc">Uzcard, Humo, Visa orqali</span>
+                            </div>
+                            <span class="custom-radio-indicator"></span>
+                        </label>
+                        <label class="payment-option-row active">
+                            <input type="radio" name="payment" value="click" checked>
+                            <div class="payment-icon">📲</div>
+                            <div class="payment-details">
+                                <span class="payment-name">Click / Payme / Apelsin</span>
+                                <span class="payment-desc">To'lov ilovalari orqali tezkor</span>
+                            </div>
+                            <span class="custom-radio-indicator"></span>
+                        </label>
+                        <label class="payment-option-row">
+                            <input type="radio" name="payment" value="cash">
+                            <div class="payment-icon">💵</div>
+                            <div class="payment-details">
+                                <span class="payment-name">Naqd pul orqali</span>
+                                <span class="payment-desc">Taomni olganda to'lov qilish</span>
+                            </div>
+                            <span class="custom-radio-indicator"></span>
+                        </label>
+                    </div>
+                </section>
+            </div>
+
+            <!-- RIGHT COLUMN: STICKY SUMMARY -->
+            <div class="checkout-summary-column">
+                <div class="sticky-summary-card">
+                    <h3 class="summary-card-title">Hisob-kitob</h3>
+                    
+                    <div class="summary-details-list">
+                        <div class="summary-detail-item">
+                            <span class="detail-label">Oraliq summa</span>
+                            <span class="detail-value" id="subtotal-val">0 so'm</span>
+                        </div>
+                        <div class="summary-detail-item">
+                            <span class="detail-label">Etkazib berish</span>
+                            <span class="detail-value free" id="delivery-val">Bepul</span>
+                        </div>
+                        <div class="summary-detail-item discount" style="display:none;">
+                            <span class="detail-label">Chegirma</span>
+                            <span class="detail-value">-0 so'm</span>
+                        </div>
+                    </div>
+
+                    <hr class="summary-card-divider">
+
+                    <div class="grand-total-row">
+                        <span class="grand-label">Jami summa:</span>
+                        <span class="grand-value grand-total">0 so'm</span>
+                    </div>
+
+                    <button class="submit-order-btn">
+                        <span class="btn-text">Tasdiqlash va to'lash</span>
+                        <i class="fas fa-arrow-right btn-arrow"></i>
+                    </button>
+                    
+                    <p class="safe-payment-hint">
+                        🔒 Xavfsiz to'lov tizimi. Ma'lumotlaringiz himoyalangan.
+                    </p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="checkout.js"></script>
+</body>
+</html>

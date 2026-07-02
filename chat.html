@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon Premium Chat</title>
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+    <div class="premium-app">
+        
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <a href="index.html" class="logo-text" style="text-decoration: none;">qozon<span>.com</span></a>
+                <div class="user-profile-mini"></div>
+            </div>
+
+            <div class="search-wrapper">
+                <input type="text" placeholder="Suhbatlarni qidirish...">
+                <span class="search-hint">⌘K</span>
+            </div>
+
+            <div class="chat-tabs">
+                <button class="tab-btn active">Barchasi</button>
+                <button class="tab-btn">Guruhlar</button>
+                <button class="tab-btn">Tizim</button>
+            </div>
+
+            <div class="conversation-list">
+                <div class="convo-item active" onclick="changeActiveChat('ahmad')">
+                    <div class="avatar-ring online">
+                        <div class="user-avatar ahmad-img"></div>
+                    </div>
+                    <div class="convo-details">
+                        <div class="convo-meta">
+                            <h4>Chef Ahmad</h4>
+                            <span class="time-stamp">15:42</span>
+                        </div>
+                        <p class="preview-text" id="side-preview-ahmad">Osh qanday bo'ldi, yoqdimi?</p>
+                        <div class="tag-row"><span class="badge-status priority">Premium Buyurtma</span></div>
+                    </div>
+                </div>
+
+                <div class="convo-item" onclick="changeActiveChat('nilufar')">
+                    <div class="avatar-ring">
+                        <div class="user-avatar nilufar-img"></div>
+                    </div>
+                    <div class="convo-details">
+                        <div class="convo-meta">
+                            <h4>Nilufar Opa</h4>
+                            <span class="time-stamp">Kecha</span>
+                        </div>
+                        <p class="preview-text" id="side-preview-nilufar">Kuryer yetib keldi, katta rahmat!</p>
+                        <div class="unread-dot">3</div>
+                    </div>
+                </div>
+
+                <div class="convo-item" onclick="changeActiveChat('mahmud')">
+                    <div class="avatar-ring">
+                        <div class="user-avatar mahmud-img"></div>
+                    </div>
+                    <div class="convo-details">
+                        <div class="convo-meta">
+                            <h4>Mahmud Amaki</h4>
+                            <span class="time-stamp">12 Iyun</span>
+                        </div>
+                        <p class="preview-text" id="side-preview-mahmud">Ertaga 5 kishilik joy bormi?</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="chat-viewport">
+            
+            <header class="chat-viewport-header" id="dynamicHeader">
+                </header>
+
+            <div class="messages-scroll-area" id="messagesBox">
+                </div>
+
+            <div class="smart-suggestions" id="suggestionsPanel">
+                </div>
+
+            <footer class="input-container-footer">
+                <div class="input-pill-wrapper" style="position: relative;">
+                    <input type="file" id="mediaUpload" hidden onchange="mediaUploadHandler(event)">
+                    <button class="icon-control-btn" onclick="document.getElementById('mediaUpload').click()">📎</button>
+                    
+                    <input type="text" id="chatInputField" placeholder="Xabarni yozing..." onkeypress="handleInputKey(event)">
+                    
+                    <div class="custom-emoji-picker" id="customEmojiPicker">
+                        <span onclick="insertEmoji('😊')">😊</span>
+                        <span onclick="insertEmoji('😂')">😂</span>
+                        <span onclick="insertEmoji('🔥')">🔥</span>
+                        <span onclick="insertEmoji('👍')">👍</span>
+                        <span onclick="insertEmoji('🇺🇿')">🇺🇿</span>
+                        <span onclick="insertEmoji('👏')">👏</span>
+                        <span onclick="insertEmoji('😎')">😎</span>
+                        <span onclick="insertEmoji('🎯')">🎯</span>
+                    </div>
+
+                    <button class="icon-control-btn" id="emojiToggleBtn" onclick="toggleEmojiPicker(event)">😊</button>
+                    
+                    <button class="premium-send-btn" onclick="handleMessageSubmit()">
+                        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+                    </button>
+                </div>
+            </footer>
+        </main>
+
+    </div>
+
+    <script src="chat.js"></script>
+</body>
+</html>

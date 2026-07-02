@@ -1,0 +1,1058 @@
+/* ASOSIY SOZLAMALAR */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: #fffbf7; /* Dizayndagi och issiq fon */
+    color: #2d2d2d;
+}
+
+/* HEADER CSS */
+.header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #f0eae4;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: #c90a2a; /* Qozon qizil rangi */
+    text-decoration: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #666;
+    margin: 0 15px;
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #c90a2a;
+}
+
+.nav-links a.active {
+    border-bottom: 2px solid #c90a2a;
+    padding-bottom: 4px;
+}
+
+.btn-order {
+    background-color: #c90a2a;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-order:hover {
+    background-color: #a30822;
+}
+
+/* CONTAINER */
+.main-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* GRIDS */
+.dashboard-grid-top {
+    display: grid;
+    grid-template-columns: 1.1fr 1.4fr 1.1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.dashboard-grid-bottom {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr;
+    gap: 20px;
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* CARDS UMUMIY STILI */
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px dashed #b2d4ff; /* Rasmda ko'rsatilgan ko'k punktir kontur */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+}
+
+/* BALANS CARD */
+.balance-card {
+    background: linear-gradient(135deg, #e32646 0%, #c90a2a 100%);
+    color: white;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-label {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-bottom: 8px;
+}
+
+.balance-amount {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.balance-amount span {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.badge {
+    background: rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.btn-withdraw {
+    width: 100%;
+    background: white;
+    color: #c90a2a;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.btn-withdraw:hover {
+    transform: translateY(-2px);
+}
+
+/* KALKULYATOR CARD */
+.calculator-card h3, .stats-card h3, .popular-card h3, .invite-card h3, .transactions-card h3, .payment-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1a1a1a;
+}
+
+.calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #555;
+}
+
+.calc-value {
+    font-weight: 700;
+    color: #c90a2a;
+    font-size: 16px;
+}
+
+.slider {
+    width: 100%;
+    accent-color: #c90a2a;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.estimated-box {
+    background: #fff5f6;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #ffe3e6;
+}
+
+.estimated-box p {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 4px;
+}
+
+.estimated-box h4 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #c90a2a;
+}
+
+/* HAFTALIK STATISTIKA (DIAGRAMMA) */
+.stats-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toggle-buttons {
+    background: #f5ece5;
+    padding: 3px;
+    border-radius: 8px;
+}
+
+.btn-toggle {
+    border: none;
+    background: transparent;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #666;
+}
+
+.btn-toggle.active {
+    background: #ffffff;
+    color: #c90a2a;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.chart-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 200px;
+    padding-top: 20px;
+}
+
+.chart-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 10px 10px 25px 10px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+.bar {
+    width: 32px;
+    height: var(--height);
+    background: #f7e6e8;
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    transition: background 0.3s;
+}
+
+.bar:hover, .bar.active {
+    background: #c90a2a;
+}
+
+.bar span {
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #888;
+    font-weight: 500;
+}
+
+.bar.active span {
+    color: #c90a2a;
+    font-weight: 700;
+}
+
+/* ENG OMMABOP TAOMLAR */
+.food-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.food-item {
+    display: flex;
+    align-items: center;
+    background: #fffbf8;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid #f5ebe1;
+}
+
+.rank {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 12px;
+}
+
+.rank-1 { background: #fef3d6; color: #b08200; }
+.rank-2 { background: #f1f3f5; color: #5f6b7a; }
+.rank-3 { background: #fdf0ea; color: #b86a3d; }
+
+.food-info {
+    flex-grow: 1;
+}
+
+.food-info strong {
+    font-size: 13px;
+    color: #222;
+}
+
+.food-info p {
+    font-size: 11px;
+    color: #777;
+}
+
+.trophy-1 { color: #e2b13c; }
+.trophy-2 { color: #a0aab5; }
+.trophy-3 { color: #cd7f32; }
+
+/* REFERAL CARD */
+.invite-card {
+    background: #fff5ee;
+    border: 1px dashed #f3ceb4;
+}
+
+.invite-card p {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.referral-code-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border: 1px dashed #e2b391;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.referral-code-box span {
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 13px;
+    color: #333;
+}
+
+#btn-copy {
+    background: transparent;
+    border: none;
+    color: #c90a2a;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+/* SO'NGGI AMALIYOTLAR */
+.trans-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.view-all {
+    font-size: 12px;
+    font-weight: 600;
+    color: #c90a2a;
+    text-decoration: none;
+}
+
+.trans-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.trans-item {
+    display: flex;
+    align-items: center;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f8f1eb;
+}
+
+.trans-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    background: #e2f0ff;
+    color: #0066cc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    margin-right: 14px;
+}
+
+.icon-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+}
+
+.icon-avatar.withdraw {
+    background: #fff0f1;
+    color: #e32646;
+}
+
+.trans-details {
+    flex-grow: 1;
+}
+
+.trans-details strong {
+    font-size: 14px;
+    color: #222;
+}
+
+.light-text {
+    font-weight: 400;
+    color: #777;
+}
+
+.trans-details p {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+}
+
+.trans-amount {
+    text-align: right;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.trans-amount.positive { color: #27a376; }
+.trans-amount.negative { color: #e32646; }
+
+.fee, .status-success {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: #999;
+    margin-top: 2px;
+}
+
+.status-success {
+    color: #27a376;
+}
+
+/* TO'LOV USULLARI (BANK KARTALARI) */
+.cards-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-bank-card {
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    position: relative;
+}
+
+.payment-bank-card.uzcard {
+    background: linear-gradient(135deg, #1b0c0a 0%, #0d0504 100%);
+    color: white;
+}
+
+.payment-bank-card.uzcard .card-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.payment-bank-card.uzcard .card-number {
+    font-family: monospace;
+    font-size: 16px;
+    letter-spacing: 2px;
+    margin: 20px 0;
+}
+
+.payment-bank-card.uzcard .card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.checked-circle {
+    background: #27a376;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+/* Humo qatori mini uslubda */
+.payment-bank-card.humo {
+    background: #ffffff;
+    border: 1px solid #f0eae4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.humo-mini-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.humo-badge {
+    background: #fff1f3;
+    color: #e32646;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.humo-details strong {
+    font-size: 13px;
+    color: #333;
+}
+
+.humo-details p {
+    font-size: 11px;
+    color: #888;
+}
+
+.btn-add-card {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed #ccc;
+    padding: 12px;
+    border-radius: 12px;
+    color: #555;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.btn-add-card:hover {
+    background: #fdfbf9;
+}
+
+/* FOOTER CSS */
+.footer {
+    background: #1e110b; /* To'q jigarrang fon */
+    color: #a89f9a;
+    padding: 40px 0 20px 0;
+    margin-top: 50px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 0 20px;
+    gap: 30px;
+}
+
+.footer-brand h2 {
+    color: #ffffff;
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.footer-brand p {
+    font-size: 12px;
+}
+
+.footer-links-group h4 {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.footer-links-group a {
+    display: block;
+    color: #a89f9a;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 10px;
+    transition: color 0.2s;
+}
+
+.footer-links-group a:hover {
+    color: #ffffff;
+}
+/* ==========================================================
+   DESKTOP HEADER STYLES (ASOSIY SOZLAMALAR)
+   ========================================================== */
+.header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #f0eae4;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: #c90a2a; /* Qozon qizil rangi */
+    text-decoration: none;
+}
+
+/* Burger tugmasi desktopda ko'rinmaydi */
+.burger-btn {
+    display: none; 
+    background: none;
+    border: none;
+    color: #c90a2a;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.nav-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #666;
+    margin: 0 15px;
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #c90a2a;
+}
+
+.nav-links a.active {
+    border-bottom: 2px solid #c90a2a;
+    padding-bottom: 4px;
+}
+
+.btn-order {
+    background-color: #c90a2a;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-order:hover {
+    background-color: #a30822;
+}
+@media (max-width: 768px) {
+    .burger-btn {
+        display: block !important; /* Mobilda aniq ko'rinishi uchun */
+        z-index: 1001; /* Menyudan ham yuqorida turishi kerak */
+        position: relative;
+    }
+
+    .nav-wrapper {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 280px;
+        height: 100vh;
+        background: #ffffff;
+        z-index: 1000; /* Boshqa elementlardan ustun turishi shart */
+        transform: translateX(100%); /* Yashirin holat */
+        transition: transform 0.3s ease-in-out;
+    }
+
+    /* JS qo'shadigan klass */
+    .nav-wrapper.open {
+        transform: translateX(0) !important; /* Ekranda paydo bo'lishi uchun */
+    }
+}
+/* ==========================================================
+   RESPONSIVE HEADER (768px dan kichik ekranlar uchun)
+   ========================================================== */
+@media (max-width: 768px) {
+    .burger-btn {
+        display: block; /* Mobilda burger tugmasi ko'rinadi */
+        z-index: 1000;
+    }
+
+    /* YONDAN OCHILADIGAN MENYU (SIDE DRAWER) */
+    .nav-wrapper {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 280px;
+        height: 100vh;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 80px 20px 24px 20px;
+        gap: 30px;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+        
+        /* Dastlab o'ng tomonda yashirin turadi */
+        transform: translateX(100%); 
+        transition: transform 0.3s ease-in-out;
+        z-index: 999;
+    }
+
+    /* JS orqali ".open" klassi qo'shilganda ekranga chiqadi */
+    .nav-wrapper.open {
+        transform: translateX(0);
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .nav-links a {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        color: #333;
+    }
+
+    .btn-order {
+        width: 100%;
+        padding: 12px 0;
+        text-align: center;
+    }
+}
+/* RESPONSIVE (Mobil qurilmalar uchun) */
+@media (max-width: 992px) {
+    .dashboard-grid-top, .dashboard-grid-bottom {
+        grid-template-columns: 1fr;
+    }
+    .footer-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+/* RESPONSIVE DIZAYN (MOBIL VA PLANSHETLAR UCHUN) */
+@media (max-width: 1024px) {
+    /* Yuqori qism: 3 ta ustun o'rniga 1 ta ustun bo'ladi */
+    .dashboard-grid-top {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    /* Pastki qism: Amaliyotlar va To'lov usullari 1 ta ustun bo'ladi */
+    .dashboard-grid-bottom {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .main-container {
+        margin: 15px auto;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Header qismini mobilga moslash (Navigatsiya va tugmani joylashtirish) */
+    .header-container {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .nav-links a {
+        margin: 0 5px;
+        font-size: 13px;
+    }
+
+    /* Diagramma ustunlari mobil ekranda siqilib ketmasligi uchun */
+    .chart-placeholder {
+        padding: 10px 5px 25px 5px;
+    }
+    
+    .bar {
+        width: 24px; /* Ustunlar sal ingichkaroq bo'ladi */
+    }
+
+    /* Footer linklarini mobilga moslash */
+    .footer-container {
+        grid-template-columns: 1fr 1fr; /* 2 tadan bo'lib joylashadi */
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Eng kichik telefonlar uchun */
+    .footer-container {
+        grid-template-columns: 1fr; /* Hamma narsa 1 qator bo'lib tushadi */
+        text-align: center;
+    }
+    
+    .balance-amount {
+        font-size: 26px; /* Balans matni sig'ishi uchun */
+    }
+}
+/* ==========================================================
+   BIRINCHI RASM (`image_0d595c.png`) HEADER RESONSIVE CODE
+   ========================================================== */
+
+@media (max-width: 992px) {
+    .header {
+        padding: 12px 0;
+    }
+    
+    .header-container {
+        padding: 0 16px;
+    }
+
+    /* Linklar shriftini biroz kichraytiramiz */
+    .nav-links a {
+        margin: 0 10px;
+        font-size: 14px;
+    }
+    
+    .btn-order {
+        padding: 8px 18px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Ekran planshet yoki katta telefonga o'tganda hamma narsani tartib bilan joylashtiramiz */
+    .header-container {
+        flex-direction: column; /* Logotip, menyu va tugma ustma-ust tushadi */
+        gap: 14px;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Menyu linklarini chiroyli markazlashtirilgan blok shakliga keltiramiz */
+    .nav-links {
+        display: flex;
+        flex-wrap: wrap; /* Agar ekran juda kichik bo'lsa linklar 2 qatorga chiroyli sinadi */
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .nav-links a {
+        margin: 4px 8px;
+        font-size: 14px;
+        padding-bottom: 2px;
+    }
+    
+    /* Aktiv link chizig'i mobil ekranda ham chiroyli turishi uchun */
+    .nav-links a.active {
+        border-bottom-width: 2px;
+        padding-bottom: 2px;
+    }
+
+    /* Buyurtma berish tugmasi mobilda to'liq kenglikni egallashi yoki chiroyli ko'rinishi uchun */
+    .btn-order {
+        width: 80%; /* Butun ekranni to'ldirib yubormasligi uchun 80% */
+        max-width: 280px;
+        padding: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Eng kichik mobil telefonlar uchun (Masalan: iPhone SE) */
+    .logo {
+        font-size: 22px;
+    }
+
+    .nav-links a {
+        font-size: 13px; /* Shrift yana biroz ixchamlashadi */
+        margin: 2px 6px;
+    }
+    
+    .btn-order {
+        width: 100%; /* Kichik telefonlarda tugma to'liq kenglikda chiroyli turadi */
+    }
+}
+@media (max-width: 768px) {
+    /* Logotip va Burger tugmasini bir qatorda saqlash */
+    .header-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        position: relative;
+    }
+
+    .burger-btn {
+        display: block;
+        background: none;
+        border: none;
+        color: #c90a2a;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 1000; /* Tugma menyu ustida ko'rinib turishi uchun */
+    }
+
+    /* YONDAN OCHILADIGAN MENYU (SIDE DRAWER) */
+    .nav-wrapper {
+        position: fixed; /* Butun ekran bo'ylab muqim turishi uchun */
+        top: 0;
+        right: 0; /* O'ng tomonga yopishtiramiz */
+        width: 280px; /* Menyuning eni */
+        height: 100vh; /* Butun ekran balandligi */
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 80px 20px 24px 20px; /* Tepadan burger tugmasi uchun joy tashlaymiz */
+        gap: 30px;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+        
+        /* O'ng tomondan yashirin holatda turadi */
+        transform: translateX(100%); 
+        transition: transform 0.3s ease-in-out;
+        z-index: 999;
+    }
+
+    /* JS orqali ".open" klassi qo'shilganda o'ngdan sirg'alib chiqadi */
+    .nav-wrapper.open {
+        transform: translateX(0);
+    }
+
+    /* Navigatsiya linklari */
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .nav-links a {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        color: #333;
+        text-decoration: none;
+    }
+
+    /* "Buyurtma berish" tugmasini menyu pastrog'iga moslash */
+    .btn-order {
+        width: 100%;
+        padding: 12px 0;
+        text-align: center;
+    }
+}
+
+/* ==========================================================================
+   FONT AWESOME FONT-FAMILY PROTECTION OVERRIDE
+   ========================================================================== */
+.fa-solid, .fas {
+    font-family: "Font Awesome 6 Free", sans-serif !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+.fa-brands, .fab {
+    font-family: "Font Awesome 6 Brands", sans-serif !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+.fa, .far, .fal, .fad, .fa-regular {
+    font-family: "Font Awesome 6 Free", sans-serif !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}

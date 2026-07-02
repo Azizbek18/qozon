@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon — VIP Rewards & Promos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./promoChegirma.css">
+    </style>
+    
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <div class="modal-overlay" id="profileModalOverlay">
+        <div class="profile-modal">
+            <div class="modal-header">
+                <h3 id="lang-modalTitle">Mening Profilim</h3>
+                <button class="close-modal" onclick="closeProfileModal()">&times;</button>
+            </div>
+            
+            <div class="avatar-upload-container">
+                <div class="avatar-preview" id="avatarPreviewBox">👩‍🍳</div>
+                <label for="avatarFile" class="file-input-label" id="lang-avatarLabel">📸 Rasm yuklash</label>
+                <input type="file" id="avatarFile" accept="image/*" onchange="previewImage(event)">
+            </div>
+
+            <div class="form-group">
+                <label id="lang-labelIsm">Ism</label>
+                <input type="text" id="profIsm" value="Malika">
+            </div>
+            <div class="form-group">
+                <label id="lang-labelFam">Familiya</label>
+                <input type="text" id="profFamiliya" value="Aliyeva">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="profEmail" value="malika@qozon.uz">
+            </div>
+            <div class="form-group">
+                <label id="lang-labelCode">Profil Maxfiy Kodi (ID)</label>
+                <input type="password" id="profCode" value="QOZON4392">
+            </div>
+
+            <div class="modal-footer-btns">
+                <button class="btn btn-filled" id="lang-btnSave" onclick="saveProfileData()">Saqlash</button>
+                <button class="btn btn-logout" id="lang-btnLogout" onclick="logoutProfile()">Chiqish</button>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <a href="#" class="logo">← Qozon</a>
+        <nav>
+            <a href="#" id="lang-navBrowse" class="active">Ko'rish</a>
+            <a href="#" id="lang-navHow">Qanday ishlaydi</a>
+            <a href="#" id="lang-navCooks">Oshpazlarimiz</a>
+        </nav>
+        
+        <div class="nav-right-icons">
+            <button class="lang-btn" onclick="rotateLanguage()" id="langBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span>UZ</span>
+            </button>
+
+            <button class="nav-btn" onclick="toggleTheme()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+                </svg>
+            </button>
+
+            <button class="nav-btn" onclick="clickCart()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96088 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z"/>
+                    <path d="M3 6H21"/>
+                    <path d="M16 10C16 11.0609 15.5786 12.0783 14.8284 12.8284C14.0783 13.5786 13.0609 14 12 14C10.9391 14 9.92172 13.5786 9.17157 12.8284C8.42143 12.0783 8 11.0609 8 10"/>
+                </svg>
+                <div class="badge-count">1</div>
+            </button>
+
+            <button class="nav-btn" style="border: none; background: none;" onclick="openProfileModal()">
+                <div class="profile-circle" id="navProfileCircle">👩‍🍳</div>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-info">
+                <h1 id="lang-heroTitle">Sizning Premium Imtiyozlaringiz</h1>
+                <p id="lang-heroDesc">Har bir buyurtmadan keshbek to'plang, o'z kuponlaringizni jonli filtrlang va maksimal foyda bilan taomlaning.</p>
+                <div class="hero-stats">
+                    <div class="stat-bubble" id="lang-statSaved">💰 Jami tejaldi: 45,000 so'm</div>
+                    <div class="stat-bubble" id="lang-statRank">⭐ Reyting: VIP Gold</div>
+                </div>
+            </div>
+            
+            <div class="loyalty-card">
+                <div class="title" id="lang-loyaltyTitle">Sodiqlik darajasi</div>
+                <div class="status">
+                    <span id="lang-loyaltyStatus">4/5 buyurtma</span>
+                    <span>✨</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="hint" id="lang-loyaltyHint">Yana 1 ta buyurtma va sizda keyingi safar - 25% chegirma!</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        
+        <div class="controls-row">
+            <h2 id="lang-secTitle">Sizning promo-kodlaringiz</h2>
+            <div class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="promoSearch" placeholder="Kupon nomini qidirish..." oninput="filterPromos()">
+            </div>
+        </div>
+        
+        <div class="promo-grid" id="promoGrid">
+            <div class="promo-card" data-name="BIRINCHI10">
+                <div class="card-top">
+                    <div class="tag-wrapper" id="lang-tag1">🎫 Yangi foydalanuvchi</div>
+                    <div class="promo-name">BIRINCHI10</div>
+                    <div class="promo-desc" id="lang-desc1">Birinchi buyurtmangiz uchun 10,000 so'm chegirma</div>
+                </div>
+                <div class="ticket-divider"><div class="ticket-line"></div></div>
+                <div class="card-bottom">
+                    <button class="btn btn-filled lang-copyBtn" onclick="copyCode('BIRINCHI10')">Nusxa olish</button>
+                </div>
+            </div>
+            
+            <div class="promo-card" data-name="FAMILYTIME">
+                <div class="card-top">
+                    <div class="tag-wrapper" id="lang-tag2">👨‍👩‍👧 Oila uchun</div>
+                    <div class="promo-name">FAMILYTIME</div>
+                    <div class="promo-desc" id="lang-desc2">Katta savat uchun -15% chegirma imkoniyati</div>
+                </div>
+                <div class="ticket-divider"><div class="ticket-line"></div></div>
+                <div class="card-bottom">
+                    <button class="btn btn-outlined lang-copyBtn" onclick="copyCode('FAMILYTIME')">Nusxa olish</button>
+                </div>
+            </div>
+            
+            <div class="promo-card" data-name="EVENING20">
+                <div class="card-top">
+                    <div class="tag-wrapper" id="lang-tag3">🌙 Kechki vaqt</div>
+                    <div class="promo-name">EVENING20</div>
+                    <div class="promo-desc" id="lang-desc3">Soat 20:00 dan keyingi barcha buyurtmalar uchun</div>
+                </div>
+                <div class="ticket-divider"><div class="ticket-line"></div></div>
+                <div class="card-bottom">
+                    <button class="btn btn-outlined lang-copyBtn" onclick="copyCode('EVENING20')">Nusxa olish</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="two-column-layout">
+            <div class="action-card">
+                <h3 id="lang-applyTitle">Promo-kodni qo'llash</h3>
+                <div class="input-wrapper">
+                    <input type="text" id="promoInput" value="BIRINCHI10">
+                    <button class="btn-apply" id="lang-btnApply" onclick="applyPromo()">Qo'llash</button>
+                </div>
+                <div class="discount-result">
+                    <span id="lang-resultTitle">Chegirma:</span>
+                    <span class="amount" id="discountDisplay">-10,000 so'm</span>
+                </div>
+            </div>
+
+            <div class="invite-card">
+                <div>
+                    <h3 id="lang-inviteTitle">Do'st taklif qiling</h3>
+                    <p id="lang-inviteDesc">Do'stingiz siz yuborgan havola orqali ro'yxatdan o'tsa, har ikkingiz bonus olasiz.</p>
+                </div>
+                <div class="share-container">
+                    <span id="shareCode">MALIKA2026</span>
+                    <button class="btn-share" id="lang-btnShare" onclick="copyCode('MALIKA2026')">Ulashish</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="offers-section">
+            <h2 id="lang-otherOffersTitle">Boshqa takliflar</h2>
+            <div class="offers-list">
+                
+                <a href="#" class="offer-row-card">
+                    <div class="offer-left">
+                        <div class="offer-img-wrapper">
+                            <span style="font-size: 28px;">🍲</span>
+                        </div>
+                        <div class="offer-details">
+                            <h4 id="lang-offer1Title">Xurmo opadan: Bugun -15%</h4>
+                            <p id="lang-offer1Desc">Barcha milliy taomlarga soat 14:00 gacha</p>
+                        </div>
+                    </div>
+                    <div class="offer-right">
+                        <span class="offer-badge badge-orange" id="lang-badge1">Yaqinda tugaydi</span>
+                        <div class="arrow-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="offer-row-card">
+                    <div class="offer-left">
+                        <div class="offer-img-wrapper">
+                            <span style="font-size: 28px;">🥐</span>
+                        </div>
+                        <div class="offer-details">
+                            <h4 id="lang-offer2Title">Iftorlik to'plami chegirmada</h4>
+                            <p id="lang-offer2Desc">3 xil taom va ichimlik - 85,000 so'm</p>
+                        </div>
+                    </div>
+                    <div class="offer-right">
+                        <span class="offer-badge badge-red" id="lang-badge2">Ommabop</span>
+                        <div class="arrow-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="offer-row-card">
+                    <div class="offer-left">
+                        <div class="offer-img-wrapper">
+                            <span style="font-size: 28px;">🍰</span>
+                        </div>
+                        <div class="offer-details">
+                            <h4 id="lang-offer3Title">Shirinliklar uchun keshbek x2</h4>
+                            <p id="lang-offer3Desc">Dam olish kunlari barcha pishiriqlarga</p>
+                        </div>
+                    </div>
+                    <div class="offer-right">
+                        <span class="offer-badge badge-yellow" id="lang-badge3">Bonus</span>
+                        <div class="arrow-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-top">
+            <div class="footer-brand">
+                <h3>Qozon</h3>
+                <p id="lang-footerBrandDesc">© 2026 Qozon Marketplace. Made with love for home cooking.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" id="lang-fLink1">About Us</a>
+                <a href="#" id="lang-fLink2">Privacy Policy</a>
+                <a href="#" id="lang-fLink3">Terms of Service</a>
+                <a href="#" id="lang-fLink4">Become a Cook</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span id="lang-footerLegal">Barcha huquqlar himoyalangan.</span>
+            <span>Premium UI v2.4</span>
+        </div>
+    </footer>
+
+    <script src="./promoChegirma.js"></script>
+      
+</body>
+</html>

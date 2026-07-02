@@ -1,0 +1,135 @@
+    <!DOCTYPE html>
+    <html lang="uz">
+    <head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Xurmo opa - Oshpazlar paneli</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="xurmoOpa.css">
+        <link rel="stylesheet" href="theme-colors.css">
+    </head>
+    <body class="theme-light">
+
+        <header>
+            <a href="index.html" class="logo" style="text-decoration: none;">qozon</a>
+            <nav>
+                <a href="index.html#how-it-works">Qanday ishlaydi</a>
+                <a href="index.html#chefs" class="active">Oshpazlar</a>
+                <a href="buyordashbord.html">Menyu</a>
+                <a href="#">Blog</a>
+            </nav>
+            <div class="header-buttons">
+                
+                <div class="custom-switcher" style="width: 76px; display: flex; position: relative;">
+                    <div class="switcher-slider"></div>
+                    <button class="switch-opt active" onclick="changeTheme('light', this)">☀️</button>
+                    <button class="switch-opt" onclick="changeTheme('dark', this)">🌙</button>
+                </div>
+
+                <a href="kirish.html" class="btn-login">Kirish</a>
+                <a href="buyordashbord.html" class="btn-order">Buyurtma berish</a>
+            </div>
+        </header>
+
+        <section class="profile-banner">
+            <div class="avatar-container">
+                <img id="chefAvatar" src="./rasm/96eb99a3133a897b885225dccfd3cc2749f4b029.jpg" alt="Chef Avatar" class="avatar">
+                <div class="status-dot"></div>
+            </div>
+            <h1 id="chefName">Xurmo opa</h1>
+            <div class="location" id="chefLocation">📍 Toshkent, Chilonzor 2-mavze</div>
+
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-value red">312</div>
+                    <div class="stat-label">Buyurtmalar</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value orange" id="chefRating">★ 4.9</div>
+                    <div class="stat-label">Reyting</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2 yil</div>
+                    <div class="stat-label">Tajriba</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value green">98%</div>
+                    <div class="stat-label">O'z vaqtida</div>
+                </div>
+            </div>
+
+            <div class="tags-container" id="chefTags">
+                <span class="tag">Osh markazi</span>
+                <span class="tag">Shurva</span>
+                <span class="tag">Somsa</span>
+                <span class="tag font-bold verified">✓ Tasdiqlangan</span>
+            </div>
+        </section>
+
+        <main class="main-content">
+            
+            <div class="left-content">
+                <div class="section-title">
+                    <span>Bugungi menyu</span>
+                    <span class="online-status">● Hozir ochiq</span>
+                </div>
+
+                <div id="chefMenuContainer">
+                    <!-- Dynamic menu cards from Supabase will be rendered here -->
+                    <div style="padding: 30px; text-align: center; color: var(--text-muted);">Menyu yuklanmoqda...</div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="reviews-card">
+                    <div class="section-title">Sharhlar</div>
+                    
+                    <div class="rating-summary">
+                        <div class="rating-big">4.9</div>
+                        <div class="stars-container">
+                            <div class="stars">★★★★★</div>
+                            <div class="rating-count">124 ta baholash</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-line"><span>5</span> <div class="bar-bg"><div class="bar-fill pct-90"></div></div></div>
+                    <div class="progress-line"><span>4</span> <div class="bar-bg"><div class="bar-fill pct-8"></div></div></div>
+                    <div class="progress-line"><span>3</span> <div class="bar-bg"><div class="bar-fill pct-2"></div></div></div>
+
+                    <div class="review-comment">
+                        <div class="review-author">
+                            <span>Javohir</span>
+                            <span class="review-date">Kechagi</span>
+                        </div>
+                        <div class="review-text">"Palov juda mazzali ekan, go'shti yumshoqqina. Rahmat Xurmo opa!"</div>
+                    </div>
+
+                    <a href="#" class="btn-all-reviews">Barcha sharhlarni ko'rish</a>
+                </div>
+            </div>
+            
+        </main>
+
+        
+        <script src="./xurmoopa.js"></script>
+
+        
+        <div id="customModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalTitle">Bildirishnoma</h3>
+            <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="modalMessage">Xabar matni shu yerda paydo bo'ladi.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal-ok" onclick="closeModal()">Yopish</button>
+        </div>
+    </div>
+</div>
+    </body>
+    </html>
