@@ -19,6 +19,10 @@ let allFoods = [];
 let allChefs = [];
 let cart = [];
 let activeTab = 'taomlar'; // 'taomlar' | 'oshpazlar'
+const initialParams = new URLSearchParams(window.location.search);
+let pageQuery = (initialParams.get('q') || '').trim().toLowerCase();
+let pageCategory = (initialParams.get('category') || '').trim().toLowerCase();
+let pageDistrict = (initialParams.get('district') || localStorage.getItem('qz_district') || '').trim();
 
 /* =============================================
    DOM REFS
@@ -37,6 +41,8 @@ const cartBadgeCount  = document.getElementById('cartBadgeCount');
 const cartTotalSum    = document.getElementById('cartTotalSum');
 const subTabs         = document.querySelectorAll('.sub-tab');
 const distBtns        = document.querySelectorAll('.dist-btn');
+const mainSearchInput = document.getElementById('mainSearchInput');
+const searchTitle     = document.getElementById('searchTitle');
 
 /* =============================================
    SUPABASE LOAD
@@ -101,6 +107,15 @@ function renderFoods(foods) {
                     <button class="btn-add-cart">Savatga</button>
                 </div>
             </div>`;
+
+        card.addEventListener('click', (event) => {
+            if (event.target.closest('.like-btn') || event.target.closest('.btn-add-cart')) return;
+            const params = new URLSearchParams();
+            params.set('id', food.id);
+            if (pageDistrict) params.set('district', pageDistrict);
+            if (pageQuery) params.set('q', pageQuery);
+            window.location.href = `food.detalis.html?${params.toString()}`;
+        });
 
         productsGrid.appendChild(card);
     });
@@ -169,6 +184,17 @@ function getFilteredFoods() {
 
     let result = [...allFoods];
 
+    if (pageQuery) {
+        result = result.filter(f => {
+            const haystack = `${f.name || ''} ${f.chef_name || ''} ${f.category || ''}`.toLowerCase();
+            return haystack.includes(pageQuery);
+        });
+    }
+
+    if (pageCategory) {
+        result = result.filter(f => (f.category || '').toLowerCase() === pageCategory);
+    }
+
     if (checkedCats.length) {
         result = result.filter(f => !f.category || checkedCats.includes(f.category));
     }
@@ -184,6 +210,12 @@ function getFilteredFoods() {
 function getFilteredChefs() {
     const sortVal = sortSelect.value;
     let result = [...allChefs];
+    if (pageQuery) {
+        result = result.filter(c => {
+            const haystack = `${c.full_name || ''} ${c.speciality || ''}`.toLowerCase();
+            return haystack.includes(pageQuery);
+        });
+    }
     if (sortVal === 'reyting') result.sort((a, b) => (b.rating ?? 5) - (a.rating ?? 5));
     return result;
 }
@@ -240,7 +272,7 @@ function attachCardListeners() {
 
             const existing = cart.find(i => i.id === id);
             if (existing) existing.quantity++;
-            else cart.push({ id, name, price, quantity: 1 });
+            else cart.push({ id, name, price, quantity: 1, chef: card.querySelector('.card-desc')?.textContent.replace('👨‍🍳', '').trim() || 'Oshpaz' });
 
             updateBadge();
 
@@ -320,6 +352,16 @@ applyFiltersBtn.addEventListener('click', () => {
     else renderChefs(getFilteredChefs());
 });
 
+if (mainSearchInput) {
+    mainSearchInput.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        pageQuery = mainSearchInput.value.trim().toLowerCase();
+        if (searchTitle) searchTitle.textContent = pageQuery ? `"${mainSearchInput.value.trim()}" bo'yicha natijalar` : 'Barcha natijalar';
+        if (activeTab === 'taomlar') renderFoods(getFilteredFoods());
+        else renderChefs(getFilteredChefs());
+    });
+}
+
 cartToggleBtn.addEventListener('click', () => { cartModal.classList.add('open'); renderCart(); });
 closeCartBtn.addEventListener('click', () => cartModal.classList.remove('open'));
 cartModal.addEventListener('click', e => { if (e.target === cartModal) cartModal.classList.remove('open'); });
@@ -332,11 +374,25 @@ if (checkoutBtn) {
             alert("Savatingiz bo'sh. Iltimos, taom qo'shing!");
             return;
         }
-        window.location.href = 'chekout.html';
+        localStorage.setItem('qz_cart', JSON.stringify(cart));
+        const params = new URLSearchParams();
+        if (pageDistrict) params.set('district', pageDistrict);
+        window.location.href = `chekout.html${params.toString() ? `?${params.toString()}` : ''}`;
     });
 }
 
 /* =============================================
    INIT
    ============================================= */
-switchTab('taomlar');
+if (mainSearchInput && pageQuery) mainSearchInput.value = initialParams.get('q');
+if (searchTitle) {
+    const cleanQuery = initialParams.get('q');
+    const districtSuffix = pageDistrict ? ` • ${pageDistrict}` : '';
+    searchTitle.textContent = cleanQuery ? `"${cleanQuery}" bo'yicha natijalar${districtSuffix}` : `Barcha natijalar${districtSuffix}`;
+}
+if (pageDistrict) {
+    distBtns.forEach(btn => btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === pageDistrict.toLowerCase()));
+}
+const initialType = initialParams.get('type') === 'oshpazlar' ? 'oshpazlar' : 'taomlar';
+subTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.type === initialType));
+switchTab(initialType);

@@ -3,154 +3,269 @@
 <head>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth_guard.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xurmo opa - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Xurmo opa - Glassmorphism 3D Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="xurmoOpa 2.css">
+    <link rel="stylesheet" href="./xurmoOpa 2.css">
+    <link rel="stylesheet" href="./chef-nav.css">
 </head>
-<body class="theme-light"> 
+<body class="theme-dark">
+
+    <!-- ══════════════ ANIMATED BACKGROUND ══════════════ -->
+    <div class="bg-layer">
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-orb orb-3"></div>
+        <div class="bg-orb orb-4"></div>
+        <div class="bg-grid"></div>
+    </div>
+
     <div class="dashboard-container">
-        
-        <aside class="sidebar">
+
+        <!-- ══════════════ SIDEBAR ══════════════ -->
+        <aside class="sidebar glass-card glass-sidebar">
             <div class="profile-section">
-                <img src="./rasm/6666f90260444c8a78cde2d5ec04de7645ff7c19.jpg" alt="Xurmo opa" class="profile-img">
+                <div class="profile-ring">
+                    <div class="profile-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=120&h=120" alt="Xurmo opa" class="profile-img">
+                    </div>
+                    <div class="online-dot"></div>
+                </div>
                 <h3 class="profile-name">Xurmo opa</h3>
-                <span class="profile-rating">★ 4.9</span>
+                <div class="profile-badge">
+                    <i class="fa-solid fa-star"></i>
+                    <span>4.9</span>
+                </div>
             </div>
-            
+
             <nav class="sidebar-menu">
-                <a href="xurmoOpa 2.html" class="menu-item active">
-                    <span class="icon"><img src="./Container (3).svg" alt=""></span> Bosh sahifa
+                <a href="xurmoOpa 2.html" class="menu-item active" data-page="bosh-sahifa">
+                    <span class="menu-icon"><img src="images/nav-home.svg" alt=""></span>
+                    <span class="menu-text">Bosh sahifa</span>
                 </a>
-                <a href="buyordashbord.html" class="menu-item">
-                    <span class="icon"><img src="./Icon (28).svg" alt=""></span> Bugungi menyu
+                <a href="xurmoOpa 2.html#today-menu-section" class="menu-item" data-page="bugungi-menyu">
+                    <span class="menu-icon"><img src="images/nav-menu.svg" alt=""></span>
+                    <span class="menu-text">Bugungi menyu</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <span class="icon"><img src="./Icon (29).svg" alt=""></span> Buyurtmalar
+                <a href="chefDashboard.html" class="menu-item" data-page="buyurtmalar">
+                    <span class="menu-icon"><img src="images/nav-orders.svg" alt=""></span>
+                    <span class="menu-text">Buyurtmalar</span>
                 </a>
-                <a href="daromad.html" class="menu-item">
-                    <span class="icon"><img src="./Icon (30).svg" alt=""></span> Daromad
+                <a href="menu.html" class="menu-item" data-page="taom-qoshish">
+                    <span class="menu-icon"><img src="images/nav-add.svg" alt=""></span>
+                    <span class="menu-text">Taom qo'shish</span>
                 </a>
-                <a href="xurmoOpa.html" class="menu-item">
-                    <span class="icon"><img src="./Icon (31).svg" alt=""></span> Profil
+                <a href="daromad.html" class="menu-item" data-page="daromad">
+                    <span class="menu-icon"><img src="images/nav-income.svg" alt=""></span>
+                    <span class="menu-text">Daromad</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <span class="icon"><img src="./Icon (32).svg" alt=""></span> Sozlamalar
+                <a href="profil.html" class="menu-item" data-page="profil">
+                    <span class="menu-icon"><img src="images/nav-profile.svg" alt=""></span>
+                    <span class="menu-text">Profil</span>
+                </a>
+                <a href="chat.html" class="menu-item" data-page="chat">
+                    <span class="menu-icon"><img src="images/nav-chat.svg" alt=""></span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="bildirishnoma.html" class="menu-item" data-page="bildirishnoma">
+                    <span class="menu-icon"><img src="images/nav-bell.svg" alt=""></span>
+                    <span class="menu-text">Bildirishnomalar</span>
                 </a>
             </nav>
+
+            <div class="sidebar-footer">
+                <div class="glass-card glass-mini-stats">
+                    <div class="mini-stat">
+                        <span class="mini-stat-val">156</span>
+                        <span class="mini-stat-label">Jami buyurtma</span>
+                    </div>
+                    <div class="mini-stat-divider"></div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-val">4.9</span>
+                        <span class="mini-stat-label">Oylik reyting</span>
+                    </div>
+                </div>
+            </div>
         </aside>
 
+        <!-- ══════════════ MAIN CONTENT ══════════════ -->
         <main class="main-content">
-            
+
+            <!-- HEADER -->
             <header class="main-header">
                 <div class="welcome-text">
-                    <h2>Xush kelibsiz, Xurmo opa!</h2>
-                    <p>Bugun sizda 8 ta yangi buyurtma bor.</p>
+                    <h2 class="glass-text-glow">Xush kelibsiz, Xurmo opa!</h2>
+                    <p>Bugun sizda <span class="text-red">8 ta yangi buyurtma</span> bor.</p>
                 </div>
                 <div class="header-actions">
-                    
-                    <div class="theme-switcher-wrapper">
-                        <button type="button" class="theme-btn active" onclick="changeTheme('light', this)" title="Light Mode">
-                            <i class="fa-solid fa-sun"></i>
-                        </button>
-                        <button type="button" class="theme-btn" onclick="changeTheme('dark', this)" title="Dark Mode">
+                    <div class="theme-switcher glass-card glass-pill">
+                        <button class="theme-btn active" data-theme="dark" title="Dark Mode">
                             <i class="fa-solid fa-moon"></i>
                         </button>
+                        <button class="theme-btn" data-theme="light" title="Light Mode">
+                            <i class="fa-solid fa-sun"></i>
+                        </button>
                     </div>
-
-                    <button class="btn-notification">🔔</button>
-                    <a href="./menu.html"><button class="btn-add-menu">＋ Menyu qo'shish</button></a>
+                    <button class="btn-notification glass-card glass-btn-icon" id="btnNotification">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notif-badge">3</span>
+                    </button>
+                    <button class="btn-add-menu glass-3d-btn" id="btnAddMenu">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Menyu qo'shish</span>
+                    </button>
                 </div>
             </header>
 
+            <!-- STATS GRID -->
             <section class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon red-bg">📋</div>
+                <div class="stat-card glass-card glass-3d-card" data-tilt>
+                    <div class="stat-icon-wrap glass-icon-box red-glow">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
                     <div class="stat-info">
                         <p class="stat-label">Bugungi buyurtmalar</p>
-                        <h3 class="stat-value">8</h3>
+                        <h3 class="stat-value counter" data-target="8">0</h3>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fa-solid fa-arrow-up"></i> 12%
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon orange-bg">💵</div>
+                <div class="stat-card glass-card glass-3d-card" data-tilt>
+                    <div class="stat-icon-wrap glass-icon-box green-glow">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                    </div>
                     <div class="stat-info">
                         <p class="stat-label">Bugungi tushum</p>
-                        <h3 class="stat-value">224,000 so'm</h3>
+                        <h3 class="stat-value"><span class="counter" data-target="224000">0</span> so'm</h3>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fa-solid fa-arrow-up"></i> 8%
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon yellow-bg">⭐</div>
+                <div class="stat-card glass-card glass-3d-card" data-tilt>
+                    <div class="stat-icon-wrap glass-icon-box amber-glow">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
                     <div class="stat-info">
                         <p class="stat-label">Haftalik reyting</p>
-                        <h3 class="stat-value">4.9</h3>
+                        <h3 class="stat-value"><span class="counter" data-target="4.9" data-decimals="1">0</span></h3>
+                    </div>
+                    <div class="stat-trend neutral">
+                        <i class="fa-solid fa-equals"></i> 0%
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon blue-bg">⏳</div>
+                <div class="stat-card glass-card glass-3d-card" data-tilt>
+                    <div class="stat-icon-wrap glass-icon-box blue-glow">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
                     <div class="stat-info">
                         <p class="stat-label">Kutilayotgan</p>
-                        <h3 class="stat-value">3</h3>
+                        <h3 class="stat-value counter" data-target="3">0</h3>
+                    </div>
+                    <div class="stat-trend down">
+                        <i class="fa-solid fa-arrow-down"></i> 5%
                     </div>
                 </div>
             </section>
 
+            <!-- CONTENT GRID -->
             <div class="content-grid">
-                
+
+                <!-- LEFT COLUMN -->
                 <div class="left-column">
-                    
-                    <section class="card-section">
+
+                    <!-- FAOL BUYURTMALAR -->
+                    <section class="card-section glass-card glass-3d-card">
                         <div class="section-header">
-                            <h3>Faol buyurtmalar</h3>
-                            <span class="live-badge">Live</span>
+                            <h3><i class="fa-solid fa-fire"></i> Faol buyurtmalar</h3>
+                            <span class="live-badge glass-pill glass-live">
+                                <span class="live-dot"></span> Live
+                            </span>
                         </div>
-                        
+
                         <div class="order-list">
-                            <div class="order-item">
-                                <div class="order-user-avatar">👤</div>
-                                <div class="order-details">
-                                    <h4 class="h4">Azizbek R.</h4>
-                                    <p>2x Osh, 1x Choy • 12:45</p>
+                            <div class="order-item glass-card glass-order">
+                                <div class="order-avatar">
+                                    <i class="fa-solid fa-user"></i>
                                 </div>
-                                <span class="status-badge status-preparing">Tayyorlanmoqda</span>
-                                <button class="btn-phone">📞</button>
+                                <div class="order-details">
+                                    <h4>Azizbek R.</h4>
+                                    <p>2x Osh, 1x Choy</p>
+                                    <span class="order-time">12:45</span>
+                                </div>
+                                <span class="status-badge status-preparing glass-pill">
+                                    <span class="status-dot"></span> Tayyorlanmoqda
+                                </span>
+                                <button class="btn-action glass-btn-icon">
+                                    <i class="fa-solid fa-phone"></i>
+                                </button>
                             </div>
-                            
-                            <div class="order-item">
-                                <div class="order-user-avatar">👤</div>
-                                <div class="order-details">
-                                    <h4 class="h4">Madina S.</h4>
-                                    <p>3x Somsa, 2x Sho'rva • 12:52</p>
+
+                            <div class="order-item glass-card glass-order">
+                                <div class="order-avatar">
+                                    <i class="fa-solid fa-user"></i>
                                 </div>
-                                <select class="status-dropdown">
-                                    <option>Tayyor</option>
-                                    <option>Yo'lda</option>
-                                </select>
-                                <button class="btn-phone">📞</button>
+                                <div class="order-details">
+                                    <h4>Madina S.</h4>
+                                    <p>3x Somsa, 2x Sho'rva</p>
+                                    <span class="order-time">12:52</span>
+                                </div>
+                                <div class="status-select-wrap">
+                                    <select class="status-select glass-select">
+                                        <option value="preparing">Tayyorlanmoqda</option>
+                                        <option value="ready">Tayyor</option>
+                                        <option value="delivering">Yo'lda</option>
+                                        <option value="delivered">Yetkazildi</option>
+                                    </select>
+                                </div>
+                                <button class="btn-action glass-btn-icon">
+                                    <i class="fa-solid fa-phone"></i>
+                                </button>
+                            </div>
+
+                            <div class="order-item glass-card glass-order">
+                                <div class="order-avatar">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <div class="order-details">
+                                    <h4>Jasur K.</h4>
+                                    <p>1x Lag'mon, 2x Non</p>
+                                    <span class="order-time">13:05</span>
+                                </div>
+                                <span class="status-badge status-delivering glass-pill">
+                                    <span class="status-dot"></span> Yo'lda
+                                </span>
+                                <button class="btn-action glass-btn-icon">
+                                    <i class="fa-solid fa-phone"></i>
+                                </button>
                             </div>
                         </div>
                     </section>
 
-                    <section class="card-section" style="margin-top: 20px;">
+                    <!-- BUGUNGI MENYU -->
+                    <section class="card-section glass-card glass-3d-card" id="today-menu-section" style="margin-top: 24px;">
                         <div class="section-header">
-                            <h3>Bugungi menyu</h3>
-                            <a href="#" class="see-all">Hammasini ko'rish ›</a>
+                            <h3><i class="fa-solid fa-utensils"></i> Bugungi menyu</h3>
+                            <a href="#" class="see-all glass-link">
+                                Hammasini ko'rish <i class="fa-solid fa-arrow-right"></i>
+                            </a>
                         </div>
-                        
+
                         <div class="menu-list">
-                            <div class="menu-item-row">
-                                <div class="drag-handle">:::</div>
-                                <img src="https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=50&h=50" alt="Palov" class="menu-item-img">
+                            <div class="menu-item-row glass-card glass-menu-row">
+                                <div class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
+                                <img src="https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=80&h=80" alt="Palov" class="menu-item-img">
                                 <div class="menu-item-details">
                                     <h4>Palov (Osh)</h4>
-                                    <p>25,000 so'm / portsitya</p>
+                                    <p>25,000 so'm / porsiya</p>
                                 </div>
-                                <div class="counter-container">
-                                    <button class="counter-btn">−</button>
+                                <div class="counter-container glass-pill glass-counter">
+                                    <button class="counter-btn minus"><i class="fa-solid fa-minus"></i></button>
                                     <span class="counter-val">12</span>
-                                    <button class="counter-btn">＋</button>
+                                    <button class="counter-btn plus"><i class="fa-solid fa-plus"></i></button>
                                 </div>
                                 <label class="toggle-switch">
                                     <input type="checkbox" checked>
@@ -158,17 +273,17 @@
                                 </label>
                             </div>
 
-                            <div class="menu-item-row">
-                                <div class="drag-handle">:::</div>
-                                <img src="./rasm/8a92d5c249f7df571f615f94a6fdf16220d33775.jpg" alt="Somsa" class="menu-item-img">
+                            <div class="menu-item-row glass-card glass-menu-row">
+                                <div class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
+                                <img src="https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?auto=format&fit=crop&w=80&h=80" alt="Somsa" class="menu-item-img">
                                 <div class="menu-item-details">
                                     <h4>Somsa (Go'shtli)</h4>
                                     <p>6,000 so'm / dona</p>
                                 </div>
-                                <div class="counter-container">
-                                    <button class="counter-btn">−</button>
+                                <div class="counter-container glass-pill glass-counter">
+                                    <button class="counter-btn minus"><i class="fa-solid fa-minus"></i></button>
                                     <span class="counter-val">45</span>
-                                    <button class="counter-btn">＋</button>
+                                    <button class="counter-btn plus"><i class="fa-solid fa-plus"></i></button>
                                 </div>
                                 <label class="toggle-switch">
                                     <input type="checkbox" checked>
@@ -176,17 +291,35 @@
                                 </label>
                             </div>
 
-                            <div class="menu-item-row">
-                                <div class="drag-handle">:::</div>
-                                <img src="https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=50&h=50" alt="Sho'rva" class="menu-item-img">
+                            <div class="menu-item-row glass-card glass-menu-row">
+                                <div class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
+                                <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=80&h=80" alt="Sho'rva" class="menu-item-img">
                                 <div class="menu-item-details">
                                     <h4>Sho'rva</h4>
-                                    <p>18,000 so'm / portsitya</p>
+                                    <p>18,000 so'm / porsiya</p>
                                 </div>
-                                <div class="counter-container">
-                                    <button class="counter-btn">−</button>
+                                <div class="counter-container glass-pill glass-counter">
+                                    <button class="counter-btn minus"><i class="fa-solid fa-minus"></i></button>
                                     <span class="counter-val">8</span>
-                                    <button class="counter-btn">＋</button>
+                                    <button class="counter-btn plus"><i class="fa-solid fa-plus"></i></button>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="menu-item-row glass-card glass-menu-row">
+                                <div class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
+                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=80&h=80" alt="Non" class="menu-item-img">
+                                <div class="menu-item-details">
+                                    <h4>Non (Patir)</h4>
+                                    <p>5,000 so'm / dona</p>
+                                </div>
+                                <div class="counter-container glass-pill glass-counter">
+                                    <button class="counter-btn minus"><i class="fa-solid fa-minus"></i></button>
+                                    <span class="counter-val">30</span>
+                                    <button class="counter-btn plus"><i class="fa-solid fa-plus"></i></button>
                                 </div>
                                 <label class="toggle-switch">
                                     <input type="checkbox" checked>
@@ -198,67 +331,131 @@
 
                 </div>
 
+                <!-- RIGHT COLUMN -->
                 <div class="right-column">
-                    
-                    <div class="income-card">
-                        <p class="income-title">Haftalik daromad</p>
-                        <p class="income-subtitle">Jami tushum (shu hafta)</p>
-                        <h3 class="income-value">1,568,000 <span>so'm</span></h3>
-                        
+
+                    <!-- HAFTALIK DAROMAD -->
+                    <div class="income-card glass-card glass-income">
+                        <div class="income-header">
+                            <div>
+                                <p class="income-title">Haftalik daromad</p>
+                                <p class="income-subtitle">Jami tushum (shu hafta)</p>
+                            </div>
+                            <div class="income-icon-box">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                        </div>
+                        <h3 class="income-value">
+                            <span class="counter" data-target="1568000">0</span>
+                            <span class="income-currency">so'm</span>
+                        </h3>
+
                         <div class="chart-container">
                             <div class="chart-bar-wrapper">
-                                <div class="chart-bar" style="height: 60px;"></div>
+                                <div class="chart-bar glass-bar" data-height="60">
+                                    <div class="chart-bar-fill" style="--bar-h: 60%"></div>
+                                </div>
                                 <span class="chart-label">Du</span>
                             </div>
                             <div class="chart-bar-wrapper">
-                                <div class="chart-bar" style="height: 90px;"></div>
+                                <div class="chart-bar glass-bar" data-height="90">
+                                    <div class="chart-bar-fill" style="--bar-h: 90%"></div>
+                                </div>
                                 <span class="chart-label">Se</span>
                             </div>
                             <div class="chart-bar-wrapper">
-                                <div class="chart-bar" style="height: 40px;"></div>
+                                <div class="chart-bar glass-bar" data-height="40">
+                                    <div class="chart-bar-fill" style="--bar-h: 40%"></div>
+                                </div>
                                 <span class="chart-label">Ch</span>
                             </div>
                             <div class="chart-bar-wrapper">
-                                <div class="chart-bar" style="height: 75px;"></div>
+                                <div class="chart-bar glass-bar" data-height="75">
+                                    <div class="chart-bar-fill" style="--bar-h: 75%"></div>
+                                </div>
                                 <span class="chart-label">Pa</span>
                             </div>
                             <div class="chart-bar-wrapper">
-                                <div class="chart-bar" style="height: 100px;"></div>
+                                <div class="chart-bar glass-bar active-bar" data-height="100">
+                                    <div class="chart-bar-fill" style="--bar-h: 100%"></div>
+                                </div>
                                 <span class="chart-label">Ju</span>
                             </div>
                             <div class="chart-bar-wrapper">
-                                <div class="chart-bar" style="height: 50px;"></div>
+                                <div class="chart-bar glass-bar" data-height="50">
+                                    <div class="chart-bar-fill" style="--bar-h: 50%"></div>
+                                </div>
                                 <span class="chart-label">Sh</span>
                             </div>
                             <div class="chart-bar-wrapper">
-                                <div class="chart-bar" style="height: 55px;"></div>
+                                <div class="chart-bar glass-bar" data-height="55">
+                                    <div class="chart-bar-fill" style="--bar-h: 55%"></div>
+                                </div>
                                 <span class="chart-label">Ya</span>
                             </div>
                         </div>
 
-                        <button class="btn-details" onclick="window.location.href='daromad.html'">Batafsil hisobot</button>
+                        <button class="btn-details glass-btn-outline" id="btnDetails">
+                            <i class="fa-solid fa-chart-bar"></i>
+                            Batafsil hisobot
+                        </button>
                     </div>
 
-                    <div class="review-card">
-                        <h4 class="review-title">Oxirgi sharhlar</h4>
-                        <div class="review-box">
+                    <!-- OXIRGI SHARHLAR -->
+                    <div class="review-card glass-card glass-3d-card">
+                        <h4 class="review-title"><i class="fa-solid fa-comment-dots"></i> Oxirgi sharhlar</h4>
+
+                        <div class="review-box glass-card glass-review">
                             <div class="review-header">
-                                <span class="review-user">Abror J.</span>
-                                <span class="review-stars">★★★★★</span>
+                                <div class="review-user-info">
+                                    <div class="review-avatar">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <span class="review-user">Abror J.</span>
+                                </div>
+                                <div class="review-stars">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
                             </div>
                             <p class="review-text">"Oshingizga gap yo'q! Go'shti yumshoqqina ekan, baraka toping."</p>
+                            <span class="review-time">2 soat oldin</span>
+                        </div>
+
+                        <div class="review-box glass-card glass-review">
+                            <div class="review-header">
+                                <div class="review-user-info">
+                                    <div class="review-avatar">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <span class="review-user">Dilnoza M.</span>
+                                </div>
+                                <div class="review-stars">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                </div>
+                            </div>
+                            <p class="review-text">"Somsalari juda mazali, lekin yetkazish biroz sekinroq bo'ldi."</p>
+                            <span class="review-time">5 soat oldin</span>
                         </div>
                     </div>
 
                 </div>
-
             </div>
-            <div id="toast-container"></div>
+
         </main>
     </div>
 
-    <script src="./xurmoopa2.js"></script>
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
 
-    
+    <script src="./chef-nav.js"></script>
+    <script src="./xurmoopa2.js"></script>
 </body>
 </html>

@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (error) throw error;
 
                 alert("Muvaffaqiyatli ro'yxatdan o'tdingiz! Agar Supabase loyihangizda email tasdiqlash yoqilgan bo'lsa, pochtangizga kelgan xatni tasdiqlang. So'ngra tizimga kirishingiz mumkin.");
-                window.location.href = 'index.html';
+                window.location.href = 'kirish.html';
             } catch (err) {
                 console.error("Ro'yxatdan o'tishda xatolik:", err.message);
                 alert("Ro'yxatdan o'tishda xatolik: " + err.message);

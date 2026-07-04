@@ -1,6 +1,57 @@
-/* ==========================================================================
-   1. ASOSIY STILLAR (LIGHT MODE - DEFAULT)
-   ========================================================================== */
+/* ══════════════════════════════════════════════════════════════
+   QOZON — MENU CREATION GLASSMORPHISM STYLESHEET
+   Matching Dashboard v2 Premium Design (GRAND & SPACIOUS BALANCE)
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+    --red-50: #fff1f2;
+    --red-100: #ffe4e6;
+    --red-200: #fecdd3;
+    --red-300: #fda4af;
+    --red-400: #fb7185;
+    --red-500: #f43f5e;
+    --red-600: #e11d48;
+    --red-700: #be123c;
+    --red-800: #9f1239;
+    --red-900: #881337;
+
+    --bg-dark: #0a0a0f;
+    --bg-dark-2: #12121a;
+    --bg-dark-3: #1a1a26;
+
+    --bg-light: #f8f9fc;
+    --bg-light-2: #ffffff;
+    --bg-light-3: #f1f3f8;
+
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+    --glass-blur: 24px;
+
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    --radius: 24px;
+    --radius-sm: 14px;
+    --radius-xs: 8px;
+}
+
+/* ─── THEME LIGHT VARIABLES ─── */
+body.theme-light {
+    --bg-dark: var(--bg-light);
+    --bg-dark-2: var(--bg-light-2);
+    --bg-dark-3: var(--bg-light-3);
+
+    --glass-bg: rgba(255, 255, 255, 0.52);
+    --glass-border: rgba(225, 29, 72, 0.08);
+    --glass-shadow: 0 25px 50px rgba(225, 29, 72, 0.06);
+
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,25 +60,95 @@
 }
 
 body {
-    background-color: #A4887B;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
-    transition: background-color 0.3s ease;
+    padding: 20px;
+    overflow: hidden; /* Scrollbars cheklangan */
+    position: relative;
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Modal Konteyneri */
-.modal-card {
-    background-color: #FFFDFC;
-    width: 100%;
-    max-width: 500px;
-    border-radius: 24px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+/* ─── ANIMATED MESH BACKGROUND ─── */
+.bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
     overflow: hidden;
-    color: #4A3E3D;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    pointer-events: none;
+}
+
+.bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.35;
+    animation: orbFloat 25s ease-in-out infinite;
+}
+
+.orb-1 {
+    width: 650px; height: 650px;
+    background: radial-gradient(circle, var(--red-600), transparent 70%);
+    top: -10%; left: -10%;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 550px; height: 550px;
+    background: radial-gradient(circle, rgba(244, 63, 94, 0.6), transparent 70%);
+    bottom: -10%; right: -5%;
+    animation-delay: -5s;
+}
+
+.orb-3 {
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(225, 29, 72, 0.4), transparent 70%);
+    top: 40%; right: 40%;
+    animation-delay: -10s;
+}
+
+@keyframes orbFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-25px) scale(1.08); }
+}
+
+/* ─── GLASS UTILITIES ─── */
+.glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--glass-shadow);
+}
+
+.glass-3d-card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.glass-3d-card:hover {
+    border-color: rgba(225, 29, 72, 0.25);
+    box-shadow: 0 30px 65px rgba(0, 0, 0, 0.4), 0 0 45px rgba(225, 29, 72, 0.1);
+}
+
+/* ─── MAIN MODAL CARD (LARGER WIDTH) ─── */
+.modal-card {
+    width: 100%;
+    max-width: 650px; /* Width extended */
+    border-radius: 28px;
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+    animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardEntrance {
+    from { opacity: 0; transform: scale(0.96) translateY(15px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* Header qismi */
@@ -35,41 +156,63 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 24px 16px 24px;
-    border-bottom: 1px solid #F0D5D2;
+    padding: 26px 32px 16px 32px;
+    border-bottom: 1px solid var(--glass-border);
     margin-bottom: 20px;
 }
 
 .modal-header h2 {
-    font-size: 20px;
-    font-weight: 700;
-    color: #2D2120;
-    transition: color 0.3s ease;
+    font-size: 24px;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(135deg, #ffffff 40%, var(--red-300) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-/* Header tugmalari konteyneri */
+body.theme-light .modal-header h2 {
+    background: linear-gradient(135deg, #1e293b 40%, var(--red-600) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Header Actions */
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: #9CA3AF;
+/* Glass Buttons */
+.glass-btn-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: color 0.2s;
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.close-btn:hover {
-    color: #4B5563;
+.glass-btn-icon:hover {
+    background: var(--red-600);
+    color: #fff;
+    border-color: var(--red-500);
+    transform: translateY(-2px);
 }
 
-/* Form elementlari */
+.theme-btn .fa-sun { display: none; }
+body.theme-light .theme-btn .fa-sun { display: block; }
+body.theme-light .theme-btn .fa-moon { display: none; }
+
+/* ─── FORM & INPUTS ─── */
 .modal-form {
-    padding: 0 24px 24px 24px;
+    padding: 0 32px 28px 32px;
 }
 
 .form-group {
@@ -79,256 +222,292 @@ body {
 .form-label {
     display: block;
     font-size: 12px;
-    font-weight: 600;
-    color: #7A6B69;
-    margin-bottom: 6px;
-    transition: color 0.3s ease;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-/* Input, Textarea va Select */
-.form-input, .form-textarea, .form-select {
+/* Premium Inputs (LARGER SIZING) */
+.glass-input {
     width: 100%;
-    padding: 12px 16px;
-    border-radius: 12px;
-    border: 1px solid #F0D5D2;
-    font-size: 14px;
-    background-color: #FFFFFF;
-    color: #2D2120;
+    padding: 13px 18px; /* Slightly taller */
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    font-size: 15px; /* Larger font size */
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-primary);
     outline: none;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 
-.form-input::placeholder, .form-textarea::placeholder, .tag-input::placeholder {
-    color: #D1D5DB;
+body.theme-light .glass-input {
+    background: rgba(0, 0, 0, 0.02);
 }
 
-.form-input:focus, .form-textarea:focus, .form-select:focus {
-    border-color: #C62828;
-    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15);
+.glass-input::placeholder {
+    color: var(--text-muted);
+}
+
+.glass-input:focus {
+    border-color: var(--red-500);
+    background: rgba(225, 29, 72, 0.02);
+    box-shadow: 0 0 15px rgba(225, 29, 72, 0.12);
 }
 
 .form-textarea {
     resize: none;
 }
 
-/* Rasm yuklash zonasi */
-.upload-zone {
-    border: 2px dashed #F0D5D2;
-    background-color: #FFF5F4;
-    border-radius: 16px;
-    padding: 24px;
+/* ─── ROW COMPOSITE (IMAGE + NAME & CATEGORY) ─── */
+.row-composite {
+    display: grid;
+    grid-template-columns: 180px 1fr; /* Wider image zone */
+    gap: 20px;
+    align-items: stretch;
+}
+
+.name-cat-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.form-group-sub {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-sub:first-child {
+    margin-bottom: 8px;
+}
+
+/* ─── IMAGE UPLOAD ZONE (LARGER & MORE SPACIOUS) ─── */
+.compact-upload-zone {
+    border: 1.5px dashed var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.01);
+    text-align: center;
+    height: 100%;
+    min-height: 136px;
 }
 
-.upload-zone:hover {
-    background-color: #FFEBE9;
+.compact-upload-zone:hover {
+    border-color: var(--red-500);
+    background: rgba(225, 29, 72, 0.03);
+    transform: translateY(-2px);
 }
 
-.upload-icon {
-    width: 48px;
-    height: 48px;
-    background-color: #FEECEB;
-    color: #C62828;
+.compact-upload-zone .upload-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--red-500), var(--red-700));
+    color: #fff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 8px;
-    font-size: 18px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    box-shadow: 0 6px 16px rgba(225, 29, 72, 0.2);
 }
 
-.upload-title {
-    font-size: 14px;
+.compact-upload-zone .upload-title {
+    font-size: 13px;
     font-weight: 700;
-    color: #2D2120;
-    text-align: center;
-    max-width: 90%;
-    white-space: nowrap;
+    color: var(--text-primary);
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.upload-subtitle {
-    font-size: 12px;
-    color: #9CA3AF;
-    margin-top: 4px;
+.compact-upload-zone .upload-subtitle {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 3px;
 }
 
-/* Grid tuzilmalari */
+/* ─── LAYOUT GRIDS ─── */
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 20px;
 }
 
 .grid-4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
-
-/* Select unifikatsiyasi */
-.select-wrapper {
-    position: relative;
-}
-
-.select-wrapper .fa-chevron-down {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #9CA3AF;
-    font-size: 12px;
-    pointer-events: none;
-}
-
-.form-select {
-    appearance: none;
-    color: #2D2120;
-}
-
-/* Soni (Counter) */
-.counter-input {
-    display: flex;
-    align-items: center;
-    border: 1px solid #F0D5D2;
-    border-radius: 12px;
-    background-color: #FFFFFF;
-    overflow: hidden;
-    height: 45px;
-    transition: all 0.2s ease;
-}
-
-.counter-btn {
-    width: 100%;
-    height: 100%;
-    background: none;
-    border: none;
-    color: #9CA3AF;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.2s;
-}
-
-.counter-btn:hover {
-    background-color: #F9FAFB;
-}
-
-.counter-value {
-    padding: 0 4px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #374151;
-    user-select: none;
-}
-
-/* Vaqt inputi */
-.time-wrapper {
-    position: relative;
-}
-
-.time-wrapper .fa-clock {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #9CA3AF;
-    font-size: 14px;
+    gap: 14px;
 }
 
 .text-center {
     text-align: center;
 }
 
-/* Masalliqlar kartasi va teglar */
-.ingredients-card {
-    background-color: #FFF5F4;
-    border: 1px solid #FCEAE8;
-    border-radius: 16px;
-    padding: 16px;
-    margin-top: 16px;
-    transition: all 0.3s ease;
+/* Select wrapper */
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.select-wrapper .fa-chevron-down {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+/* Counter Input (LARGER & ROBUST) */
+.counter-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 46px; /* Taller */
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
+}
+
+.counter-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.counter-btn:hover {
+    background: var(--red-600);
+    color: #fff;
+}
+
+.counter-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Time Picker Wrapper */
+.time-wrapper {
+    position: relative;
+}
+
+.time-wrapper .fa-clock {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+/* ─── INGREDIENTS & ALLERGENS (GRAND & SPACIOUS) ─── */
+.ingredients-composite {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 16px;
+    align-items: stretch;
 }
 
 .tags-container {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    min-height: 48px;
+    padding: 8px 14px;
     align-items: center;
-    background-color: #FFFFFF;
-    border: 1px solid #F0D5D2;
-    border-radius: 12px;
-    padding: 8px;
-    min-height: 46px;
-    transition: all 0.2s ease;
 }
 
 .tag {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 12px;
-    background-color: #FEECEB;
-    color: #C62828;
-    font-size: 12px;
-    font-weight: 500;
-    border-radius: 9999px;
+    padding: 6px 12px;
+    background: rgba(225, 29, 72, 0.1);
+    border: 1px solid rgba(225, 29, 72, 0.2);
+    color: var(--red-300);
+    border-radius: var(--radius-xs);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+body.theme-light .tag {
+    background: rgba(225, 29, 72, 0.05);
+    color: var(--red-700);
 }
 
 .tag button {
     background: none;
     border: none;
-    color: #C62828;
-    font-weight: bold;
-    cursor: pointer;
+    color: var(--red-400);
     font-size: 14px;
+    cursor: pointer;
+    font-weight: 700;
 }
 
 .tag-input {
     border: none;
     outline: none;
-    font-size: 12px;
-    flex: 1;
-    min-width: 60px;
-    padding: 4px;
     background: transparent;
+    color: var(--text-primary);
+    font-size: 13px;
+    min-width: 60px;
+    flex-grow: 1;
 }
 
-/* Allergenlar va Toggle Switch */
-.allergen-row {
+.allergen-half {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid #FBE3E0;
-    transition: border-color 0.3s ease;
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    height: 100%;
 }
 
 .allergen-title {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
-    color: #2D2120;
+    color: var(--text-primary);
 }
 
 .allergen-desc {
-    font-size: 10px;
-    color: #9CA3AF;
-    margin-top: 2px;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
 }
 
+/* Switch styling */
 .switch {
     position: relative;
     display: inline-block;
-    width: 36px;
-    height: 20px;
+    width: 46px;
+    height: 24px;
+    flex-shrink: 0;
 }
 
 .switch input {
@@ -340,264 +519,112 @@ body {
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #E5E7EB;
-    transition: .3s;
-    border-radius: 20px;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+body.theme-light .slider {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
+    height: 16px;
+    width: 16px;
+    left: 4px;
     bottom: 3px;
-    background-color: white;
-    transition: .3s;
+    background-color: var(--text-secondary);
+    transition: .4s;
     border-radius: 50%;
 }
 
 input:checked + .slider {
-    background-color: #C62828;
+    background-color: var(--red-600);
+    border-color: var(--red-500);
 }
 
 input:checked + .slider:before {
-    transform: translateX(16px);
+    transform: translateX(20px);
+    background-color: #fff;
 }
 
-/* Footer tugmalari */
+/* ─── MODAL FOOTER ─── */
 .modal-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 16px;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 14px;
 }
 
-.cancel-btn {
-    background: none;
-    border: none;
+/* Cancel Button */
+.glass-btn-outline {
+    padding: 13px 26px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
     font-size: 14px;
-    font-weight: 600;
-    color: #9CA3AF;
+    font-weight: 700;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: all 0.3s ease;
 }
 
-.cancel-btn:hover {
-    color: #4B5563;
+.glass-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    transform: translateY(-1px);
 }
 
-.submit-btn {
+/* Submit Button (GRAND & ROBUST) */
+.glass-3d-btn {
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: #C62828;
-    color: #FFFFFF;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 14px 24px;
+    padding: 13px 32px; /* Taller and wider */
     border: none;
-    border-radius: 9999px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--red-600), var(--red-700));
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 10px 15px -3px rgba(198, 40, 40, 0.2);
-    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3);
+    transition: all 0.3s ease;
 }
 
-.submit-btn:hover {
-    background-color: #B32424;
+.glass-3d-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(225, 29, 72, 0.4), 0 0 30px rgba(225, 29, 72, 0.1);
 }
 
-.submit-btn:active {
-    transform: scale(0.97);
+.glass-3d-btn:active {
+    transform: translateY(-1px);
 }
 
-/* Dark Mode o'zgartirgich tugmasi */
-.theme-btn {
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+/* Number input'lar uchun spin buttonlarni tozalash/moslashtirish */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Time input default iconini yashirish (custom clock fa-regular fa-clock chiroyli ko'rinishi uchun) */
+input[type="time"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    color: #4a5568;
-    transition: all 0.2s ease;
-}
-
-.theme-btn:hover {
-    transform: scale(1.05);
-    background: #e2e8f0;
-}
-
-.theme-btn .fa-moon {
-    display: block;
-}
-
-.theme-btn .fa-sun {
-    display: none;
-}
-
-
-/* ==========================================================================
-   2. DARK MODE FAOL BO'LGANDAGI STILLAR (MUKAMMAL)
-   ========================================================================== */
-body.dark-mode {
-    background-color: #0f172a !important;
-    color: #f1f5f9 !important;
-}
-
-/* Sarlavha endi qorong'u fonda oppoq va chiroyli turadi */
-body.dark-mode .modal-header h2 {
-    color: #ffffff !important;
-}
-
-body.dark-mode .modal-header {
-    border-bottom-color: #334155 !important;
-}
-
-/* Dark modeda kecha/gunduz tugmasi holati */
-body.dark-mode .theme-btn {
-    background: #334155;
-    border-color: #475569;
-    color: #f59e0b;
-}
-
-body.dark-mode .theme-btn:hover {
-    background: #475569;
-}
-
-body.dark-mode .theme-btn .fa-moon {
-    display: none;
-}
-
-body.dark-mode .theme-btn .fa-sun {
-    display: block;
-}
-
-/* Kartalar fonini to'g'rilash */
-body.dark-mode .modal-card {
-    background-color: #1e293b !important;
-    color: #f1f5f9 !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-}
-
-body.dark-mode .ingredients-card {
-    background-color: #0f172a !important;
-    border-color: #334155 !important;
-}
-
-/* Hamma turdagi Inputlar va maydonlar */
-body.dark-mode .form-input,
-body.dark-mode .form-select,
-body.dark-mode .form-textarea,
-body.dark-mode .counter-input,
-body.dark-mode .tags-container {
-    background-color: #0f172a !important;
-    color: #f1f5f9 !important;
-    border-color: #334155 !important;
-}
-
-body.dark-mode .form-input:focus, 
-body.dark-mode .form-textarea:focus, 
-body.dark-mode .form-select:focus {
-    border-color: #C62828;
-}
-
-body.dark-mode .form-input::placeholder, 
-body.dark-mode .form-textarea::placeholder,
-body.dark-mode .tag-input::placeholder {
-    color: #4b5563 !important;
-}
-
-/* Rasm yuklash zonasi dark mode */
-body.dark-mode .upload-zone {
-    background-color: #0f172a !important;
-    border-color: #334155 !important;
-}
-
-body.dark-mode .upload-zone:hover {
-    background-color: #1e293b !important;
-}
-
-body.dark-mode .upload-title {
-    color: #ffffff !important;
-}
-
-body.dark-mode .upload-icon {
-    background-color: #1e293b !important;
-}
-
-/* Matnlar va kichik yozuvlar ranglari */
-body.dark-mode .form-label,
-body.dark-mode .allergen-title {
-    color: #cbd5e1 !important;
-}
-
-body.dark-mode .allergen-desc,
-body.dark-mode .upload-subtitle {
-    color: #64748b !important;
-}
-
-body.dark-mode .allergen-row {
-    border-top-color: #334155 !important;
-}
-
-body.dark-mode .counter-value {
-    color: #ffffff !important;
-}
-
-body.dark-mode .counter-btn:hover {
-    background-color: #1e293b !important;
-}
-
-/* Tag (masalliqlar teglari) rangi */
-body.dark-mode .tag {
-    background-color: #334155 !important;
-    color: #f1f5f9 !important;
-}
-
-body.dark-mode .tag button {
-    color: #ef4444 !important;
-}
-
-/* Yopish va bekor qilish tugmalari */
-body.dark-mode .close-btn,
-body.dark-mode .cancel-btn {
-    color: #64748b !important;
-}
-
-body.dark-mode .close-btn:hover,
-body.dark-mode .cancel-btn:hover {
-    color: #ffffff !important;
-}
-
-/* ==========================================================================
-   FONT AWESOME FONT-FAMILY PROTECTION OVERRIDE
-   ========================================================================== */
-.fa-solid, .fas {
-    font-family: "Font Awesome 6 Free", sans-serif !important;
-    font-weight: 900 !important;
-    font-style: normal !important;
-    font-variant: normal !important;
-    text-rendering: auto !important;
-    -webkit-font-smoothing: antialiased !important;
-}
-.fa-brands, .fab {
-    font-family: "Font Awesome 6 Brands", sans-serif !important;
-    font-weight: 400 !important;
-    font-style: normal !important;
-    font-variant: normal !important;
-    text-rendering: auto !important;
-    -webkit-font-smoothing: antialiased !important;
-}
-.fa, .far, .fal, .fad, .fa-regular {
-    font-family: "Font Awesome 6 Free", sans-serif !important;
-    font-style: normal !important;
-    font-variant: normal !important;
-    text-rendering: auto !important;
-    -webkit-font-smoothing: antialiased !important;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
 }

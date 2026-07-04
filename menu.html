@@ -6,74 +6,136 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yangi taom qo'shish</title>
+    <title>Qozon — Yangi taom qo'shish</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="./menu.css">
+    <link rel="stylesheet" href="./chef-nav.css">
 </head>
-<body>
+<body class="theme-dark">
 
-    <div class="modal-card">
+    <!-- ANIMATED MESH BACKGROUND -->
+    <div class="bg-layer">
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-orb orb-3"></div>
+    </div>
+
+    <button class="chef-mobile-menu-btn" data-chef-sidebar-toggle aria-label="Menyuni ochish">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <aside class="chef-sidebar">
+        <a href="xurmoOpa 2.html" class="chef-sidebar-brand">
+            <img src="images/nav-home.svg" alt="">
+            <div>
+                <strong>qozon</strong>
+                <span>Oshpaz paneli</span>
+            </div>
+        </a>
+        <nav class="sidebar-menu">
+            <a href="xurmoOpa 2.html" class="menu-item" data-page="bosh-sahifa">
+                <span class="menu-icon"><img src="images/nav-home.svg" alt=""></span>
+                <span class="menu-text">Bosh sahifa</span>
+            </a>
+            <a href="xurmoOpa 2.html#today-menu-section" class="menu-item" data-page="bugungi-menyu">
+                <span class="menu-icon"><img src="images/nav-menu.svg" alt=""></span>
+                <span class="menu-text">Bugungi menyu</span>
+            </a>
+            <a href="chefDashboard.html" class="menu-item" data-page="buyurtmalar">
+                <span class="menu-icon"><img src="images/nav-orders.svg" alt=""></span>
+                <span class="menu-text">Buyurtmalar</span>
+            </a>
+            <a href="menu.html" class="menu-item active" data-page="taom-qoshish">
+                <span class="menu-icon"><img src="images/nav-add.svg" alt=""></span>
+                <span class="menu-text">Taom qo'shish</span>
+            </a>
+            <a href="daromad.html" class="menu-item" data-page="daromad">
+                <span class="menu-icon"><img src="images/nav-income.svg" alt=""></span>
+                <span class="menu-text">Daromad</span>
+            </a>
+            <a href="profil.html" class="menu-item" data-page="profil">
+                <span class="menu-icon"><img src="images/nav-profile.svg" alt=""></span>
+                <span class="menu-text">Profil</span>
+            </a>
+            <a href="chat.html" class="menu-item" data-page="chat">
+                <span class="menu-icon"><img src="images/nav-chat.svg" alt=""></span>
+                <span class="menu-text">Chat</span>
+            </a>
+            <a href="bildirishnoma.html" class="menu-item" data-page="bildirishnoma">
+                <span class="menu-icon"><img src="images/nav-bell.svg" alt=""></span>
+                <span class="menu-text">Bildirishnomalar</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CARD CONTAINER -->
+    <div class="modal-card glass-card glass-3d-card chef-page-offset">
         
         <div class="modal-header">
             <h2>Yangi taom qo'shish</h2>
             
             <div class="header-actions">
-                <button type="button" class="theme-btn" id="themeToggleBtn" title="Rejimni o'zgartirish">
+                <button type="button" class="theme-btn glass-btn-icon" id="themeToggleBtn" title="Rejimni o'zgartirish">
                     <i class="fa-solid fa-moon"></i>
                     <i class="fa-solid fa-sun"></i>
                 </button>
-                <button type="button" class="close-btn" onclick="window.location.href='xurmoOpa 2.html'">✕</button>
+                <button type="button" class="close-btn glass-btn-icon" onclick="window.location.href='xurmoOpa 2.html'">✕</button>
             </div>
         </div>
 
         <form class="modal-form">
             
-            <div class="form-group">
-                <label class="form-label">Taom rasmi</label>
-                <div class="upload-zone" id="uploadZone">
+            <!-- ROW 1: Image Upload (Left) + Name & Category (Right) -->
+            <div class="row-composite form-group">
+                <div class="compact-upload-zone glass-card" id="uploadZone">
                     <input type="file" id="fileInput" accept="image/*" hidden>
                     <div class="upload-icon">
                         <i class="fa-solid fa-camera"></i>
                     </div>
                     <span class="upload-title" id="uploadTitle">Rasm yuklang</span>
-                    <span class="upload-subtitle">PNG, JPG (max. 5MB)</span>
+                    <span class="upload-subtitle">PNG, JPG (max 5MB)</span>
                 </div>
-            </div>
-
-            <div class="grid-2 form-group">
-                <div>
-                    <label class="form-label">Taom nomi</label>
-                    <input type="text" placeholder="M: Milliy palov" class="form-input" required>
-                </div>
-                <div>
-                    <label class="form-label">Kategoriya</label>
-                    <div class="select-wrapper">
-                        <select class="form-select">
-                            <option>Tanlang</option>
-                            <option value="milliy">Milliy taomlar</option>
-                            <option value="fastfood">Fast Food</option>
-                            <option value="ichimliklar">Ichimliklar</option>
-                        </select>
-                        <i class="fa-solid fa-chevron-down"></i>
+                <div class="name-cat-wrapper">
+                    <div class="form-group-sub">
+                        <label class="form-label">Taom nomi</label>
+                        <input type="text" placeholder="M: Milliy palov" class="form-input glass-input" required>
+                    </div>
+                    <div class="form-group-sub">
+                        <label class="form-label">Kategoriya</label>
+                        <div class="select-wrapper">
+                            <select class="form-select glass-input">
+                                <option value="">Tanlang</option>
+                                <option value="milliy">Milliy taomlar</option>
+                                <option value="fastfood">Fast Food</option>
+                                <option value="ichimliklar">Ichimliklar</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- ROW 2: Description (Tavsif) -->
             <div class="form-group">
                 <label class="form-label">Tavsif</label>
-                <textarea rows="3" placeholder="Taom haqida batafsil ma'lumot bering..." class="form-textarea"></textarea>
+                <textarea rows="2" placeholder="Taom haqida batafsil ma'lumot bering..." class="form-textarea glass-input"></textarea>
             </div>
 
+            <!-- ROW 3: Price, Quantity, Prep, Time -->
             <div class="grid-4 form-group">
                 <div>
                     <label class="form-label">Narxi (so'm)</label>
-                    <input type="text" value="45000" class="form-input text-center">
+                    <input type="number" value="45000" min="0" class="form-input glass-input text-center">
                 </div>
                 <div>
                     <label class="form-label">Soni</label>
-                    <div class="counter-input">
+                    <div class="counter-input glass-card">
                         <button type="button" class="counter-btn" id="minusBtn">-</button>
                         <span class="counter-value" id="counterValue">10</span>
                         <button type="button" class="counter-btn" id="plusBtn">+</button>
@@ -81,21 +143,22 @@
                 </div>
                 <div>
                     <label class="form-label">Tayyorlash (min)</label>
-                    <input type="text" value="45" class="form-input text-center">
+                    <input type="number" value="45" min="0" class="form-input glass-input text-center">
                 </div>
                 <div>
                     <label class="form-label">Tayyor vaqti</label>
                     <div class="time-wrapper">
-                        <input type="text" placeholder="--:--" class="form-input text-center">
+                        <input type="time" class="form-input glass-input text-center">
                         <i class="fa-regular fa-clock"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="ingredients-card">
-                <div>
+            <!-- ROW 4: Ingredients & Allergen Switch (Side-by-side) -->
+            <div class="ingredients-composite form-group">
+                <div class="ingredients-half">
                     <label class="form-label">Masalliqlar</label>
-                    <div class="tags-container" id="tagsContainer">
+                    <div class="tags-container glass-input" id="tagsContainer">
                         <span class="tag">
                             Mol go'shti <button type="button">×</button>
                         </span>
@@ -105,11 +168,11 @@
                         <input type="text" placeholder="Qo'shish..." class="tag-input" id="tagInput">
                     </div>
                 </div>
-
-                <div class="allergen-row">
-                    <div>
+                
+                <div class="allergen-half glass-card">
+                    <div class="allergen-text">
                         <h4 class="allergen-title">Allergenlar</h4>
-                        <p class="allergen-desc">Tarkibida allergik masalliqlar bormi?</p>
+                        <p class="allergen-desc">Tarkibida bormi?</p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="allergenSwitch">
@@ -118,9 +181,10 @@
                 </div>
             </div>
 
+            <!-- Footer -->
             <div class="modal-footer">
-                <button type="button" class="cancel-btn" onclick="window.location.href='xurmoOpa 2.html'">Bekor qilish</button>
-                <button type="submit" class="submit-btn">
+                <button type="button" class="cancel-btn glass-btn-outline" onclick="window.location.href='xurmoOpa 2.html'">Bekor qilish</button>
+                <button type="submit" class="submit-btn glass-3d-btn">
                     Menyuga qo'shish <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
@@ -128,8 +192,7 @@
         </form>
     </div>
 
+    <script src="./chef-nav.js"></script>
     <script src="menu.js"></script>
-
-   
 </body>
 </html>

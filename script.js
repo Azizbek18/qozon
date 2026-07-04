@@ -165,7 +165,7 @@ function renderChefs(chefsList) {
 
     chefsList.forEach(chef => {
         const name     = chef.name || chef.full_name || "Noma'lum oshpaz";
-        const image    = chef.image_url || chef.image || 'https://cdn.dribbble.com/userupload/37942659/file/original-e75e34cb44361a6425fd82f51f07777b.png?resize=752x&vertical=center';
+        const image    = chef.avatar_url || chef.image_url || chef.image || 'https://cdn.dribbble.com/userupload/37942659/file/original-e75e34cb44361a6425fd82f51f07777b.png?resize=752x&vertical=center';
         const location = chef.location || chef.address || "Manzil ko'rsatilmagan";
         const meals    = chef.meal_count || chef.meals || 0;
         const rating   = chef.rating_score || chef.rating || '5.0';
@@ -664,6 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Auth-state header initialization
     initHeaderAuth();
+    initProfileDropdown();
 
     // Tilt effect — init after chefs/foods load
     setTimeout(initTiltEffect, 500);
@@ -726,6 +727,42 @@ function updateHeaderUI(user) {
         if (mobileLoginItem) mobileLoginItem.style.display = 'none';
         if (mobileProfileItem) mobileProfileItem.style.display = 'block';
         if (mobileOrderItem) mobileOrderItem.style.display = 'block';
+
+        // Update user profile info inside dropdown
+        const email = user.email || '';
+        const emailEl = document.getElementById('dropdown-user-email');
+        if (emailEl) emailEl.innerText = email;
+
+        const name = user.user_metadata?.full_name || 'Foydalanuvchi';
+        const nameEl = document.getElementById('dropdown-user-name');
+        if (nameEl) nameEl.innerText = name;
+        const profileNameEl = document.getElementById('header-profile-name');
+        if (profileNameEl) profileNameEl.innerText = name;
+
+        if (supabaseClient) {
+            supabaseClient.from('profiles').select('full_name, role, avatar_url').eq('id', user.id).single()
+                .then(({ data: profile }) => {
+                    if (profile) {
+                        const fullName = profile.full_name || name;
+                        if (nameEl) nameEl.innerText = fullName;
+                        if (profileNameEl) profileNameEl.innerText = fullName;
+                        
+                        if (profile.avatar_url) {
+                            const avatarImg = document.getElementById('dropdown-avatar-img');
+                            if (avatarImg) avatarImg.src = profile.avatar_url;
+                        }
+                        
+                        const chefLink = document.getElementById('dropdown-chef-dashboard-link');
+                        const profileSettingsLink = document.getElementById('dropdown-profile-settings-link');
+                        if (chefLink) {
+                            chefLink.style.display = (profile.role === 'oshpaz') ? 'block' : 'none';
+                        }
+                        if (profileSettingsLink) {
+                            profileSettingsLink.href = (profile.role === 'oshpaz') ? 'profil.html' : 'kirish.html';
+                        }
+                    }
+                }).catch(err => console.error("Error fetching header user profile details:", err));
+        }
     } else {
         // User logged out
         if (loginBtn) loginBtn.style.display = 'inline-block';
@@ -735,5 +772,54 @@ function updateHeaderUI(user) {
         if (mobileLoginItem) mobileLoginItem.style.display = 'block';
         if (mobileProfileItem) mobileProfileItem.style.display = 'none';
         if (mobileOrderItem) mobileOrderItem.style.display = 'none';
+    }
+}
+
+// ==========================================
+// 17. PROFILE DROPDOWN INTERACTION
+// ==========================================
+function initProfileDropdown() {
+    const trigger = document.getElementById('profileTriggerBtn');
+    const menu = document.getElementById('profileDropdownMenu');
+    const logoutBtn = document.getElementById('dropdownLogoutBtn');
+
+    if (!trigger || !menu) return;
+
+    // Toggle dropdown on click
+    trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isActive = menu.classList.contains('active');
+        if (isActive) {
+            menu.classList.remove('active');
+            trigger.classList.remove('active');
+        } else {
+            menu.classList.add('active');
+            trigger.classList.add('active');
+        }
+    });
+
+    // Close dropdown on click outside
+    document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+            menu.classList.remove('active');
+            trigger.classList.remove('active');
+        }
+    });
+
+    // Handle logout click
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            if (supabaseClient) {
+                try {
+                    const { error } = await supabaseClient.auth.signOut();
+                    if (error) throw error;
+                    // Reload the page on sign out
+                    window.location.reload();
+                } catch (err) {
+                    console.error("Sign out error:", err);
+                    alert("Tizimdan chiqishda xatolik yuz berdi.");
+                }
+            }
+        });
     }
 }

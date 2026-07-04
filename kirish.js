@@ -2109,7 +2109,7 @@ const FOODS = [
             toast(t("regOk") || "Muvaffaqiyatli ro'yxatdan o'tdingiz!", "ts");
             setTimeout(() => {
               if (selectedRole === "oshpaz") {
-                window.location.href = "oshpazlarOnboard.html";
+                go("pgLogin");
               } else {
                 window.location.href = "buyordashbord.html";
               }
@@ -2603,34 +2603,55 @@ const FOODS = [
 
       }
 
-      function saveEdit() {
+      async function saveEdit() {
+        const newName = document.getElementById("eN").value.trim() || user.name;
+        const newPhone = document.getElementById("ePh").value.trim();
+        const newAddress = document.getElementById("eAd").value.trim();
 
-        user.name = document.getElementById("eN").value.trim() || user.name;
-
-        user.phone = document.getElementById("ePh").value.trim();
-
-        user.address = document.getElementById("eAd").value.trim();
-
+        user.name = newName;
+        user.phone = newPhone;
+        user.address = newAddress;
         save();
 
+        if (supabaseClient) {
+            try {
+                const { data: { user: authUser } } = await supabaseClient.auth.getUser();
+                if (authUser) {
+                    await supabaseClient
+                        .from('profiles')
+                        .update({
+                            full_name: newName,
+                            phone: newPhone
+                        })
+                        .eq('id', authUser.id);
+                    
+                    await supabaseClient.auth.updateUser({
+                        data: {
+                            full_name: newName,
+                            phone: newPhone
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error("Supabase profile save failed:", err);
+            }
+        }
+
         renderProfile();
-
         toast(t("ts"), "ts");
-
       }
 
-      function doLogout() {
+      async function doLogout() {
+        if (supabaseClient) {
+            await supabaseClient.auth.signOut();
+        }
 
         user = null;
-
         localStorage.removeItem("tn_user");
 
         document.getElementById("prBtn").style.display = "none";
-
         go("pgLogin");
-
         toast(t("lo"), "ti");
-
       }
 
 
@@ -3087,7 +3108,56 @@ const FOODS = [
 
       updateNav();
 
-      if (user) document.getElementById("prBtn").style.display = "flex";
+      // Auto-detect and sync Supabase session
+      async function initAuthSync() {
+        if (!supabaseClient) return;
+        try {
+          const { data: { session } } = await supabaseClient.auth.getSession();
+          if (session && session.user) {
+            let { data: profile } = await supabaseClient
+              .from('profiles')
+              .select('role, full_name, phone')
+              .eq('id', session.user.id)
+              .single();
+
+            const meta = session.user.user_metadata || {};
+            
+            user = {
+              name: profile?.full_name || meta.full_name || "Foydalanuvchi",
+              email: session.user.email,
+              phone: profile?.phone || meta.phone || "",
+              address: "",
+              joined: new Date(session.user.created_at).toLocaleDateString("uz"),
+              role: profile?.role || meta.role || "mijoz"
+            };
+
+            localStorage.setItem("tn_user", JSON.stringify(user));
+            
+            const prBtn = document.getElementById("prBtn");
+            if (prBtn) prBtn.style.display = "flex";
+            
+            const params = new URLSearchParams(window.location.search);
+            const screenParam = params.get('screen');
+            if (screenParam === 'orders') {
+                go('pgOrders');
+            } else if (screenParam === 'settings') {
+                go('pgSettings');
+            } else {
+                go('pgProfile');
+            }
+          } else {
+            user = null;
+            localStorage.removeItem("tn_user");
+            const prBtn = document.getElementById("prBtn");
+            if (prBtn) prBtn.style.display = "none";
+            go("pgLogin");
+          }
+        } catch (err) {
+          console.error("Session sync failed:", err);
+        }
+      }
+
+      initAuthSync();
 
       // Parse role query parameter (mijoz or oshpaz) to set default role tab
       const urlParams = new URLSearchParams(window.location.search);

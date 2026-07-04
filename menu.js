@@ -87,18 +87,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     const closeBtn = document.querySelector('.close-btn');
     const cancelBtn = document.querySelector('.cancel-btn');
-    const modal = document.querySelector('.modal-card');
 
-    // Ikkala tugma bosilganda ham formani tozalaydi yoki ogohlantiradi
     [closeBtn, cancelBtn].forEach(button => {
-        button.addEventListener('click', () => {
-            if (confirm("Haqiqatan ham bekor qilmoqchimisiz? Ma'lumotlar o'chib ketadi.")) {
-                document.querySelector('.modal-form').reset(); // Formani tozalash
-                counterValue.textContent = "10"; // Counterni dastlabki holatga qaytarish
-                uploadTitle.textContent = "Rasm yuklang"; // Rasmni qaytarish
-                alert("Oyna yopildi (Forma tozalandi).");
-            }
-        });
+        if (button) {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = 'xurmoOpa 2.html';
+            });
+        }
     });
 
     // ==========================================
@@ -135,18 +131,33 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("Taom muvaffaqiyatli qo'shildi! Natijani ko'rish uchun (F12 -> Console) oynasini oching.");
         window.location.href = 'xurmoOpa 2.html';
     });
-});
-   const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+    // ==========================================
+    // 6. THEME TOGGLER (Dark / Light)
+    // ==========================================
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    if (themeToggleBtn) {
+        const savedTheme = localStorage.getItem("xurmo-glass-theme") || "dark";
         
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
+        // Dastlabki temani yuklash
+        if (savedTheme === "light") {
+            document.body.classList.remove("theme-dark");
+            document.body.classList.add("theme-light");
+        } else {
+            document.body.classList.remove("theme-light");
+            document.body.classList.add("theme-dark");
         }
 
         themeToggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
+            if (document.body.classList.contains("theme-dark")) {
+                document.body.classList.remove("theme-dark");
+                document.body.classList.add("theme-light");
+                localStorage.setItem("xurmo-glass-theme", "light");
             } else {
-                localStorage.setItem('theme', 'light');
+                document.body.classList.remove("theme-light");
+                document.body.classList.add("theme-dark");
+                localStorage.setItem("xurmo-glass-theme", "dark");
             }
         });
+    }
+});

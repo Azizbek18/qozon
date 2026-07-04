@@ -58,6 +58,44 @@ body {
     align-items: center;
 }
 
+.chat-dashboard-nav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    padding: 0 18px 18px;
+}
+
+.chat-dashboard-nav .menu-item {
+    min-height: 70px;
+    padding: 10px 6px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid var(--border-color);
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.chat-dashboard-nav .menu-item:hover,
+.chat-dashboard-nav .menu-item.active,
+.chat-dashboard-nav .menu-item.is-active {
+    color: #fff;
+    background: linear-gradient(135deg, rgba(225,29,72,.28), rgba(225,29,72,.12));
+    transform: translateY(-2px);
+}
+
+.chat-dashboard-nav .menu-icon img {
+    width: 23px;
+    height: 23px;
+}
+
 .logo-text {
     font-size: 22px;
     font-weight: 800;

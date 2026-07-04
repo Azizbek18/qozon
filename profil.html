@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xurmo opa - Profil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./profil.css">
+    <link rel="stylesheet" href="./chef-nav.css">
+</head>
+<body class="theme-dark">
+
+    <!-- ══════════════ ANIMATED BACKGROUND ══════════════ -->
+    <div class="bg-layer">
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-orb orb-3"></div>
+        <div class="bg-orb orb-4"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <div class="dashboard-container">
+
+        <!-- ══════════════ SIDEBAR ══════════════ -->
+        <aside class="sidebar glass-card glass-sidebar">
+            <div class="profile-section">
+                <div class="profile-ring">
+                    <div class="profile-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=120&h=120" alt="Xurmo opa" class="profile-img">
+                    </div>
+                    <div class="online-dot"></div>
+                </div>
+                <h3 class="profile-name">Xurmo opa</h3>
+                <div class="profile-badge">
+                    <i class="fa-solid fa-star"></i>
+                    <span>4.9</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="xurmoOpa 2.html" class="menu-item" data-page="bosh-sahifa">
+                    <span class="menu-icon"><img src="images/nav-home.svg" alt=""></span>
+                    <span class="menu-text">Bosh sahifa</span>
+                </a>
+                <a href="xurmoOpa 2.html#today-menu-section" class="menu-item" data-page="bugungi-menyu">
+                    <span class="menu-icon"><img src="images/nav-menu.svg" alt=""></span>
+                    <span class="menu-text">Bugungi menyu</span>
+                </a>
+                <a href="chefDashboard.html" class="menu-item" data-page="buyurtmalar">
+                    <span class="menu-icon"><img src="images/nav-orders.svg" alt=""></span>
+                    <span class="menu-text">Buyurtmalar</span>
+                </a>
+                <a href="menu.html" class="menu-item" data-page="taom-qoshish">
+                    <span class="menu-icon"><img src="images/nav-add.svg" alt=""></span>
+                    <span class="menu-text">Taom qo'shish</span>
+                </a>
+                <a href="daromad.html" class="menu-item" data-page="daromad">
+                    <span class="menu-icon"><img src="images/nav-income.svg" alt=""></span>
+                    <span class="menu-text">Daromad</span>
+                </a>
+                <a href="profil.html" class="menu-item active" data-page="profil">
+                    <span class="menu-icon"><img src="images/nav-profile.svg" alt=""></span>
+                    <span class="menu-text">Profil</span>
+                </a>
+                <a href="chat.html" class="menu-item" data-page="chat">
+                    <span class="menu-icon"><img src="images/nav-chat.svg" alt=""></span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="bildirishnoma.html" class="menu-item" data-page="bildirishnoma">
+                    <span class="menu-icon"><img src="images/nav-bell.svg" alt=""></span>
+                    <span class="menu-text">Bildirishnomalar</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="glass-card glass-mini-stats">
+                    <div class="mini-stat">
+                        <span class="mini-stat-val">156</span>
+                        <span class="mini-stat-label">Jami buyurtma</span>
+                    </div>
+                    <div class="mini-stat-divider"></div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-val">4.9</span>
+                        <span class="mini-stat-label">Oylik reyting</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ══════════════ MAIN CONTENT ══════════════ -->
+        <main class="main-content">
+
+            <!-- HEADER -->
+            <header class="main-header">
+                <div class="welcome-text">
+                    <h2 class="glass-text-glow">Profil sozlamalari</h2>
+                    <p>Shaxsiy ma'lumotlaringizni boshqaring</p>
+                </div>
+                <div class="header-actions">
+                    <div class="theme-switcher glass-card glass-pill">
+                        <button class="theme-btn active" data-theme="dark" title="Dark Mode">
+                            <i class="fa-solid fa-moon"></i>
+                        </button>
+                        <button class="theme-btn" data-theme="light" title="Light Mode">
+                            <i class="fa-solid fa-sun"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ═══════ PROFILE CONTENT ═══════ -->
+            <div class="profile-layout">
+
+                <!-- LEFT: AVATAR & INFO CARD -->
+                <div class="profile-left-col">
+
+                    <!-- AVATAR CARD -->
+                    <div class="avatar-card glass-card glass-3d-card" data-tilt>
+                        <div class="avatar-cover"></div>
+                        <div class="avatar-main">
+                            <div class="avatar-ring-lg">
+                                <div class="avatar-img-wrapper-lg">
+                                    <img src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=200&h=200" alt="Xurmo opa" class="avatar-img-lg" id="profileAvatar">
+                                </div>
+                                <button class="avatar-edit-btn glass-btn-icon" id="btnChangeAvatar" title="Rasmni o'zgartirish">
+                                    <i class="fa-solid fa-camera"></i>
+                                </button>
+                            </div>
+                            <h2 class="avatar-name" id="displayName">Xurmo opa</h2>
+                            <p class="avatar-role">Oshpaz <span class="role-dot"></span> Faol</p>
+                            <div class="avatar-rating-row">
+                                <div class="avatar-stars">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                </div>
+                                <span class="avatar-rating-num">4.9</span>
+                            </div>
+                        </div>
+
+                        <div class="avatar-stats-row">
+                            <div class="avatar-stat">
+                                <span class="avatar-stat-val">156</span>
+                                <span class="avatar-stat-label">Buyurtma</span>
+                            </div>
+                            <div class="avatar-stat-divider"></div>
+                            <div class="avatar-stat">
+                                <span class="avatar-stat-val">4.9</span>
+                                <span class="avatar-stat-label">Reyting</span>
+                            </div>
+                            <div class="avatar-stat-divider"></div>
+                            <div class="avatar-stat">
+                                <span class="avatar-stat-val">2 yil</span>
+                                <span class="avatar-stat-label">Tajriba</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ILTIJOS KARTASI -->
+                    <div class="quick-card glass-card glass-3d-card" data-tilt style="margin-top: 24px;">
+                        <h4 class="quick-card-title"><i class="fa-solid fa-bolt"></i> Tezkor harakatlar</h4>
+                        <div class="quick-actions">
+                            <button class="quick-action-btn glass-card" id="btnQuickShare">
+                                <i class="fa-solid fa-share-nodes"></i>
+                                <span>Ulashish</span>
+                            </button>
+                            <button class="quick-action-btn glass-card" id="btnQuickQr">
+                                <i class="fa-solid fa-qrcode"></i>
+                                <span>QR kod</span>
+                            </button>
+                            <button class="quick-action-btn glass-card" id="btnQuickSupport">
+                                <i class="fa-solid fa-headset"></i>
+                                <span>Yordam</span>
+                            </button>
+                            <button class="quick-action-btn glass-card" id="btnQuickLogout">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>Chiqish</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: FORM SECTIONS -->
+                <div class="profile-right-col">
+
+                    <!-- SHAXSIY MA'LUMOTLAR -->
+                    <section class="form-section glass-card glass-3d-card" data-tilt>
+                        <div class="section-header">
+                            <h3><i class="fa-solid fa-id-card"></i> Shaxsiy ma'lumotlar</h3>
+                            <button class="btn-edit glass-btn-icon" id="btnEditPersonal" title="Tahrirlash">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-grid" id="personalForm">
+                            <div class="form-group">
+                                <label class="form-label">Ism va Familiya</label>
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-user form-input-icon"></i>
+                                    <input type="text" class="form-input glass-input" id="inputFullName" value="Xurmo opa" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Telefon raqam</label>
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-phone form-input-icon"></i>
+                                    <input type="tel" class="form-input glass-input" id="inputPhone" value="+998 90 123 45 67" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-envelope form-input-icon"></i>
+                                    <input type="email" class="form-input glass-input" id="inputEmail" value="xurmoopa@example.com" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Manzil</label>
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-location-dot form-input-icon"></i>
+                                    <input type="text" class="form-input glass-input" id="inputAddress" value="Toshkent, Chilonzor tumani" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label class="form-label">Bio / Tavsif</label>
+                                <div class="form-input-wrap textarea-wrap">
+                                    <textarea class="form-input glass-input form-textarea" id="inputBio" disabled>Uy oshpazi — an'anaviy o'zbek taomlarini sevish bilan tayyorlayman. Palov, somsa, sho'rva va boshqa milliy taomlar.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions hidden" id="personalActions">
+                            <button class="glass-btn-cancel" id="btnCancelPersonal">Bekor qilish</button>
+                            <button class="glass-3d-btn" id="btnSavePersonal">
+                                <i class="fa-solid fa-check"></i>
+                                <span>Saqlash</span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- XAVFSIZLIK -->
+                    <section class="form-section glass-card glass-3d-card" data-tilt style="margin-top: 24px;">
+                        <div class="section-header">
+                            <h3><i class="fa-solid fa-shield-halved"></i> Xavfsizlik</h3>
+                            <button class="btn-edit glass-btn-icon" id="btnEditSecurity" title="O'zgartirish">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-grid" id="securityForm">
+                            <div class="form-group">
+                                <label class="form-label">Joriy parol</label>
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-lock form-input-icon"></i>
+                                    <input type="password" class="form-input glass-input" id="inputCurrentPass" placeholder="••••••••" disabled>
+                                    <button class="toggle-pass glass-btn-icon-sm" data-target="inputCurrentPass" title="Ko'rsatish">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Yangi parol</label>
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-key form-input-icon"></i>
+                                    <input type="password" class="form-input glass-input" id="inputNewPass" placeholder="Kamida 8 ta belgi" disabled>
+                                    <button class="toggle-pass glass-btn-icon-sm" data-target="inputNewPass" title="Ko'rsatish">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Yangi parol (takror)</label>
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-check-double form-input-icon"></i>
+                                    <input type="password" class="form-input glass-input" id="inputConfirmPass" placeholder="Parolni qayta kiriting" disabled>
+                                    <button class="toggle-pass glass-btn-icon-sm" data-target="inputConfirmPass" title="Ko'rsatish">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAROL KUCHI INDIKATORI -->
+                        <div class="password-strength hidden" id="passStrength">
+                            <div class="strength-label">
+                                <span>Parol kuchiligi</span>
+                                <span id="strengthText">Kuchsiz</span>
+                            </div>
+                            <div class="strength-bar-bg">
+                                <div class="strength-bar-fill" id="strengthFill"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions hidden" id="securityActions">
+                            <button class="glass-btn-cancel" id="btnCancelSecurity">Bekor qilish</button>
+                            <button class="glass-3d-btn" id="btnSaveSecurity">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>Parolni yangilash</span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- TIL VA SOZLAMALAR -->
+                    <section class="form-section glass-card glass-3d-card" data-tilt style="margin-top: 24px;">
+                        <div class="section-header">
+                            <h3><i class="fa-solid fa-sliders"></i> Afzalliklar</h3>
+                        </div>
+
+                        <div class="preferences-list">
+                            <div class="pref-item glass-card">
+                                <div class="pref-info">
+                                    <div class="pref-icon-box red-glow">
+                                        <i class="fa-solid fa-bell"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Push bildirishnomalar</h4>
+                                        <p>Yangi buyurtma va sharhlar haqida xabar oling</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-pref="notifications">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="pref-item glass-card">
+                                <div class="pref-info">
+                                    <div class="pref-icon-box green-glow">
+                                        <i class="fa-solid fa-volume-high"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Ovozli signal</h4>
+                                        <p>Buyurtma kelganda ovozli eslatma</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-pref="sound">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="pref-item glass-card">
+                                <div class="pref-info">
+                                    <div class="pref-icon-box amber-glow">
+                                        <i class="fa-solid fa-location-crosshairs"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Joylashuvni ulashish</h4>
+                                        <p>Mijozlarga manzilingizni ko'rsatish</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-pref="location">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="pref-item glass-card">
+                                <div class="pref-info">
+                                    <div class="pref-icon-box blue-glow">
+                                        <i class="fa-solid fa-clock"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Ish vaqti</h4>
+                                        <p>08:00 — 22:00 gacha faol</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-pref="worktime">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- DANGER ZONE -->
+                    <section class="form-section glass-card danger-section" style="margin-top: 24px;">
+                        <div class="section-header">
+                            <h3><i class="fa-solid fa-triangle-exclamation"></i> Xavfli zona</h3>
+                        </div>
+                        <div class="danger-content">
+                            <p class="danger-text">Akkauntni o'chirish — barcha ma'lumotlar, buyurtmalar tarixi va sharhlar butunlay yo'qoladi. Bu amalni qaytarib bo'lmaydi.</p>
+                            <button class="btn-danger glass-btn-danger" id="btnDeleteAccount">
+                                <i class="fa-solid fa-trash-can"></i>
+                                Akkauntni o'chirish
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
+
+    <!-- DELETE MODAL -->
+    <div class="modal-overlay hidden" id="deleteModal">
+        <div class="modal-box glass-card glass-3d-card">
+            <div class="modal-icon danger-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3>Akkauntni o'chirish</h3>
+            <p>Siz rostdan ham akkauntni o'chirmoqchimisiz? Barcha ma'lumotlaringiz yo'qoladi va bu amalni orqaga qaytarib bo'lmaydi.</p>
+            <div class="modal-actions">
+                <button class="glass-btn-cancel" id="btnModalCancel">Bekor qilish</button>
+                <button class="btn-danger glass-btn-danger" id="btnModalConfirm">
+                    <i class="fa-solid fa-trash-can"></i>
+                    O'chirish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./chef-nav.js"></script>
+    <script src="profil.js"></script>
+</body>
+</html>

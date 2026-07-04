@@ -76,6 +76,16 @@ function initSearch() {
             input.focus();
         });
     }
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        const q = input.value.trim();
+        const district = localStorage.getItem('qz_district') || 'Yunusobod';
+        const params = new URLSearchParams();
+        if (q) params.set('q', q);
+        if (district) params.set('district', district);
+        window.location.href = `qidiruvnatijalari.html?${params.toString()}`;
+    });
 }
 
 // ==========================================
@@ -552,14 +562,14 @@ function renderChefs() {
 
     allChefsData.forEach((chef, index) => {
         const name       = chef.name || chef.full_name || "Noma'lum oshpaz";
-        const image      = chef.image_url || chef.image || 'https://cdn.dribbble.com/userupload/37942659/file/original-e75e34cb44361a6425fd82f51f07777b.png?resize=752x&vertical=center';
+        const image      = chef.avatar_url || chef.image_url || chef.image || 'https://cdn.dribbble.com/userupload/37942659/file/original-e75e34cb44361a6425fd82f51f07777b.png?resize=752x&vertical=center';
         const location   = chef.location || chef.address || "Manzil ko'rsatilmagan";
         const meals      = chef.meal_count || chef.meals || 0;
         const rating     = chef.rating_score || chef.rating || '5.0';
         const specialties = chef.specialties || ["Osh", "Manti"];
         const walkTime   = chef.walk_time || Math.floor(Math.random() * 15 + 8) + ' min';
         const isOnline   = chef.online !== false;
-        const chefId     = 'chef-' + (chef.id || index);
+        const chefId     = name.toLowerCase().replace(/['`’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
         const isFav      = favChefs.includes(chefId);
 
         const specText = (Array.isArray(specialties) ? specialties.join(' va ') : specialties) + ' ustasi';
@@ -630,9 +640,13 @@ function initSeeAllLinks() {
     if (seeAllLink) {
         seeAllLink.addEventListener('click', (e) => {
             e.preventDefault();
-            isFoodsExpanded = true;
-            renderFoods();
-            document.querySelector('.bento-foods')?.scrollIntoView({ behavior: 'smooth' });
+            const params = new URLSearchParams({
+                type: 'taomlar',
+                district: localStorage.getItem('qz_district') || 'Yunusobod'
+            });
+            if (currentFilter && currentFilter !== 'all') params.set('category', currentFilter);
+            if (searchQuery) params.set('q', searchQuery);
+            window.location.href = `qidiruvnatijalari.html?${params.toString()}`;
         });
     }
 
@@ -640,7 +654,12 @@ function initSeeAllLinks() {
     if (seeAllChefsLink) {
         seeAllChefsLink.addEventListener('click', (e) => {
             e.preventDefault();
-            showToast('info', 'Tez orada', 'Barcha oshpazlar sahifasi tez orada!');
+            const params = new URLSearchParams({
+                type: 'oshpazlar',
+                district: localStorage.getItem('qz_district') || 'Yunusobod'
+            });
+            if (searchQuery) params.set('q', searchQuery);
+            window.location.href = `qidiruvnatijalari.html?${params.toString()}`;
         });
     }
 }

@@ -10,11 +10,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
     <link rel="stylesheet" href="daromad.css">
+    <link rel="stylesheet" href="./chef-nav.css">
 </head>
 <body>
 
+<button class="chef-mobile-menu-btn" data-chef-sidebar-toggle aria-label="Menyuni ochish">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<aside class="chef-sidebar">
+    <a href="xurmoOpa 2.html" class="chef-sidebar-brand">
+        <img src="images/nav-home.svg" alt="">
+        <div>
+            <strong>qozon</strong>
+            <span>Oshpaz paneli</span>
+        </div>
+    </a>
+    <nav class="sidebar-menu">
+        <a href="xurmoOpa 2.html" class="menu-item" data-page="bosh-sahifa">
+            <span class="menu-icon"><img src="images/nav-home.svg" alt=""></span>
+            <span class="menu-text">Bosh sahifa</span>
+        </a>
+        <a href="xurmoOpa 2.html#today-menu-section" class="menu-item" data-page="bugungi-menyu">
+            <span class="menu-icon"><img src="images/nav-menu.svg" alt=""></span>
+            <span class="menu-text">Bugungi menyu</span>
+        </a>
+        <a href="chefDashboard.html" class="menu-item" data-page="buyurtmalar">
+            <span class="menu-icon"><img src="images/nav-orders.svg" alt=""></span>
+            <span class="menu-text">Buyurtmalar</span>
+        </a>
+        <a href="menu.html" class="menu-item" data-page="taom-qoshish">
+            <span class="menu-icon"><img src="images/nav-add.svg" alt=""></span>
+            <span class="menu-text">Taom qo'shish</span>
+        </a>
+        <a href="daromad.html" class="menu-item active" data-page="daromad">
+            <span class="menu-icon"><img src="images/nav-income.svg" alt=""></span>
+            <span class="menu-text">Daromad</span>
+        </a>
+        <a href="profil.html" class="menu-item" data-page="profil">
+            <span class="menu-icon"><img src="images/nav-profile.svg" alt=""></span>
+            <span class="menu-text">Profil</span>
+        </a>
+        <a href="chat.html" class="menu-item" data-page="chat">
+            <span class="menu-icon"><img src="images/nav-chat.svg" alt=""></span>
+            <span class="menu-text">Chat</span>
+        </a>
+        <a href="bildirishnoma.html" class="menu-item" data-page="bildirishnoma">
+            <span class="menu-icon"><img src="images/nav-bell.svg" alt=""></span>
+            <span class="menu-text">Bildirishnomalar</span>
+        </a>
+    </nav>
+</aside>
+
 <!-- HEADER WITH BURGER MENU -->
-<header class="header">
+<header class="header chef-page-offset">
     <div class="header-container">
         <a href="index.html" class="logo">qozon</a>
         
@@ -26,17 +75,19 @@
         <!-- Navigatsiya va tugma bloki -->
         <div class="nav-wrapper" id="mobile-menu">
             <nav class="nav-links">
-                <a href="index.html#how-it-works">Qanday ishlaydi</a>
-                <a href="index.html#chefs">Oshpazlar</a>
-                <a href="buyordashbord.html">Menyu</a>
+                <a href="xurmoOpa 2.html">Bosh sahifa</a>
+                <a href="chefDashboard.html">Buyurtmalar</a>
+                <a href="menu.html">Taom qo'shish</a>
                 <a href="daromad.html" class="active">Daromad</a>
+                <a href="profil.html">Profil</a>
+                <a href="chat.html">Chat</a>
             </nav>
-            <button class="btn-order" onclick="window.location.href='buyordashbord.html'">Buyurtma berish</button>
+            <button class="btn-order" onclick="window.location.href='menu.html'">Taom qo'shish</button>
         </div>
     </div>
 </header>
 
-    <main class="main-container">
+    <main class="main-container chef-page-offset">
         
         <div class="dashboard-grid-top">
             
@@ -201,7 +252,7 @@
 
     </main>
 
-    <footer class="footer">
+    <footer class="footer chef-page-offset">
         <div class="footer-container">
             <div class="footer-brand">
                 <h2>qozon</h2>
@@ -227,6 +278,7 @@
         </div>
     </footer>
 
+    <script src="./chef-nav.js"></script>
     <script src="daromad.js"></script>
 </body>
 </html>

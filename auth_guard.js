@@ -11,7 +11,7 @@
     function redirectToLogin() {
         let role = 'mijoz';
         const path = window.location.pathname.toLowerCase();
-        if (path.includes('menu.html') || path.includes('daromad.html') || path.includes('oshpazlaronboard.html')) {
+        if (path.includes('menu.html') || path.includes('daromad.html') || path.includes('oshpazlaronboard.html') || path.includes('xurmoopa%202') || path.includes('xurmoopa 2') || path.includes('profil.html') || path.includes('chefdashboard.html')) {
             role = 'oshpaz';
         }
         window.location.href = 'kirish.html?role=' + role;

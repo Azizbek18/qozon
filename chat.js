@@ -174,7 +174,7 @@ function changeActiveChat(userId) {
   document
     .querySelectorAll(".convo-item")
     .forEach((el) => el.classList.remove("active"));
-  event.currentTarget.classList.add("active");
+  if (event?.currentTarget) event.currentTarget.classList.add("active");
   loadChatWorkspace(userId);
 }
 
@@ -300,5 +300,65 @@ document.addEventListener("click", function (event) {
   }
 });
 
+function bootChatFromParams() {
+  const params = new URLSearchParams(window.location.search);
+  const customer = params.get("customer");
+  const order = params.get("order");
+
+  if (!customer && !order) {
+    loadChatWorkspace("ahmad");
+    return;
+  }
+
+  const id = `order-${(order || customer || "new").toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  mockDatabase[id] = {
+    name: customer || "Yangi mijoz",
+    avatarClass: "mahmud-img",
+    role: order ? `Buyurtma ${order}` : "Buyurtma bo'yicha suhbat",
+    status: "Buyurtma konteksti ochildi",
+    suggestions: ["Buyurtmangiz tayyorlanmoqda", "Yetkazish vaqtini aniqlayman", "Rahmat!"],
+    chatHistory: [
+      {
+        type: "alert",
+        title: "Buyurtma chatga ulandi",
+        body: order
+          ? `${order} raqamli buyurtma bo'yicha suhbat ochildi.`
+          : "Mijoz bilan suhbat ochildi.",
+      },
+    ],
+    smartResponses: {
+      tayyor: "Buyurtmangiz tayyorlanish jarayonida. Tayyor bo'lishi bilan darhol xabar beramiz.",
+      yetkazish: "Yetkazish vaqtini tekshiryapman, odatda 15-20 daqiqa ichida manzilga yetib boradi.",
+      rahmat: "Sizga ham rahmat! Yoqimli ishtaha.",
+    },
+  };
+
+  const list = document.querySelector(".conversation-list");
+  if (list) {
+    const item = document.createElement("div");
+    item.className = "convo-item active";
+    item.onclick = () => changeActiveChat(id);
+    item.innerHTML = `
+      <div class="avatar-ring online">
+        <div class="user-avatar mahmud-img"></div>
+      </div>
+      <div class="convo-details">
+        <div class="convo-meta">
+          <h4>${mockDatabase[id].name}</h4>
+          <span class="time-stamp">Hozir</span>
+        </div>
+        <p class="preview-text" id="side-preview-${id}">${mockDatabase[id].role}</p>
+        <div class="tag-row"><span class="badge-status priority">Buyurtma chat</span></div>
+      </div>
+    `;
+    list.prepend(item);
+    document.querySelectorAll(".convo-item").forEach((el) => {
+      if (el !== item) el.classList.remove("active");
+    });
+  }
+
+  loadChatWorkspace(id);
+}
+
 // Start
-loadChatWorkspace("ahmad");
+bootChatFromParams();

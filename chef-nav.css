@@ -1,0 +1,161 @@
+:root {
+    --chef-sidebar-w: 270px;
+}
+
+.chef-shell {
+    min-height: 100vh;
+}
+
+.chef-sidebar {
+    width: var(--chef-sidebar-w);
+    padding: 30px 20px;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 120;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(10, 10, 15, 0.64);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+
+.chef-sidebar-brand {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 8px 22px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.chef-sidebar-brand img {
+    width: 38px;
+    height: 38px;
+}
+
+.chef-sidebar-brand strong {
+    display: block;
+    font-size: 20px;
+    letter-spacing: 0;
+}
+
+.chef-sidebar-brand span {
+    display: block;
+    color: rgba(255,255,255,.55);
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.chef-sidebar .sidebar-menu {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.menu-icon img,
+.chef-sidebar .menu-icon img {
+    width: 21px;
+    height: 21px;
+    display: block;
+}
+
+.chef-sidebar .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 46px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    color: rgba(255,255,255,.68);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 650;
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s ease, color .25s ease, box-shadow .25s ease;
+}
+
+.chef-sidebar .menu-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(225,29,72,.15), rgba(225,29,72,.05));
+    opacity: 0;
+    transition: opacity .25s ease;
+}
+
+.chef-sidebar .menu-item:hover {
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.chef-sidebar .menu-item:hover::before,
+.chef-sidebar .menu-item.active::before,
+.chef-sidebar .menu-item.is-active::before {
+    opacity: 1;
+}
+
+.chef-sidebar .menu-item.active,
+.chef-sidebar .menu-item.is-active {
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(225, 29, 72, .28), 0 0 38px rgba(225, 29, 72, .08);
+}
+
+.chef-sidebar .menu-item.active::before,
+.chef-sidebar .menu-item.is-active::before {
+    background: linear-gradient(135deg, #e11d48, #be123c);
+}
+
+.chef-sidebar .menu-icon,
+.chef-sidebar .menu-text {
+    position: relative;
+    z-index: 1;
+}
+
+.chef-page-offset {
+    margin-left: var(--chef-sidebar-w);
+}
+
+.chef-mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 140;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    color: #fff;
+    background: rgba(10,10,15,.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+@media (max-width: 768px) {
+    .chef-sidebar {
+        transform: translateX(-100%);
+        transition: transform .35s cubic-bezier(.4,0,.2,1);
+    }
+
+    .chef-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .chef-page-offset {
+        margin-left: 0;
+        padding-top: 64px;
+    }
+
+    .chef-mobile-menu-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

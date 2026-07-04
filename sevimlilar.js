@@ -1,4 +1,4 @@
-﻿/* ==========================================
+/* ==========================================
    QOZON — SEVIMLILAR JS
    ========================================== */
 
@@ -306,6 +306,7 @@ window.toggleChefFav = function(btn, chefId, chefName) {
     }
 
     saveFavChefs(favChefs);
+    initChefFavorites();
 };
 
 /* Kard click — fav btn ga bosilmagan bo'lsa navigate qilish */
@@ -317,12 +318,16 @@ window.handleChefCardClick = function(event, card, href) {
 /* Sahifa ochilganda oshpaz tugmalarini to'g'ri holat bilan ko'rsatish */
 function initChefFavorites() {
     const favChefs = getFavChefs();
+    let visibleCount = 0;
+
     document.querySelectorAll('.chef-card[data-chef-id]').forEach(card => {
         const chefId   = card.getAttribute('data-chef-id');
         const chefName = card.getAttribute('data-chef-name');
         const btn      = card.querySelector('.chef-fav-btn');
+        const isFav    = favChefs.includes(chefId);
+
         if (btn) {
-            if (favChefs.includes(chefId)) {
+            if (isFav) {
                 btn.textContent = '❤️';
                 btn.classList.add('active');
             } else {
@@ -330,7 +335,38 @@ function initChefFavorites() {
                 btn.classList.remove('active');
             }
         }
+
+        if (isFav) {
+            card.style.display = '';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+
         updateChefBadge(chefId, chefName);
     });
+
+    let emptyMsg = document.getElementById('empty-chefs-msg');
+    if (!emptyMsg) {
+        emptyMsg = document.createElement('div');
+        emptyMsg.id = 'empty-chefs-msg';
+        emptyMsg.className = 'state-msg';
+        emptyMsg.innerHTML = `
+            <div style="font-size:32px; margin-bottom:10px;">🍳</div>
+            <h3>Sevimli oshpazlar yo'q</h3>
+            <p style="color:#a3907c; font-size:13px; margin: 5px 0 15px;">Hali birorta ham oshpazni sevimlilarga qo'shmadingiz.</p>
+            <button class="order-btn" onclick="window.location.href='buyordashbord.html'" style="display:inline-flex; align-items:center; background:#e63946; color:#fff; border:none; padding:10px 20px; border-radius:30px; font-weight:700; cursor:pointer; font-size:12px;">Oshpazlarni topish</button>
+        `;
+        const oshpazlarPanel = document.getElementById('oshpazlar');
+        if (oshpazlarPanel) {
+            oshpazlarPanel.appendChild(emptyMsg);
+        }
+    }
+
+    if (visibleCount === 0) {
+        emptyMsg.style.display = 'block';
+    } else {
+        emptyMsg.style.display = 'none';
+    }
 }
 

@@ -69,10 +69,54 @@
             <a href="kirish.html" class="login-link" id="header-login-btn">Kirish &rarr;</a>
             
             <!-- Logged in: show Profil and Buyurtma berish -->
-            <a href="kirish.html" class="profile-link" id="header-profile-btn" style="display: none;">
-                <img src="https://img.icons8.com/fluency/48/user-male-circle.png" alt="Profile" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 6px;">
-                <span>Profil</span>
-            </a>
+            <div class="profile-dropdown-container" id="header-profile-btn" style="display: none;">
+                <a href="javascript:void(0)" class="profile-link" id="profileTriggerBtn">
+                    <img src="https://img.icons8.com/fluency/48/user-male-circle.png" alt="Profile" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 6px;">
+                    <span id="header-profile-name">Profil</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 6px; transition: 0.2s;" id="profile-chevron"></i>
+                </a>
+                <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                    <div class="dropdown-header">
+                        <img src="https://img.icons8.com/fluency/48/user-male-circle.png" alt="Avatar" class="dropdown-avatar" id="dropdown-avatar-img">
+                        <div class="dropdown-user-info">
+                            <h4 id="dropdown-user-name">Foydalanuvchi</h4>
+                            <p id="dropdown-user-email">email@example.com</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <ul class="dropdown-links">
+                        <li>
+                            <a href="kirish.html" id="dropdown-profile-settings-link">
+                                <i class="fa-solid fa-user-gear"></i>
+                                <span>Profil sozlamalari</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="kirish.html?screen=orders">
+                                <i class="fa-solid fa-receipt"></i>
+                                <span>Buyurtmalar tarixi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="sevimlilar.html">
+                                <i class="fa-solid fa-heart"></i>
+                                <span>Sevimlilar</span>
+                            </a>
+                        </li>
+                        <li id="dropdown-chef-dashboard-link" style="display: none;">
+                            <a href="chefDashboard.html">
+                                <i class="fa-solid fa-store"></i>
+                                <span>Oshpaz paneli</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-logout-btn" id="dropdownLogoutBtn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Tizimdan chiqish</span>
+                    </button>
+                </div>
+            </div>
             <button class="order-btn" id="header-order-btn" onclick="window.location.href='buyordashbord.html'" style="display: none;">Buyurtma berish</button>
         </div>
         <button class="hamburger-menu" id="mobile-menu-toggle" aria-label="Menyuni ochish">
