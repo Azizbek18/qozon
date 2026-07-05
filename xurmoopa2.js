@@ -317,7 +317,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleFoodAvailability('${food.id}', this.checked)">
                     <span class="slider"></span>
                 </label>
-                <button class="btn-action glass-btn-icon" style="margin-left: 8px; color: var(--red-400);" onclick="deleteFoodItem('${food.id}', '${food.name}')">
+                <button class="btn-action glass-btn-icon" style="margin-left: 8px; color: var(--red-400);" onclick="deleteFoodItem('${food.id}', '${food.name.replace(/'/g, "\\'")}')">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
             `;

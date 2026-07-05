@@ -17,6 +17,8 @@ let conversations = [];   // {id, customer_id, chef_id, order_id, customer_name,
 let activeConversationId = null;
 let messagesChannel = null;
 
+if (chatInputField) chatInputField.disabled = true;
+
 function getClockTime(dateStr) {
   const d = dateStr ? new Date(dateStr) : new Date();
   return d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0");
@@ -97,7 +99,10 @@ async function loadChefConversations() {
 /* ---------- MIJOZ REJIMI: bitta suhbatni topish/yaratish ---------- */
 async function loadOrCreateCustomerConversation() {
   const params = new URLSearchParams(window.location.search);
-  const orderId = params.get('orderId');
+  // Ba'zi statik hostinglar ".html" manzillarni "toza" URL'ga
+  // yo'naltirishda query-string'ni tashlab yuborishi mumkin — shu sabab
+  // orderId topilmasa, joriy faol buyurtmaga (localStorage) qaraymiz.
+  const orderId = params.get('orderId') || localStorage.getItem('qz_current_order_id');
   const sidebar = document.querySelector('.sidebar');
   if (sidebar) sidebar.style.display = 'none';
 
@@ -137,6 +142,7 @@ async function loadOrCreateCustomerConversation() {
 /* ---------- SUHBATNI OCHISH ---------- */
 async function openConversation(conversationId, headerName) {
   activeConversationId = conversationId;
+  if (chatInputField) chatInputField.disabled = false;
   document.querySelectorAll('.convo-item').forEach(el => {
     el.classList.toggle('active', el.dataset.convId === String(conversationId));
   });

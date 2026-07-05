@@ -441,7 +441,7 @@ function renderFoods() {
                 <img src="${image}" alt="${name}" loading="lazy" onerror="setFoodImageFallback(this, '${name.replace(/'/g, "\\'")}', '${String(food.category || '').replace(/'/g, "\\'")}', ${index})">
                 <span class="food-card-portions-badge">🔥 ${portions} ta qoldi</span>
                 <span class="food-card-price-badge">${price}</span>
-                <button class="food-card-fav ${isFav ? 'active' : ''}" data-fav-id="${foodId}" onclick="event.stopPropagation(); toggleFavorite(this, '${foodId}', '${name}')" title="Sevimlilarga qo'shish">${isFav ? '❤️' : '🤍'}</button>
+                <button class="food-card-fav ${isFav ? 'active' : ''}" data-fav-id="${foodId}" onclick="event.stopPropagation(); toggleFavorite(this, '${foodId}', '${name.replace(/'/g, "\\'")}')" title="Sevimlilarga qo'shish">${isFav ? '❤️' : '🤍'}</button>
             </div>
             <div class="food-card-body" onclick="window.location.href='food.detalis.html?id=${foodId}'">
                 <h3 class="food-card-title">${name}</h3>
@@ -1048,29 +1048,32 @@ function renderFavorites() {
     if (!grid) return;
     grid.innerHTML = '';
 
-    const favItems = [
-        {
-            name: "Choyxona Palov",
-            count: 4,
-            image: "Traditional Uzbek Plov (1).svg"
-        },
-        {
-            name: "Krem-Pasta",
-            count: 2,
-            image: "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=150&q=80"
-        }
-    ];
+    let meta = {};
+    try { meta = JSON.parse(localStorage.getItem('qz_fav_meta') || '{}'); } catch (e) {}
 
-    favItems.forEach(item => {
+    const favItems = Array.from(favorites).map(id => {
+        const m = meta[id] || {};
+        return { id, name: m.name || 'Taom', chef: m.chef || '', image: m.image || FOOD_PLACEHOLDER_IMAGE, price: m.price || 0 };
+    });
+
+    if (!favItems.length) {
+        grid.innerHTML = `<p style="padding:12px 0;color:var(--text-light,#8b7355);font-size:13px">Hozircha sevimli taomlaringiz yo'q.</p>`;
+        return;
+    }
+
+    favItems.slice(0, 6).forEach(item => {
         const card = document.createElement('div');
         card.className = 'fav-card';
+        const safeName = String(item.name).replace(/'/g, "\\'");
+        const safeChef = String(item.chef).replace(/'/g, "\\'");
+        const safeImage = String(item.image).replace(/'/g, "\\'");
         card.innerHTML = `
             <img class="fav-img" src="${item.image}" alt="${item.name}">
             <div class="fav-info">
                 <h4 class="fav-title">${item.name}</h4>
-                <p class="fav-count">${item.count} marta buyurtma berilgan</p>
+                <p class="fav-count">${item.chef || ''}</p>
             </div>
-            <button class="fav-order-btn" onclick="event.stopPropagation(); cartCount++; updateCartBadge(); showToast('success', 'Savatchaga qo\\'shildi', '${item.name} savatchaga qo\\'shildi! 🛒');">Qayta olish</button>
+            <button class="fav-order-btn" onclick="event.stopPropagation(); addToCart('${item.id}', '${safeName}', ${item.price}, '${safeImage}', '${safeChef}'); showToast('success', 'Savatchaga qo\\'shildi', '${safeName} savatchaga qo\\'shildi! 🛒');">Qayta olish</button>
         `;
         grid.appendChild(card);
     });
