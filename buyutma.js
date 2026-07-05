@@ -543,22 +543,33 @@ document.addEventListener("DOMContentLoaded", () => {
         {code:'hi',label:"\u0939\u093F\u0928\u094D\u0926\u0940",flag:"\u{1F1EE}\u{1F1F3}"}
       ];
 
+      /* ========== SUPABASE ========== */
+      const SUPABASE_URL='https://usoekoycypxbcxzwoaea.supabase.co';
+      const SUPABASE_KEY='sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
+      const supaClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
       /* ========== HOLAT ========== */
       let currentLang=localStorage.getItem('qz_lang')||'uz';
-      let currentUser=JSON.parse(localStorage.getItem('qz_current')||'null');
+      let currentUser=null;
       let currentCurrency=localStorage.getItem('qz_curr')||'UZS';
       let verifyTarget='',verifyAction='',pendingRegData=null,pendingOrderData=null;
       let deliveryType='delivery',deliveryFee=15000,promoApplied=false,promoDiscount=0;
+      let appliedPromoId=null,promoPercent=0,promoFixedAmount=0;
       const SERVICE_RATE=0.05;
       const RATES={UZS:1,RUB:0.00735,USD:0.0000794};
       const SYMBOLS={UZS:"so'm",RUB:"\u20BD",USD:"$"};
-      const cartData=[
-        {id:1,name:"Osh to'pi",rest:"Osh Markazi",price:35000,oldPrice:42000,qty:2,img:"https://picsum.photos/seed/osh11/200/200.jpg",tags:[{text:"Mashhur",type:"hot"},{text:"Go'shtli",type:""}],checked:true},
-        {id:2,name:"Manti (10 dona)",rest:"Cho'lpon Milliy Taomlar",price:45000,oldPrice:null,qty:1,img:"https://picsum.photos/seed/manti22/200/200.jpg",tags:[{text:"Yangi",type:"new"}],checked:true},
-        {id:3,name:"Lag'mon",rest:"Buxoro Cafe",price:32000,oldPrice:38000,qty:1,img:"https://picsum.photos/seed/lagmon33/200/200.jpg",tags:[],checked:true},
-        {id:4,name:"Shashlik (6 dona)",rest:"Cho'lpon Milliy Taomlar",price:55000,oldPrice:null,qty:1,img:"https://picsum.photos/seed/shash44/200/200.jpg",tags:[{text:"Mashhur",type:"hot"}],checked:false},
-        {id:5,name:"Norin",rest:"Osh Markazi",price:28000,oldPrice:33000,qty:1,img:"https://picsum.photos/seed/norin55/200/200.jpg",tags:[],checked:true}
-      ];
+
+      /* Haqiqiy savat \u2014 qz_cart (menu/taom sahifalaridan qo'shilgan) */
+      function loadCartFromStorage(){
+        let raw=[];
+        try{raw=JSON.parse(localStorage.getItem('qz_cart')||'[]')}catch(e){raw=[]}
+        return raw.map(it=>({id:it.id,foodId:it.foodId,name:it.name,rest:it.chef||'',price:it.price,oldPrice:null,qty:it.quantity||1,img:it.image||'',tags:[],checked:true}));
+      }
+      function saveCartToStorage(){
+        const raw=cartData.map(it=>({id:it.id,foodId:it.foodId||it.id,name:it.name,price:it.price,image:it.img,chef:it.rest,quantity:it.qty}));
+        localStorage.setItem('qz_cart',JSON.stringify(raw));
+      }
+      let cartData=loadCartFromStorage();
       const recommendations=[
         {name:"Chak-chak",rest:"Tatar Sariqi",price:18000,img:"https://picsum.photos/seed/chak66/200/200.jpg"},
         {name:"Somsa (5 dona)",rest:"Somsa Xon",price:25000,img:"https://picsum.photos/seed/somsa77/200/200.jpg"},
@@ -600,13 +611,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
       function renderRecs(){document.getElementById('recList').innerHTML=recommendations.map(r=>`<div class="rec-item"><img src="${r.img}" alt="${r.name}" loading="lazy"/><div class="rec-info"><div class="rec-name">${r.name}</div><div class="rec-rest">${r.rest}</div></div><div class="rec-price">${formatPrice(r.price)}</div><button class="rec-add" onclick="addRec('${r.name}','${r.rest}',${r.price},'${r.img}')"><i class="fas fa-plus"></i></button></div>`).join('')}
 
-      function changeQty(id,d){const i=cartData.find(x=>x.id===id);if(i){i.qty=Math.max(1,i.qty+d);renderCart();renderCartDD()}}
+      function changeQty(id,d){const i=cartData.find(x=>x.id===id);if(i){i.qty=Math.max(1,i.qty+d);saveCartToStorage();renderCart();renderCartDD()}}
       function toggleCheck(id){const i=cartData.find(x=>x.id===id);if(i){i.checked=!i.checked;renderCart()}}
-      function removeItem(id){const el=document.querySelector(`.ci[data-id="${id}"]`);if(el){el.classList.add('ci-removing');setTimeout(()=>{const it=cartData.find(x=>x.id===id);cartData=cartData.filter(x=>x.id!==id);renderCart();renderCartDD();if(it)showToast('warning','O\'chirildi',it.name+' olib tashlandi')},400)}}
-      function clearCart(){if(!cartData.length)return;cartData=[];promoApplied=false;promoDiscount=0;document.getElementById('discountRow').style.display='none';document.getElementById('promoBtn').textContent='Qo\'llash';document.getElementById('promoBtn').classList.remove('applied');document.getElementById('promoInput').disabled=false;document.getElementById('promoInput').value='';renderCart();renderCartDD();showToast('info','Tozalandi','Savat bo\'shatildi')}
-      function addRec(name,rest,price,img){const ex=cartData.find(i=>i.name===name);if(ex){ex.qty++;renderCart();renderCartDD();showToast('info','Yangilandi',name+' miqdori oshirildi');return}cartData.push({id:Date.now(),name,rest,price,oldPrice:null,qty:1,img,tags:[{text:'Yangi',type:'new'}],checked:true});renderCart();renderCartDD();showToast('success','Qo\'shildi',name+' savatga qo\'shildi')}
-      function updateSummary(){const ch=cartData.filter(i=>i.checked),sub=ch.reduce((s,i)=>s+i.price*i.qty,0),svc=Math.round(sub*SERVICE_RATE),disc=promoApplied?Math.round(sub*promoDiscount):0,tot=Math.max(0,sub+deliveryFee+svc-disc);document.getElementById('subtotalVal').textContent=formatPrice(sub);document.getElementById('deliveryVal').textContent=deliveryFee===0?'Bepul':formatPrice(deliveryFee);document.getElementById('serviceVal').textContent=formatPrice(svc);document.getElementById('totalVal').textContent=formatPrice(tot);if(promoApplied&&disc>0){document.getElementById('discountRow').style.display='flex';document.getElementById('discountVal').textContent='-'+formatPrice(disc)}else{document.getElementById('discountRow').style.display='none'}}
-      function applyPromo(){const inp=document.getElementById('promoInput'),btn=document.getElementById('promoBtn'),code=inp.value.trim().toUpperCase();if(promoApplied)return;if(!code){showToast('error','Xato','Promo kodni kiriting');inp.focus();return}if(code==='QOZON20'){promoApplied=true;promoDiscount=.2;btn.textContent='Qo\'llandi';btn.classList.add('applied');inp.disabled=true;updateSummary();showToast('success','Promo faol!','20% chegirma')}else if(code==='BEPUL'){promoApplied=true;promoDiscount=0;deliveryFee=0;btn.textContent='Qo\'llandi';btn.classList.add('applied');inp.disabled=true;updateSummary();showToast('success','Promo faol!','Yetkazib berish bepul')}else{showToast('error','Xato','Noto\'g\'ri promo kod');inp.style.borderColor='var(--danger)';setTimeout(()=>inp.style.borderColor='',2000)}}
+      function removeItem(id){const el=document.querySelector(`.ci[data-id="${id}"]`);if(el){el.classList.add('ci-removing');setTimeout(()=>{const it=cartData.find(x=>x.id===id);cartData=cartData.filter(x=>x.id!==id);saveCartToStorage();renderCart();renderCartDD();if(it)showToast('warning','O\'chirildi',it.name+' olib tashlandi')},400)}}
+      function clearCart(){if(!cartData.length)return;cartData=[];saveCartToStorage();promoApplied=false;promoDiscount=0;appliedPromoId=null;promoPercent=0;promoFixedAmount=0;document.getElementById('discountRow').style.display='none';document.getElementById('promoBtn').textContent='Qo\'llash';document.getElementById('promoBtn').classList.remove('applied');document.getElementById('promoInput').disabled=false;document.getElementById('promoInput').value='';renderCart();renderCartDD();showToast('info','Tozalandi','Savat bo\'shatildi')}
+      function addRec(name,rest,price,img){const ex=cartData.find(i=>i.name===name);if(ex){ex.qty++;saveCartToStorage();renderCart();renderCartDD();showToast('info','Yangilandi',name+' miqdori oshirildi');return}cartData.push({id:Date.now(),name,rest,price,oldPrice:null,qty:1,img,tags:[{text:'Yangi',type:'new'}],checked:true});saveCartToStorage();renderCart();renderCartDD();showToast('success','Qo\'shildi',name+' savatga qo\'shildi')}
+      function updateSummary(){const ch=cartData.filter(i=>i.checked),sub=ch.reduce((s,i)=>s+i.price*i.qty,0),svc=Math.round(sub*SERVICE_RATE),disc=promoApplied?(promoPercent?Math.round(sub*promoPercent/100):promoFixedAmount):0,tot=Math.max(0,sub+deliveryFee+svc-disc);document.getElementById('subtotalVal').textContent=formatPrice(sub);document.getElementById('deliveryVal').textContent=deliveryFee===0?'Bepul':formatPrice(deliveryFee);document.getElementById('serviceVal').textContent=formatPrice(svc);document.getElementById('totalVal').textContent=formatPrice(tot);if(promoApplied&&disc>0){document.getElementById('discountRow').style.display='flex';document.getElementById('discountVal').textContent='-'+formatPrice(disc)}else{document.getElementById('discountRow').style.display='none'}}
+      async function applyPromo(){
+        const inp=document.getElementById('promoInput'),btn=document.getElementById('promoBtn'),code=inp.value.trim().toUpperCase();
+        if(promoApplied)return;
+        if(!code){showToast('error','Xato','Promo kodni kiriting');inp.focus();return}
+        const sub=cartData.filter(i=>i.checked).reduce((s,i)=>s+i.price*i.qty,0);
+        const{data:promo,error}=await supaClient.from('promo_codes').select('*').eq('code',code).eq('is_active',true).single();
+        const now=new Date();
+        const valid=promo&&!error&&(!promo.valid_until||new Date(promo.valid_until)>now)&&sub>=(promo.min_order_amount||0);
+        if(valid){
+          appliedPromoId=promo.id;
+          promoPercent=promo.discount_type==='percent'?Number(promo.discount_value):0;
+          promoFixedAmount=promo.discount_type==='fixed'?Number(promo.discount_value):0;
+          promoApplied=true;
+          btn.textContent='Qo\'llandi';btn.classList.add('applied');inp.disabled=true;
+          updateSummary();
+          showToast('success','Promo faol!',promo.discount_type==='percent'?`${promo.discount_value}% chegirma`:`${Number(promo.discount_value).toLocaleString('ru-RU')} so'm chegirma`);
+        }else if(promo&&sub<(promo.min_order_amount||0)){
+          showToast('error','Xato',`Minimal buyurtma: ${Number(promo.min_order_amount).toLocaleString('ru-RU')} so'm`);
+        }else{
+          showToast('error','Xato','Noto\'g\'ri yoki muddati o\'tgan promo kod');
+          inp.style.borderColor='var(--danger)';setTimeout(()=>inp.style.borderColor='',2000)
+        }
+      }
       function selectDelivery(el,type,fee){document.querySelectorAll('.del-opt').forEach(o=>o.classList.remove('active'));el.classList.add('active');deliveryType=type;deliveryFee=fee;const d1=document.getElementById('delPrice1');if(d1&&fee>0)d1.textContent=formatPrice(fee);updateSummary()}
       function toggleCartDD(){const dd=document.getElementById('cartDD');closeLangMenu();if(dd.classList.contains('open'))closeCartDD();else{renderCartDD();dd.classList.add('open')}}
       function closeCartDD(){document.getElementById('cartDD').classList.remove('open')}
@@ -698,13 +731,42 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       async function finishOrder(data){
-        const res=await API.createOrder(data);if(!res.ok)return;
-        document.getElementById('successOrderId').textContent=res.orderId;openModal('successModal');
-        cartData=cartData.filter(i=>!i.checked);promoApplied=false;promoDiscount=0;
+        const items=cartData.filter(i=>i.checked);
+        if(!items.length)return;
+        const orderNumber='QZ-'+Math.floor(10000+Math.random()*90000);
+        const foodNames=items.map(i=>`${i.name} (${i.qty}x)`).join(', ');
+        const firstItem=items[0];
+        let chefId=null;
+        if(firstItem.rest){
+          const{data:chefRow}=await supaClient.from('chefs').select('id').eq('full_name',firstItem.rest).single();
+          if(chefRow)chefId=chefRow.id;
+        }
+        const orderPayload={
+          order_number:orderNumber,
+          customer_id:currentUser?currentUser.id:null,
+          customer_name:currentUser?(currentUser.name+' '+(currentUser.surname||'')).trim():'Mehmon',
+          customer_phone:data.phone||(currentUser?currentUser.phone:'')||'',
+          food_name:foodNames,
+          food_image:firstItem.img||'',
+          chef_id:chefId,
+          chef_name:firstItem.rest||'Oshpaz',
+          quantity:items.reduce((s,i)=>s+i.qty,0),
+          price:items.reduce((s,i)=>s+i.price*i.qty,0),
+          total_price:(()=>{const sub=items.reduce((s,i)=>s+i.price*i.qty,0),disc=promoApplied?(promoPercent?Math.round(sub*promoPercent/100):promoFixedAmount):0;return Math.max(0,sub+deliveryFee-disc)})(),
+          status:'pending',
+          notes:`Manzil: ${data.address||''}. Izoh: ${data.note||''}`
+        };
+        const{data:created,error}=await supaClient.from('orders').insert(orderPayload).select().single();
+        if(error){showToast('error','Xato','Buyurtmani yaratib bo\'lmadi');return}
+        if(promoApplied&&appliedPromoId&&currentUser){
+          supaClient.from('promo_code_redemptions').insert({promo_code_id:appliedPromoId,user_id:currentUser.id,order_id:created.id}).then(({error})=>{if(error)console.error('Promo qo\'llanishini saqlashda xatolik:',error)});
+        }
+        document.getElementById('successOrderId').textContent=orderNumber;openModal('successModal');
+        cartData=cartData.filter(i=>!i.checked);saveCartToStorage();promoApplied=false;promoDiscount=0;appliedPromoId=null;promoPercent=0;promoFixedAmount=0;
         document.getElementById('discountRow').style.display='none';document.getElementById('promoBtn').textContent='Qo\'llash';document.getElementById('promoBtn').classList.remove('applied');document.getElementById('promoInput').disabled=false;document.getElementById('promoInput').value='';
-        renderCart();renderCartDD();showToast('success','Buyurtma yaratildi',res.orderId);
+        renderCart();renderCartDD();showToast('success','Buyurtma yaratildi',orderNumber);
         /* Kuryer xabarnomasi */
-        setTimeout(()=>showNotifToast('courier',data.phone,'qozon: Kuryer yo\'lga chiqdi. Taxminan 25-35 daqiqa ichida yetib keladi. Buyurtma: '+res.orderId),4000);
+        setTimeout(()=>showNotifToast('courier',data.phone,'qozon: Kuryer yo\'lga chiqdi. Taxminan 25-35 daqiqa ichida yetib keladi. Buyurtma: '+orderNumber),4000);
       }
 
       /* ========== XABARNOMA TOAST (SMS/Email/Kuryer) ========== */
@@ -727,12 +789,28 @@ document.addEventListener("DOMContentLoaded", () => {
         tabs.forEach((b,i)=>b.classList.toggle('active',i===idx));panels.forEach((p,i)=>document.getElementById(p).classList.toggle('active',i===idx));
         if(tab==='info'&&currentUser){document.getElementById('pfEditName').value=currentUser.name||'';document.getElementById('pfEditSurname').value=currentUser.surname||'';document.getElementById('pfEditEmail').value=currentUser.email||'';document.getElementById('pfEditPhone').value=currentUser.phone||''}
       }
-      async function saveProfile(){if(!currentUser)return;const r=await API.updateProfile(currentUser.id,{name:document.getElementById('pfEditName').value,surname:document.getElementById('pfEditSurname').value,phone:document.getElementById('pfEditPhone').value});if(r.ok){currentUser=r.user;localStorage.setItem('qz_current',JSON.stringify(currentUser));updateProfileUI();showToast('success','Saqlandi','Profil yangilandi')}}
-      async function changePassword(){if(!currentUser)return;const r=await API.changePass(currentUser.id,document.getElementById('oldPass').value,document.getElementById('newPass').value);if(!r.ok){showToast('error','Xato',r.msg);return}showToast('success','O\'zgartirildi','Parol yangilandi');document.getElementById('oldPass').value='';document.getElementById('newPass').value='';document.getElementById('newPass2').value=''}
-      function doLogout(){currentUser=null;localStorage.removeItem('qz_current');closeModal('profileModal');updateProfileUI();showToast('info','Chiqdingiz','Tizimdan chiqdingiz')}
+      async function saveProfile(){
+        if(!currentUser)return;
+        const fullName=(document.getElementById('pfEditName').value.trim()+' '+document.getElementById('pfEditSurname').value.trim()).trim();
+        const phone=document.getElementById('pfEditPhone').value.trim();
+        const{error}=await supaClient.from('profiles').update({full_name:fullName,phone}).eq('id',currentUser.id);
+        if(error){showToast('error','Xato','Profilni saqlab bo\'lmadi');return}
+        currentUser.name=fullName;currentUser.phone=phone;
+        updateProfileUI();showToast('success','Saqlandi','Profil yangilandi');
+      }
+      async function changePassword(){
+        if(!currentUser)return;
+        const newPass=document.getElementById('newPass').value,newPass2=document.getElementById('newPass2').value;
+        if(newPass.length<6){showToast('error','Xato','Yangi parol kamida 6 belgi');return}
+        if(newPass!==newPass2){showToast('error','Xato','Parollar mos kelmayapti');return}
+        const{error}=await supaClient.auth.updateUser({password:newPass});
+        if(error){showToast('error','Xato',error.message);return}
+        showToast('success','O\'zgartirildi','Parol yangilandi');document.getElementById('oldPass').value='';document.getElementById('newPass').value='';document.getElementById('newPass2').value='';
+      }
+      async function doLogout(){await supaClient.auth.signOut();currentUser=null;closeModal('profileModal');updateProfileUI();showToast('info','Chiqdingiz','Tizimdan chiqdingiz');setTimeout(()=>window.location.href='kirish.html',800)}
       function updateProfileUI(){
         const av=document.getElementById('navAv'),nm=document.getElementById('navNm');
-        if(currentUser){nm.textContent=currentUser.name+' '+currentUser.surname;av.innerHTML=`<span style="font-size:11px;font-weight:700">${(currentUser.name||'')[0]}${(currentUser.surname||'')[0]}</span>`;document.getElementById('pfName').textContent=currentUser.name+' '+currentUser.surname;document.getElementById('pfEmail').textContent=currentUser.email;document.getElementById('pfRole').textContent='Foydalanuvchi';document.getElementById('pfAvBig').innerHTML=`<span style="font-size:28px;font-weight:800">${(currentUser.name||'')[0]}${(currentUser.surname||'')[0]}</span>`}
+        if(currentUser){const fullName=(currentUser.name+' '+(currentUser.surname||'')).trim();const initials=((currentUser.name||'')[0]||'')+((currentUser.surname||'')[0]||'');nm.textContent=fullName;av.innerHTML=`<span style="font-size:11px;font-weight:700">${initials}</span>`;document.getElementById('pfName').textContent=fullName;document.getElementById('pfEmail').textContent=currentUser.email;document.getElementById('pfRole').textContent='Foydalanuvchi';document.getElementById('pfAvBig').innerHTML=`<span style="font-size:28px;font-weight:800">${initials}</span>`}
         else{nm.textContent='Profil';av.innerHTML='<i class="fas fa-user"></i>';document.getElementById('pfName').textContent='Mehmon';document.getElementById('pfEmail').textContent='Tizimga kirmagan';document.getElementById('pfRole').textContent='Mehmon';document.getElementById('pfAvBig').innerHTML='<i class="fas fa-user"></i>'}
       }
 
@@ -749,11 +827,44 @@ document.addEventListener("DOMContentLoaded", () => {
       function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
       function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
       function openSettings(){closeCartDD();closeLangMenu();openModal('settingsModal')}
-      function showNotifications(){showToast('info','Bildirishnoma','3-ta buyurtmangiz yetkazilmoqda');document.getElementById('notifBadge').style.display='none'}
+      /* ========== BILDIRISHNOMALAR (public.notifications) ========== */
+      let notifRealtimeChannel=null;
+      async function updateNotifBadge(){
+        const badge=document.getElementById('notifBadge');
+        if(!badge)return;
+        if(!currentUser){badge.style.display='none';return}
+        const{count}=await supaClient.from('notifications').select('id',{count:'exact',head:true}).eq('user_id',currentUser.id).eq('is_read',false);
+        if(count>0){badge.textContent=count>9?'9+':String(count);badge.style.display='flex'}else{badge.style.display='none'}
+      }
+      function closeNotifDD(){const dd=document.getElementById('notifDD');if(dd)dd.classList.remove('open')}
+      async function showNotifications(){
+        let dd=document.getElementById('notifDD');
+        if(!dd){dd=document.createElement('div');dd.id='notifDD';dd.className='cart-dd';document.getElementById('notifBtn').insertAdjacentElement('afterend',dd)}
+        if(dd.classList.contains('open')){closeNotifDD();return}
+        closeCartDD();closeLangMenu();dd.classList.add('open');
+        if(!currentUser){dd.innerHTML=`<div style="padding:20px;text-align:center;color:var(--text2);font-size:13px">Bildirishnomalarni ko'rish uchun tizimga kiring</div>`;return}
+        dd.innerHTML=`<div style="padding:20px;text-align:center;color:var(--text2);font-size:13px">Yuklanmoqda...</div>`;
+        const{data,error}=await supaClient.from('notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(15);
+        if(error||!data||!data.length){
+          dd.innerHTML=`<div style="padding:20px;text-align:center;color:var(--text2);font-size:13px">Hozircha bildirishnoma yo'q</div>`;
+        }else{
+          dd.innerHTML=data.map(n=>`<div style="padding:12px 16px;border-bottom:1px solid var(--border);${n.is_read?'':'background:var(--info-bg)'}"><div style="font-size:13px;font-weight:700;margin-bottom:3px">${n.title}</div><div style="font-size:12px;color:var(--text2);margin-bottom:4px">${n.body||''}</div><div style="font-size:11px;color:var(--text3)">${new Date(n.created_at).toLocaleString('uz')}</div></div>`).join('');
+          const unreadIds=data.filter(n=>!n.is_read).map(n=>n.id);
+          if(unreadIds.length){await supaClient.from('notifications').update({is_read:true}).in('id',unreadIds);updateNotifBadge()}
+        }
+      }
+      function initNotifications(){
+        if(!currentUser)return;
+        updateNotifBadge();
+        if(notifRealtimeChannel)supaClient.removeChannel(notifRealtimeChannel);
+        notifRealtimeChannel=supaClient.channel('notifications-'+currentUser.id)
+          .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:`user_id=eq.${currentUser.id}`},()=>updateNotifBadge())
+          .subscribe();
+      }
       document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));
 
       /* ========== TEMA ========== */
-      function toggleTheme(){const h=document.documentElement,isD=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',isD?'light':'dark');document.querySelector('#themeBtn i').className=isD?'fas fa-moon':'fas fa-sun';const dt=document.getElementById('darkToggle');if(dt)dt.classList.toggle('on',!isD);localStorage.setItem('qz-theme',isD?'light':'dark')}
+      function toggleTheme(){const h=document.documentElement,isD=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',isD?'light':'dark');document.querySelector('#themeBtn i').className=isD?'fas fa-moon':'fas fa-sun';const dt=document.getElementById('darkToggle');if(dt)dt.classList.toggle('on',!isD);localStorage.setItem('qz_theme',isD?'light':'dark')}
       function toggleParticles(){const on=document.getElementById('particles').style.opacity==='0';document.getElementById('particles').style.opacity=on?'0.5':'0';document.getElementById('particleToggle').classList.toggle('on',on)}
       function clearAllData(){localStorage.clear();currentUser=null;cartData.length=0;renderCart();renderCartDD();updateProfileUI();closeModal('settingsModal');showToast('info','Tozalandi','Barcha ma\'lumotlar o\'chirildi')}
       (function(){const s=localStorage.getItem('qz_theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('#themeBtn i').className='fas fa-sun';const dt=document.getElementById('darkToggle');if(dt)dt.classList.add('on')}})();
@@ -766,8 +877,19 @@ document.addEventListener("DOMContentLoaded", () => {
       window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>20));
 
       /* ========== PARTICLES ========== */
-      document.addEventListener('click',e=>{if(!e.target.closest('#cartBtnWrap'))closeCartDD();if(!e.target.closest('.ldd'))closeLangMenu()});
+      document.addEventListener('click',e=>{if(!e.target.closest('#cartBtnWrap'))closeCartDD();if(!e.target.closest('.ldd'))closeLangMenu();if(!e.target.closest('#notifBtn')&&!e.target.closest('#notifDD'))closeNotifDD()});
       document.getElementById('promoInput').addEventListener('keydown',e=>{if(e.key==='Enter')applyPromo()});
 
       /* ========== INIT ========== */
-      renderLangMenu();updateProfileUI();renderCart();renderCartDD();renderRecs();
+      async function loadCurrentUser(){
+        const{data:{session}}=await supaClient.auth.getSession();
+        if(!session){currentUser=null;updateProfileUI();return}
+        const authUser=session.user;
+        const{data:profile}=await supaClient.from('profiles').select('*').eq('id',authUser.id).single();
+        const fullName=profile?.full_name||authUser.user_metadata?.full_name||'';
+        currentUser={id:authUser.id,name:fullName,surname:'',email:authUser.email||'',phone:profile?.phone||authUser.user_metadata?.phone||''};
+        updateProfileUI();
+        initNotifications();
+      }
+      document.getElementById('notifBadge').style.display='none';
+      renderLangMenu();updateProfileUI();renderCart();renderCartDD();renderRecs();loadCurrentUser();

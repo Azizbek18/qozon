@@ -48,9 +48,11 @@
       <button class="nbtn" id="themeBtn" onclick="toggleTheme()" title="Tema">
         <i class="fas fa-moon"></i>
       </button>
-      <button class="nbtn" id="notifBtn" onclick="showNotifications()">
-        <i class="fas fa-bell"></i><span class="badge" id="notifBadge">3</span>
-      </button>
+      <div style="position: relative" id="notifBtnWrap">
+        <button class="nbtn" id="notifBtn" onclick="showNotifications()">
+          <i class="fas fa-bell"></i><span class="badge" id="notifBadge">3</span>
+        </button>
+      </div>
       <div style="position: relative" id="cartBtnWrap">
         <button class="nbtn" onclick="toggleCartDD()" title="Savat" id="cartNavBtn">
           <i class="fas fa-shopping-bag"></i><span class="badge" id="cartBadge">5</span>

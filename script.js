@@ -301,7 +301,8 @@ function renderFoods() {
     filtered.forEach((food, index) => {
         const name        = food.name || "Noma'lum taom";
         const price       = new Intl.NumberFormat('ru-RU').format(food.price) + ' UZS';
-        const image       = food.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';
+        const fallbackImage = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';
+        const image       = food.image_url || fallbackImage;
         const chef        = food.chef_name || 'Oshpaz';
         const badgeHTML   = (food.portions_left < 5) ? '<span class="badge">Tez tugaydi</span>' : '';
         const hiddenClass = (index >= INITIAL_ITEMS && !isFoodsExpanded) ? 'hidden' : 'show';
@@ -322,7 +323,7 @@ function renderFoods() {
             <div class="food-card ${hiddenClass}" data-category="${categoryGroup}" onclick="window.location.href='food.detalis.html'" style="cursor: pointer;">
                 <div class="card-image">
                     ${badgeHTML}
-                    <img src="${image}" alt="${name}">
+                    <img src="${image}" alt="${name}" onerror="this.onerror=null;this.src='${fallbackImage}';">
                     <span class="price">${price}</span>
                 </div>
                 <div class="card-content">

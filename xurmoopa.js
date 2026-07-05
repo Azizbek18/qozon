@@ -241,7 +241,7 @@ function renderChefMenu(foods, chefName) {
         
         html += `
             <div class="menu-card" data-food-id="${food.id}" onclick="window.location.href='food.detalis.html?id=${food.id}'" style="cursor: pointer;">
-                <img src="${image}" alt="${food.name}" class="menu-img">
+                <img src="${image}" alt="${food.name}" class="menu-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';">
                 <div class="menu-info">
                     <div class="menu-header">
                         <div class="menu-title">${food.name}</div>

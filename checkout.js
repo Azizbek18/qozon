@@ -5,6 +5,38 @@
 document.addEventListener("DOMContentLoaded", () => {
     const SUPABASE_URL = 'https://usoekoycypxbcxzwoaea.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
+    const supabaseAuthClient = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+    async function resolveChefId(chefName) {
+        if (!chefName) return null;
+        try {
+            const resp = await fetch(`${SUPABASE_URL}/rest/v1/chefs?select=id&full_name=eq.${encodeURIComponent(chefName)}`, {
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            if (!resp.ok) return null;
+            const rows = await resp.json();
+            return rows && rows[0] ? rows[0].id : null;
+        } catch (e) {
+            return null;
+        }
+    }
+    const FOOD_PLACEHOLDER_IMAGE = './Traditional Uzbek Plov (1).svg';
+    const FOOD_FALLBACK_IMAGES = [
+        'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=180&h=180&q=80',
+        'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=180&h=180&q=80',
+        'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=180&h=180&q=80',
+        'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=180&h=180&q=80'
+    ];
+    window.setFoodImageFallback = function(img, name = '', index = 0) {
+        const nextStep = Number(img.dataset.fallbackStep || 0);
+        if (nextStep < FOOD_FALLBACK_IMAGES.length) {
+            img.dataset.fallbackStep = String(nextStep + 1);
+            img.src = FOOD_FALLBACK_IMAGES[(Math.abs(index) + nextStep) % FOOD_FALLBACK_IMAGES.length];
+            return;
+        }
+        img.onerror = null;
+        img.src = FOOD_PLACEHOLDER_IMAGE;
+    };
 
     // 1. Savatchani localStorage dan yuklash
     let cartItems = [];
@@ -37,14 +69,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. Taomlarni dinamik render qilish va subtotal hisoblash
     if (itemsListContainer) {
         itemsListContainer.innerHTML = '';
-        cartItems.forEach(item => {
+        cartItems.forEach((item, index) => {
             const itemTotal = (item.price || 0) * (item.quantity || 1);
             subtotal += itemTotal;
 
             const card = document.createElement("div");
             card.className = "product-card";
             card.innerHTML = `
-                <img src="${item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=150'}" alt="${item.name}" class="product-img">
+                <img src="${item.image || FOOD_FALLBACK_IMAGES[index % FOOD_FALLBACK_IMAGES.length]}" alt="${item.name}" class="product-img" onerror="setFoodImageFallback(this, '${String(item.name || 'Taom').replace(/'/g, "\\'")}', ${index})">
                 <div class="product-info">
                     <h4>${item.name}</h4>
                     <p class="chef-name">👨‍🍳 ${item.chef || 'Oshpaz'}</p>
@@ -180,18 +212,41 @@ document.addEventListener("DOMContentLoaded", () => {
             const foodNames = cartItems.map(item => `${item.name} (${item.quantity || 1}x)`).join(', ');
             const firstItem = cartItems[0];
 
+            // Tizimga kirgan foydalanuvchini aniqlash (mehmon bo'lsa null qoladi)
+            let authUserId = null;
+            if (supabaseAuthClient) {
+                try {
+                    const { data: { user } } = await supabaseAuthClient.auth.getUser();
+                    if (user) authUserId = user.id;
+                } catch (e) {}
+            }
+            const chefId = await resolveChefId(firstItem ? firstItem.chef : null);
+
             const orderPayload = {
                 order_number: orderNumber,
+                customer_id: authUserId,
                 customer_name: userData ? (userData.full_name || userData.name || userData.email || 'Mehmon') : 'Mehmon',
                 customer_phone: userData ? (userData.phone || '+998 90 123 45 67') : '+998 90 123 45 67',
                 food_name: foodNames,
                 food_image: firstItem ? (firstItem.image || '') : '',
+                chef_id: chefId,
                 chef_name: firstItem ? (firstItem.chef || 'Oshpaz') : 'Oshpaz',
                 quantity: cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0),
                 price: subtotal,
                 total_price: subtotal + deliveryFee,
                 status: 'pending',
                 notes: `Vaqt: ${selectedTime}, Usul: ${selectedMethod}, To'lov: ${selectedPayment}`
+            };
+            const orderFoodSnapshot = {
+                name: foodNames,
+                image: firstItem ? firstItem.image : '',
+                chef: firstItem ? firstItem.chef : 'Oshpaz',
+                chef_phone: firstItem ? (firstItem.chef_phone || firstItem.chefPhone || firstItem.phone || '') : '',
+                quantity: 1,
+                price: subtotal + deliveryFee,
+                delivery_method: selectedMethod,
+                delivery_time: selectedTime,
+                customer_phone: orderPayload.customer_phone
             };
 
             try {
@@ -213,21 +268,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     localStorage.setItem('qz_active_order', 'true');
                     localStorage.setItem('qz_current_order_id', createdOrder.id);
                     localStorage.setItem('qz_current_order_number', orderNumber);
-                    localStorage.setItem('qz_current_order_food', JSON.stringify({
-                        name: foodNames,
-                        image: firstItem ? firstItem.image : '',
-                        chef: firstItem ? firstItem.chef : 'Oshpaz',
-                        quantity: 1,
-                        price: subtotal + deliveryFee
-                    }));
+                    localStorage.setItem('qz_current_order_food', JSON.stringify(orderFoodSnapshot));
                 } else {
                     localStorage.setItem('qz_active_order', 'true');
                     localStorage.setItem('qz_current_order_number', orderNumber);
+                    localStorage.setItem('qz_current_order_food', JSON.stringify(orderFoodSnapshot));
                 }
             } catch (err) {
                 console.error("Supabase order failed, fallback:", err);
                 localStorage.setItem('qz_active_order', 'true');
                 localStorage.setItem('qz_current_order_number', orderNumber);
+                localStorage.setItem('qz_current_order_food', JSON.stringify(orderFoodSnapshot));
             }
 
             // Savatchani tozalash

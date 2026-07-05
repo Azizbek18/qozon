@@ -5,6 +5,41 @@ let mainCount = 1;
 let foodNameText = "Fergana uslubida osh";
 let foodImageUrl = "./image copy 2.png";
 let foodChefName = "Xurmo opa";
+const FOOD_PLACEHOLDER_IMAGE = './Traditional Uzbek Plov (1).svg';
+const FOOD_FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=800&h=520&q=80',
+  'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&h=520&q=80',
+  'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&h=520&q=80',
+  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&h=520&q=80',
+  'https://images.unsplash.com/photo-1559622214-f8a9850965bb?auto=format&fit=crop&w=800&h=520&q=80'
+];
+
+function getFoodFallbackImage(name = '', category = '', index = 0) {
+  const key = `${name} ${category}`.toLowerCase();
+  if (key.includes('osh') || key.includes('palov') || key.includes('plov')) return FOOD_PLACEHOLDER_IMAGE;
+  if (key.includes('somsa')) return FOOD_FALLBACK_IMAGES[0];
+  if (key.includes('manti')) return FOOD_FALLBACK_IMAGES[2];
+  if (key.includes('shurva') || key.includes("sho'rva")) return FOOD_FALLBACK_IMAGES[1];
+  if (key.includes('shirin')) return FOOD_FALLBACK_IMAGES[4];
+  const seed = key.split('').reduce((sum, char) => sum + char.charCodeAt(0), index);
+  return FOOD_FALLBACK_IMAGES[Math.abs(seed) % FOOD_FALLBACK_IMAGES.length];
+}
+
+window.setFoodImageFallback = function(img, name = '', category = '', index = 0) {
+  const nextStep = Number(img.dataset.fallbackStep || 0);
+  if (nextStep === 0) {
+    img.dataset.fallbackStep = '1';
+    img.src = getFoodFallbackImage(name, category, index);
+    return;
+  }
+  if (nextStep <= FOOD_FALLBACK_IMAGES.length) {
+    img.dataset.fallbackStep = String(nextStep + 1);
+    img.src = FOOD_FALLBACK_IMAGES[(Math.abs(index) + nextStep - 1) % FOOD_FALLBACK_IMAGES.length];
+    return;
+  }
+  img.onerror = null;
+  img.src = FOOD_PLACEHOLDER_IMAGE;
+};
 
 // Extract food ID from URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -25,42 +60,66 @@ const ingredientsNames = {
   cumin: "Zira"
 };
 
-// Reviews mock data
-const reviewsDataList = [
-    {
-        author: "Aziza Karimova",
-        avatar: "A",
-        avatarBg: "#ffe3e3",
-        avatarColor: "#c92c36",
-        stars: "★★★★★",
-        rating: 5,
-        time: "2 soat avval",
-        text: "Osh juda mazali ekan! Guruchi dona-dona bo'lib pishgan, go'shti esa og'izda erib ketyapti. Xurmo opaga rahmat!",
-        hasPhoto: true
-    },
-    {
-        author: "Javohir T.",
-        avatar: "J",
-        avatarBg: "#e3f2fd",
-        avatarColor: "#1e88e5",
-        stars: "★★★★☆",
-        rating: 4,
-        time: "Kecha",
-        text: "Yaxshi, lekin biroz yog'liroq ekan. Ammo ta'mi a'lo!",
-        hasPhoto: false
-    },
-    {
-        author: "Sardor",
-        avatar: "S",
-        avatarBg: "#e8f5e9",
-        avatarColor: "#43a047",
-        stars: "★★★★★",
-        rating: 5,
-        time: "3 kun avval",
-        text: "Haqiqiy Farg'ona oshi. Qayta-qayta buyurtma beraman!",
-        hasPhoto: false
-    }
+// Reviews — public.reviews jadvalidan yuklanadi (loadReviewsForFood orqali)
+let reviewsDataList = [];
+const REVIEW_AVATAR_COLORS = [
+    { bg: "#ffe3e3", color: "#c92c36" },
+    { bg: "#e3f2fd", color: "#1e88e5" },
+    { bg: "#e8f5e9", color: "#43a047" },
+    { bg: "#fff3e0", color: "#e65100" },
+    { bg: "#f3e5f5", color: "#8e24aa" }
 ];
+
+function timeAgoUz(dateStr) {
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 60) return mins <= 1 ? "hozirgina" : `${mins} daqiqa avval`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours} soat avval`;
+    const days = Math.floor(hours / 24);
+    if (days === 1) return "kecha";
+    if (days < 7) return `${days} kun avval`;
+    return new Date(dateStr).toLocaleDateString('uz');
+}
+
+async function loadReviewsForFood(client, targetFoodId) {
+    try {
+        const { data: reviews, error } = await client
+            .from('reviews')
+            .select('user_id, rating, comment, photo_url, created_at')
+            .eq('food_id', targetFoodId)
+            .order('created_at', { ascending: false });
+        if (error || !reviews) return;
+
+        const userIds = Array.from(new Set(reviews.map(r => r.user_id)));
+        let profilesById = {};
+        if (userIds.length) {
+            const { data: profiles } = await client.from('profiles').select('id, full_name').in('id', userIds);
+            (profiles || []).forEach(p => { profilesById[p.id] = p.full_name; });
+        }
+
+        reviewsDataList = reviews.map((r, index) => {
+            const name = profilesById[r.user_id] || 'Foydalanuvchi';
+            const palette = REVIEW_AVATAR_COLORS[index % REVIEW_AVATAR_COLORS.length];
+            return {
+                author: name,
+                avatar: name.charAt(0).toUpperCase(),
+                avatarBg: palette.bg,
+                avatarColor: palette.color,
+                stars: '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating),
+                rating: r.rating,
+                time: timeAgoUz(r.created_at),
+                text: r.comment || '',
+                hasPhoto: !!r.photo_url
+            };
+        });
+
+        const activeTab = document.querySelector('.review-tab.active');
+        renderReviews(activeTab ? activeTab.textContent.trim() : 'Barchasi');
+    } catch (e) {
+        console.error('Sharhlarni yuklashda xatolik:', e);
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM Elementlari
@@ -366,7 +425,12 @@ window.renderReviews = function(tabName = "Barchasi") {
     } else if (tabName === "5 ★") {
         filtered = reviewsDataList.filter(r => r.rating === 5);
     }
-    
+
+    if (!filtered.length) {
+        listContainer.innerHTML = `<p style="padding:16px 0;color:var(--text-light,#8b7355);font-size:13px">Hozircha sharhlar yo'q.</p>`;
+        return;
+    }
+
     let html = '';
     filtered.forEach(r => {
         html += `
@@ -529,7 +593,10 @@ document.addEventListener("DOMContentLoaded", () => {
         
         try {
             const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            
+
+            // 0. Fetch real reviews for this food (reviews table)
+            loadReviewsForFood(client, foodId);
+
             // 1. Fetch Food details
             client.from('foods').select('*').eq('id', foodId).single().then(({ data: food, error }) => {
                 if (error) throw error;
@@ -537,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     baseFoodPrice = food.price;
                     currentUnitPrice = food.price;
                     foodNameText = food.name;
-                    foodImageUrl = food.image_url || food.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';
+                    foodImageUrl = food.image_url || food.image || getFoodFallbackImage(food.name, food.category, foodId);
                     foodChefName = food.chef_name || "Oshpaz";
 
                     // Update document title
@@ -554,6 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Update main food image
                     const imgEl = document.getElementById('foodImage');
                     if (imgEl) {
+                        imgEl.onerror = () => setFoodImageFallback(imgEl, food.name, food.category, foodId);
                         imgEl.src = foodImageUrl;
                         imgEl.alt = food.name;
                     }

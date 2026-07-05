@@ -353,7 +353,15 @@ document.querySelectorAll(".tab").forEach(tab => {
            ============================================== */
       var currentLang = localStorage.getItem("mk_lang") || "uz";
       var currentTheme = localStorage.getItem("mk_theme") || "light";
-      var currentUser = JSON.parse(localStorage.getItem("mk_user") || "null");
+      var currentUser = (function () {
+        for (const key of ["mk_user", "qz_current", "tn_user", "user"]) {
+          try {
+            const d = JSON.parse(localStorage.getItem(key) || "null");
+            if (d) return d;
+          } catch (e) {}
+        }
+        return null;
+      })();
       var orders =
         JSON.parse(localStorage.getItem("mk_orders") || "null") ||
         JSON.parse(JSON.stringify(defaultOrders));

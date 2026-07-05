@@ -1,3 +1,7 @@
+const MENU_SUPABASE_URL = 'https://usoekoycypxbcxzwoaea.supabase.co';
+const MENU_SUPABASE_KEY = 'sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
+const menuSupabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(MENU_SUPABASE_URL, MENU_SUPABASE_KEY) : null;
+
 // Kod brauzerda HTML to'liq yuklangandan keyin ishga tushadi
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -101,35 +105,75 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. MENYUGA QO'SHISH (FORM SUBMIT)
     // ==========================================
     const form = document.querySelector('.modal-form');
+    const submitBtn = form.querySelector('button[type="submit"], .save-btn, .submit-btn');
 
-    form.addEventListener('submit', (e) => {
+    function readImageAsDataUrl(file) {
+        return new Promise((resolve) => {
+            if (!file) { resolve(null); return; }
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault(); // Sahifa yangilanib ketishini oldini oladi
 
-        // Kiritilgan barcha masalliq (tag)larni massivga yig'ish
-        const ingredients = [];
-        tagsContainer.querySelectorAll('.tag').forEach(tag => {
-            // "×" belgisini olib tashlab matnni saqlaydi
-            ingredients.push(tag.textContent.replace('×', '').trim());
-        });
+        const name = document.querySelector('input[placeholder="M: Milliy palov"]').value.trim();
+        const category = document.querySelector('.form-select').value;
+        const price = parseInt(document.querySelector('.grid-4 div:nth-child(1) input').value, 10) || 0;
+        const portionsLeft = parseInt(counterValue.textContent, 10) || 0;
 
-        // Barcha ma'lumotlarni bitta chiroyli Objectga yig'ish
-        const foodData = {
-            nomi: document.querySelector('input[placeholder="M: Milliy palov"]').value,
-            kategoriya: document.querySelector('.form-select').value,
-            tavsif: document.querySelector('.form-textarea').value,
-            narxi: document.querySelector('.grid-4 div:nth-child(1) input').value,
-            soni: counterValue.textContent,
-            tayyorlashVaqti: document.querySelector('.grid-4 div:nth-child(3) input').value,
-            tayyorVaqtiSoat: document.querySelector('.time-wrapper input').value,
-            masalliqlar: ingredients,
-            allergenMavjud: document.getElementById('allergenSwitch').checked,
-            rasmFayli: fileInput.files[0] ? fileInput.files[0].name : "Yuklanmagan"
-        };
+        if (!name) {
+            alert("Taom nomini kiriting.");
+            return;
+        }
+        if (!menuSupabaseClient) {
+            alert("Xatolik: Supabase ulanmagan.");
+            return;
+        }
 
-        // Dasturchilar uchun konsol oynasiga tekshirish uchun chiqarish
-        console.log("Yig'ilgan ma'lumotlar:", foodData);
-        alert("Taom muvaffaqiyatli qo'shildi! Natijani ko'rish uchun (F12 -> Console) oynasini oching.");
-        window.location.href = 'xurmoOpa 2.html';
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saqlanmoqda...'; }
+
+        try {
+            const { data: { user } } = await menuSupabaseClient.auth.getUser();
+            if (!user) {
+                alert("Taom qo'shish uchun tizimga kiring.");
+                return;
+            }
+            const { data: chefRow, error: chefError } = await menuSupabaseClient
+                .from('chefs').select('id, full_name').eq('user_id', user.id).single();
+            if (chefError || !chefRow) {
+                alert("Oshpaz profili topilmadi.");
+                return;
+            }
+
+            const imageUrl = await readImageAsDataUrl(fileInput.files[0]);
+
+            const foodPayload = {
+                chef_id: chefRow.id,
+                chef_name: chefRow.full_name || 'Oshpaz',
+                name: name,
+                category: category || null,
+                price: price,
+                portions_left: portionsLeft,
+                is_available: portionsLeft > 0,
+                image_url: imageUrl || undefined
+            };
+
+            const { error } = await menuSupabaseClient.from('foods').insert(foodPayload);
+            if (error) {
+                console.error('Taom qo\'shishda xatolik:', error);
+                alert("Taomni saqlab bo'lmadi: " + error.message);
+                return;
+            }
+
+            alert("Taom muvaffaqiyatli qo'shildi!");
+            window.location.href = 'xurmoOpa 2.html';
+        } finally {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Saqlash'; }
+        }
     });
 
     // ==========================================

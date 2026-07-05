@@ -29,9 +29,9 @@
             <div class="tracking-left">
                 
                 <div class="track-card status-card">
-                    <h3>Buyurtma Holati</h3>
+                    <h3 class="tracking-card-title">Buyurtma Holati <span class="live-badge">Jonli</span></h3>
                     
-                    <div class="timeline">
+                    <div class="timeline" id="trackingTimeline">
                         <div class="timeline-item completed">
                             <div class="timeline-dot-wrapper">
                                 <div class="dot"></div>
@@ -82,13 +82,13 @@
                             <i class="fa-solid fa-bowl-rice"></i>
                         </div>
                         <div class="food-text">
-                            <span class="food-title">To'y Oshi (Maxsus)</span>
-                            <span class="chef-name">Oshpaz: Malika opa</span>
+                            <span class="food-title" id="trackingFoodTitle">Buyurtma yuklanmoqda...</span>
+                            <span class="chef-name" id="trackingChefName">Oshpaz: aniqlanmoqda</span>
                         </div>
                     </div>
                     <div class="time-row">
                         <span class="time-label">Taxminiy vaqt</span>
-                        <span class="time-value">13:35</span>
+                        <span class="time-value" id="trackingEta">Aniqlanmoqda</span>
                     </div>
                 </div>
 
@@ -100,16 +100,16 @@
                     <div class="map-placeholder">
                         
                         <div class="map-marker chef-marker" style="top: 25%; left: 50%;">
-                            <span class="marker-label">Malika opa</span>
+                            <span class="marker-label" id="chefMarkerLabel">Oshpaz</span>
                             <div class="marker-pin"><i class="fa-solid fa-location-dot"></i></div>
                         </div>
 
-                        <div class="moving-courier" style="top: 45%; left: 66%;">
+                        <div class="moving-courier" id="movingCourier" style="top: 45%; left: 66%;">
                             <i class="fa-solid fa-motorcycle"></i>
                         </div>
 
                         <div class="map-marker user-marker" style="top: 60%; left: 80%;">
-                            <span class="marker-label">Sizning manzilingiz</span>
+                            <span class="marker-label" id="userMarkerLabel">Sizning manzilingiz</span>
                             <div class="marker-pin"><i class="fa-solid fa-location-pin"></i></div>
                         </div>
 
@@ -132,8 +132,8 @@
                         </div>
                         <div class="courier-info">
                             <span class="role-label">Kuryer</span>
-                            <span class="courier-name">Dilshod</span>
-                            <span class="courier-rating"><i class="fa-solid fa-star"></i> 4.9 <span class="order-count">(120+ buyurtma)</span></span>
+                            <span class="courier-name" id="courierName">Kuryer aniqlanmoqda</span>
+                            <span class="courier-rating" id="courierStatus"><i class="fa-solid fa-circle-notch"></i> Status yuklanmoqda</span>
                         </div>
                     </div>
                     <div class="courier-actions">
@@ -160,6 +160,8 @@
             </div>
         </div>
     </footer>
+
+    <div class="tracking-toast-container" id="trackingToastContainer" aria-live="polite" aria-atomic="true"></div>
 
     <script src="tracking.js"></script>
 </body>

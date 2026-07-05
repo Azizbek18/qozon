@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             const { error } = await supabaseClient
                 .from('orders')
-                .update({ status: newStatus })
+                .update({ status: newStatus, updated_at: new Date().toISOString() })
                 .eq('id', orderId);
 
             if (error) throw error;
@@ -303,7 +303,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             row.innerHTML = `
                 <div class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
-                <img src="${imgUrl}" alt="${food.name}" class="menu-item-img">
+                <img src="${imgUrl}" alt="${food.name}" class="menu-item-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=80&h=80';">
                 <div class="menu-item-details">
                     <h4>${food.name}</h4>
                     <p>${food.price.toLocaleString()} so'm / porsiya</p>

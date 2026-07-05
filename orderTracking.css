@@ -38,16 +38,28 @@ body {
     flex-direction: column;
 }
 
+.page-shell {
+    width: 100%;
+    min-height: 100vh;
+}
+
 .container {
-    max-width: 1200px;
+    max-width: 1450px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
     width: 100%;
 }
 
 main {
     flex: 1;
     padding: 20px 0 60px;
+}
+
+main > section {
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
 /* ==========================================================================
@@ -59,31 +71,79 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
+    width: 100%;
 }
 
 .header-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
+    min-height: 88px;
     width: 100%;
+    gap: 28px;
 }
 
-header img {
-    height: 32px;
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.back-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    text-decoration: none;
+    color: var(--text-dark);
+    background: #f4f1ed;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 6px 16px rgba(45, 27, 14, 0.06);
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: translateX(-2px);
+    color: var(--brand-red);
+}
+
+.back-btn i {
+    font-size: 15px;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    line-height: 0;
+}
+
+.header-logo img {
+    display: block;
+    height: 48px;
+    width: auto;
 }
 
 header nav {
     display: flex;
     align-items: center;
-    gap: 36px;
+    justify-content: flex-end;
+    gap: 34px;
+    flex: 1;
+    min-width: 0;
 }
 
 header nav ul {
     display: flex;
     list-style: none;
-    gap: 32px;
+    gap: clamp(18px, 2vw, 36px);
     align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
 }
 
 header nav ul li a {
@@ -101,7 +161,8 @@ header nav ul li a:hover {
 header .menu-actions {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 14px;
+    flex: 0 0 auto;
 }
 
 header .menu-actions a {
@@ -110,6 +171,7 @@ header .menu-actions a {
     font-weight: 700;
     font-size: 15px;
     transition: color 0.2s ease;
+    white-space: nowrap;
 }
 
 header .menu-actions a:hover {
@@ -142,8 +204,8 @@ header .menu-actions button:hover {
    BUYURTMA STATUSI / DIV-1 (SUCCESS BOX)
    ========================================================================== */
 .div-1 {
-    background: rgba(88, 204, 2, 0.08);
-    border: 1px solid rgba(88, 204, 2, 0.2);
+    background: rgba(255, 159, 67, 0.1);
+    border: 1px solid rgba(255, 159, 67, 0.24);
     border-radius: var(--radius-lg);
     padding: 24px;
     display: flex;
@@ -152,12 +214,13 @@ header .menu-actions button:hover {
     gap: 15px;
     margin-bottom: 30px;
     box-shadow: 0 10px 30px rgba(88, 204, 2, 0.04);
+    transition: background 0.25s ease, border-color 0.25s ease;
 }
 
 .div-1 p:first-child {
     font-size: 20px;
     font-weight: 800;
-    color: var(--accent-green);
+    color: #e17c2f;
 }
 
 .div-1 p:nth-child(2) {
@@ -186,6 +249,39 @@ header .menu-actions button:hover {
     font-size: 18px;
     font-weight: 800;
     color: var(--brand-red);
+}
+
+.div-1.summary-pending {
+    background: rgba(255, 159, 67, 0.1);
+    border-color: rgba(255, 159, 67, 0.26);
+}
+
+.div-1.summary-pending p:first-child,
+.div-1.summary-pending .div-ichi p:last-child {
+    color: #e17c2f;
+}
+
+.div-1.summary-success {
+    background: rgba(88, 204, 2, 0.08);
+    border-color: rgba(88, 204, 2, 0.22);
+}
+
+.div-1.summary-success p:first-child {
+    color: var(--accent-green);
+}
+
+.div-1.summary-success .div-ichi p:last-child {
+    color: var(--brand-red);
+}
+
+.div-1.summary-cancelled {
+    background: rgba(163, 144, 124, 0.1);
+    border-color: rgba(163, 144, 124, 0.22);
+}
+
+.div-1.summary-cancelled p:first-child,
+.div-1.summary-cancelled .div-ichi p:last-child {
+    color: var(--text-muted);
 }
 
 /* ==========================================================================
@@ -401,6 +497,145 @@ header .menu-actions button:hover {
 }
 
 /* ==========================================================================
+   TOAST NOTIFICATIONS
+   ========================================================================== */
+.tracking-toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    pointer-events: none;
+}
+
+.tracking-toast {
+    width: min(390px, calc(100vw - 32px));
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+    padding: 16px 44px 16px 16px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(232, 221, 208, 0.95);
+    box-shadow: 0 24px 55px rgba(45, 27, 14, 0.14);
+    transform: translateX(120%) scale(0.96);
+    opacity: 0;
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    pointer-events: auto;
+}
+
+.tracking-toast.show {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+
+.tracking-toast.hide {
+    transform: translateX(120%) scale(0.96);
+    opacity: 0;
+}
+
+.tracking-toast-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    color: #fff;
+    background: var(--brand-red);
+    box-shadow: 0 10px 24px rgba(230, 57, 70, 0.22);
+}
+
+.tracking-toast-success .tracking-toast-icon {
+    background: var(--accent-green);
+    box-shadow: 0 10px 24px rgba(88, 204, 2, 0.22);
+}
+
+.tracking-toast-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.tracking-toast-title {
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.tracking-toast-message {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
+.tracking-toast-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(45, 27, 14, 0.06);
+    color: var(--text-muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.tracking-toast-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.tracking-toast-actions button {
+    border: 0;
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.tracking-toast-secondary {
+    background: #f7efe6;
+    color: var(--text-muted);
+}
+
+.tracking-toast-danger {
+    background: var(--brand-red);
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(230, 57, 70, 0.22);
+}
+
+.tracking-toast-danger:disabled {
+    opacity: 0.7;
+    cursor: progress;
+}
+
+.tracking-toast-progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(90deg, var(--brand-red), var(--accent-yellow));
+    animation: trackingToastProgress 3.6s linear forwards;
+}
+
+@keyframes trackingToastProgress {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+/* ==========================================================================
    MANZIL VA STATUS TIMELINE
    ========================================================================== */
 .main-container {
@@ -441,6 +676,35 @@ header .menu-actions button:hover {
     font-weight: 800;
     color: var(--text-dark);
     margin-bottom: 12px;
+}
+
+.status-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.live-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(88, 204, 2, 0.1);
+    color: #43a047;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+}
+
+.live-status-badge::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 0 4px rgba(88, 204, 2, 0.12);
 }
 
 .address-info p {
@@ -488,6 +752,7 @@ header .menu-actions button:hover {
 
 .timeline-item {
     position: relative;
+    animation: timelineItemIn 0.32s ease both;
 }
 
 .timeline-dot {
@@ -505,11 +770,28 @@ header .menu-actions button:hover {
 .timeline-item.active .timeline-dot {
     background: var(--brand-red);
     box-shadow: 0 0 0 2px var(--brand-red-light), 0 0 8px var(--brand-red);
+    animation: liveStatusPulse 1.5s ease-in-out infinite;
 }
 
 .timeline-item.completed .timeline-dot {
     background: var(--accent-green);
     box-shadow: 0 0 0 2px rgba(88, 204, 2, 0.15);
+}
+
+.timeline-item.status-cancelled .timeline-dot {
+    background: #a3907c;
+    box-shadow: 0 0 0 2px rgba(163, 144, 124, 0.18);
+    animation: none;
+}
+
+@keyframes liveStatusPulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--brand-red-light), 0 0 8px var(--brand-red); }
+    50% { box-shadow: 0 0 0 7px rgba(230, 57, 70, 0.08), 0 0 14px rgba(230, 57, 70, 0.55); }
+}
+
+@keyframes timelineItemIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .status-title-row {
@@ -757,11 +1039,31 @@ footer p:hover {
         width: 75px !important;
         height: 75px !important;
     }
+    .tracking-toast-container {
+        top: auto;
+        right: 16px;
+        bottom: 18px;
+        left: 16px;
+    }
+    .tracking-toast {
+        width: 100%;
+        transform: translateY(120%) scale(0.98);
+    }
+    .tracking-toast.show {
+        transform: translateY(0) scale(1);
+    }
+    .tracking-toast.hide {
+        transform: translateY(120%) scale(0.98);
+    }
+    .tracking-toast-actions {
+        flex-direction: column-reverse;
+    }
+    .tracking-toast-actions button {
+        width: 100%;
+    }
     footer .container {
         grid-template-columns: 1fr !important;
         text-align: center !important;
         gap: 24px !important;
     }
 }
-
-

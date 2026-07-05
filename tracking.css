@@ -96,6 +96,34 @@ body {
     margin-bottom: 24px;
 }
 
+.tracking-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(88, 204, 2, 0.1);
+    color: #43a047;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.live-badge::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #58cc02;
+    box-shadow: 0 0 0 4px rgba(88, 204, 2, 0.12);
+}
+
 /* TIMELINE (DUMALOQLAR TEKIS VA TO'G'RI CHIZIQDA TURISHI UCHUN FLUID JADVAL) */
 .timeline {
     display: flex;
@@ -149,6 +177,14 @@ body {
     margin-top: 4px;
 }
 
+.status-desc {
+    font-size: 12px;
+    line-height: 1.45;
+    color: #8b7355;
+    margin-top: 6px;
+    max-width: 260px;
+}
+
 /* Muvaffaqiyatli yakunlangan qismlar */
 .timeline-item.completed .dot {
     background: #b61c32;
@@ -164,6 +200,7 @@ body {
 .timeline-item.active .dot {
     background: #e32646;
     box-shadow: 0 0 0 4px rgba(227, 38, 70, 0.2);
+    animation: livePulse 1.5s ease-in-out infinite;
 }
 .timeline-item.active .status-name {
     color: #e32646;
@@ -177,6 +214,17 @@ body {
 /* Kelgusi bosqich */
 .timeline-item.pending .dot {
     background: #ebdcd7;
+}
+
+.timeline-item.status-cancelled .dot {
+    background: #a3907c;
+    box-shadow: 0 0 0 4px rgba(163, 144, 124, 0.14);
+    animation: none;
+}
+
+@keyframes livePulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(227, 38, 70, 0.2); }
+    50% { box-shadow: 0 0 0 9px rgba(227, 38, 70, 0.08); }
 }
 
 /* TAOM VA VAQT CARD */
@@ -297,6 +345,11 @@ body {
     transform: translate(-50%, -50%);
     z-index: 6;
     box-shadow: 0 0 10px rgba(243, 168, 124, 0.5);
+    transition: top 0.55s ease, left 0.55s ease, opacity 0.25s ease;
+}
+
+.moving-courier.is-waiting {
+    opacity: 0.55;
 }
 
 /* Nuqtalararo marshrut chizig'i */
@@ -439,6 +492,77 @@ body {
     background: #613d22;
 }
 
+.btn-action.is-disabled {
+    opacity: 0.55;
+}
+
+.btn-action.is-disabled:hover {
+    background: white;
+}
+
+.btn-call.is-disabled:hover {
+    background: #794d2c;
+}
+
+.tracking-toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tracking-toast {
+    width: min(360px, calc(100vw - 32px));
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #f3eae6;
+    box-shadow: 0 18px 45px rgba(45, 27, 14, 0.12);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.28s ease, opacity 0.24s ease;
+}
+
+.tracking-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.tracking-toast-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 34px;
+    color: #fff;
+    font-weight: 900;
+    background: #c90a2a;
+}
+
+.tracking-toast-success .tracking-toast-icon {
+    background: #58cc02;
+}
+
+.tracking-toast-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #23120b;
+}
+
+.tracking-toast-message {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #8b7355;
+    margin-top: 3px;
+}
+
 /* MINI FOOTER STILI */
 .mini-footer {
     background: #23120b;
@@ -514,6 +638,22 @@ body {
         flex: 1; /* Ikkala tugma ham teng kenglikda (50/50) bo'ladi */
         justify-content: center;
         padding: 12px;
+    }
+
+    .tracking-toast-container {
+        top: auto;
+        right: 16px;
+        bottom: 18px;
+        left: 16px;
+    }
+
+    .tracking-toast {
+        width: 100%;
+        transform: translateY(120%);
+    }
+
+    .tracking-toast.show {
+        transform: translateY(0);
     }
 
     /* Mini footer qismini markazlashtirish */

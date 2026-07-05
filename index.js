@@ -10,6 +10,80 @@ let allChefsData = [];
 let currentFilter = 'all';
 let searchQuery = '';
 let cartItems = [];
+const CHEF_PLACEHOLDER_ICON = 'images/chef-placeholder.svg';
+const FOOD_PLACEHOLDER_IMAGE = './Traditional Uzbek Plov (1).svg';
+const FOOD_FALLBACK_IMAGES = [
+    'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1559622214-f8a9850965bb?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&h=420&q=80'
+];
+const CHEF_FALLBACK_IMAGES = [
+    'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=160&h=160&q=80',
+    'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=160&h=160&q=80',
+    'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=160&h=160&q=80',
+    'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=160&h=160&q=80',
+    'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=160&h=160&q=80'
+];
+
+function getChefFallbackImage(name = '', index = 0) {
+    const seed = String(name).split('').reduce((sum, char) => sum + char.charCodeAt(0), index);
+    return CHEF_FALLBACK_IMAGES[Math.abs(seed) % CHEF_FALLBACK_IMAGES.length];
+}
+
+function makeChefFavoriteId(chef = {}, fallbackName = '', index = 0) {
+    const rawId = chef.id || chef.user_id || chef.profile_id || fallbackName || chef.full_name || chef.name || `oshpaz-${index}`;
+    const raw = String(rawId).trim().toLowerCase();
+    const slug = raw
+        .replace(/['`’]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    if (slug) return slug;
+
+    const hash = raw.split('').reduce((sum, char) => ((sum * 31) + char.charCodeAt(0)) >>> 0, index + 17);
+    return `chef-${hash.toString(36)}`;
+}
+
+window.setChefImageFallback = function(img, name = '', index = 0) {
+    const nextStep = Number(img.dataset.fallbackStep || 0);
+    if (nextStep < CHEF_FALLBACK_IMAGES.length) {
+        img.dataset.fallbackStep = String(nextStep + 1);
+        img.src = CHEF_FALLBACK_IMAGES[(Math.abs(index) + nextStep) % CHEF_FALLBACK_IMAGES.length];
+        return;
+    }
+    img.onerror = null;
+    img.src = CHEF_PLACEHOLDER_ICON;
+};
+
+function getFoodFallbackImage(name = '', category = '', index = 0) {
+    const key = `${name} ${category}`.toLowerCase();
+    if (key.includes('osh') || key.includes('palov') || key.includes('plov')) return './Traditional Uzbek Plov (1).svg';
+    if (key.includes('somsa')) return 'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&h=420&q=80';
+    if (key.includes('manti')) return 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&h=420&q=80';
+    if (key.includes('shurva') || key.includes("sho'rva") || key.includes('soup')) return 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&h=420&q=80';
+    if (key.includes('salat')) return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&h=420&q=80';
+    if (key.includes('shirin') || key.includes('dessert')) return 'https://images.unsplash.com/photo-1559622214-f8a9850965bb?auto=format&fit=crop&w=600&h=420&q=80';
+    const seed = key.split('').reduce((sum, char) => sum + char.charCodeAt(0), index);
+    return FOOD_FALLBACK_IMAGES[Math.abs(seed) % FOOD_FALLBACK_IMAGES.length];
+}
+
+window.setFoodImageFallback = function(img, name = '', category = '', index = 0) {
+    const nextStep = Number(img.dataset.fallbackStep || 0);
+    if (nextStep === 0) {
+        img.dataset.fallbackStep = '1';
+        img.src = getFoodFallbackImage(name, category, index);
+        return;
+    }
+    if (nextStep <= FOOD_FALLBACK_IMAGES.length) {
+        img.dataset.fallbackStep = String(nextStep + 1);
+        img.src = FOOD_FALLBACK_IMAGES[(Math.abs(index) + nextStep - 1) % FOOD_FALLBACK_IMAGES.length];
+        return;
+    }
+    img.onerror = null;
+    img.src = FOOD_PLACEHOLDER_IMAGE;
+};
 try {
     cartItems = JSON.parse(localStorage.getItem('qz_cart') || '[]');
 } catch(e) {
@@ -23,6 +97,46 @@ try {
 } catch(e) {}
 const INITIAL_ITEMS = 6;
 let isFoodsExpanded = false;
+
+// ==========================================
+// SEVIMLI TAOMLARNI SUPABASE (favorite_foods) BILAN SINXRONLASH
+// ==========================================
+const FAV_SUPABASE_URL = 'https://usoekoycypxbcxzwoaea.supabase.co';
+const FAV_SUPABASE_KEY = 'sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
+const favSupabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(FAV_SUPABASE_URL, FAV_SUPABASE_KEY) : null;
+let favCurrentUserId = null;
+
+async function syncFavoritesFromServer() {
+    if (!favSupabaseClient) return;
+    try {
+        const { data: { user } } = await favSupabaseClient.auth.getUser();
+        if (!user) return;
+        favCurrentUserId = user.id;
+        const { data, error } = await favSupabaseClient.from('favorite_foods').select('food_id').eq('user_id', user.id);
+        if (error || !data) return;
+        data.forEach(row => favorites.add(String(row.food_id)));
+        localStorage.setItem('qz_favorites', JSON.stringify(Array.from(favorites)));
+        renderFoods();
+        updateFavBadge();
+    } catch (e) {
+        console.error('Sevimlilarni serverdan yuklashda xatolik:', e);
+    }
+}
+
+function syncFavoriteToggleToServer(foodId, isNowFavorite) {
+    if (!favSupabaseClient || !favCurrentUserId) return;
+    const numericId = parseInt(foodId, 10);
+    if (!numericId) return;
+    if (isNowFavorite) {
+        favSupabaseClient.from('favorite_foods').insert({ user_id: favCurrentUserId, food_id: numericId }).then(({ error }) => {
+            if (error) console.error('Sevimlilarga saqlashda xatolik:', error);
+        });
+    } else {
+        favSupabaseClient.from('favorite_foods').delete().eq('user_id', favCurrentUserId).eq('food_id', numericId).then(({ error }) => {
+            if (error) console.error("Sevimlilardan o'chirishda xatolik:", error);
+        });
+    }
+}
 
 const DELIVERY_TIMES = ['20-30 daq', '25-35 daq', '30-40 daq', '15-25 daq', '35-45 daq'];
 
@@ -307,7 +421,7 @@ function renderFoods() {
     itemsToShow.forEach((food, index) => {
         const name = food.name || "Noma'lum taom";
         const price = new Intl.NumberFormat('ru-RU').format(food.price) + " so'm";
-        const image = food.image_url || food.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';
+        const image = food.image_url || food.image || getFoodFallbackImage(name, food.category, index);
         const chef = food.chef_name || 'Oshpaz';
         const portions = food.portions_left || 0;
         const rating = food.rating || food.rating_score || '4.5';
@@ -324,7 +438,7 @@ function renderFoods() {
         const reviewsCount = Math.floor(parseFloat(rating) * 35 + (portions * 5) + 12);
         card.innerHTML = `
             <div class="food-card-image" onclick="window.location.href='food.detalis.html?id=${foodId}'">
-                <img src="${image}" alt="${name}" loading="lazy">
+                <img src="${image}" alt="${name}" loading="lazy" onerror="setFoodImageFallback(this, '${name.replace(/'/g, "\\'")}', '${String(food.category || '').replace(/'/g, "\\'")}', ${index})">
                 <span class="food-card-portions-badge">🔥 ${portions} ta qoldi</span>
                 <span class="food-card-price-badge">${price}</span>
                 <button class="food-card-fav ${isFav ? 'active' : ''}" data-fav-id="${foodId}" onclick="event.stopPropagation(); toggleFavorite(this, '${foodId}', '${name}')" title="Sevimlilarga qo'shish">${isFav ? '❤️' : '🤍'}</button>
@@ -416,6 +530,8 @@ window.toggleFavorite = function(btn, foodId, foodName) {
     // localStorage ga saqlash
     localStorage.setItem('qz_favorites', JSON.stringify(Array.from(favorites)));
     localStorage.setItem('qz_fav_meta', JSON.stringify(meta));
+    // Tizimga kirgan bo'lsa — serverga (favorite_foods) ham yozish
+    syncFavoriteToggleToServer(foodId, !isActive);
     // Header badge ni yangilash
     updateFavBadge();
 };
@@ -472,7 +588,8 @@ function updateFavBadge() {
     if (!badge) return;
     try {
         const favs = JSON.parse(localStorage.getItem('qz_favorites') || '[]');
-        const count = favs.length;
+        const favChefs = JSON.parse(localStorage.getItem('qz_fav_chefs') || '[]');
+        const count = favs.length + favChefs.length;
         if (count > 0) {
             badge.textContent = count;
             badge.style.display = 'flex';
@@ -562,14 +679,14 @@ function renderChefs() {
 
     allChefsData.forEach((chef, index) => {
         const name       = chef.name || chef.full_name || "Noma'lum oshpaz";
-        const image      = chef.avatar_url || chef.image_url || chef.image || 'https://cdn.dribbble.com/userupload/37942659/file/original-e75e34cb44361a6425fd82f51f07777b.png?resize=752x&vertical=center';
+        const image      = chef.avatar_url || chef.image_url || chef.image || getChefFallbackImage(name, index);
         const location   = chef.location || chef.address || "Manzil ko'rsatilmagan";
         const meals      = chef.meal_count || chef.meals || 0;
         const rating     = chef.rating_score || chef.rating || '5.0';
         const specialties = chef.specialties || ["Osh", "Manti"];
         const walkTime   = chef.walk_time || Math.floor(Math.random() * 15 + 8) + ' min';
         const isOnline   = chef.online !== false;
-        const chefId     = name.toLowerCase().replace(/['`’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        const chefId     = makeChefFavoriteId(chef, name, index);
         const isFav      = favChefs.includes(chefId);
 
         const specText = (Array.isArray(specialties) ? specialties.join(' va ') : specialties) + ' ustasi';
@@ -587,7 +704,7 @@ function renderChefs() {
         };
 
         card.innerHTML = `
-            <img class="chef-avatar" src="${image}" alt="${name}" loading="lazy">
+            <img class="chef-avatar" src="${image}" alt="${name}" loading="lazy" onerror="setChefImageFallback(this, '${name.replace(/'/g, "\\'")}', ${index})">
             <div class="chef-card-info">
                 <h3 class="chef-card-name">${name}</h3>
                 <p class="chef-card-spec">${specText}</p>
@@ -610,12 +727,20 @@ function renderChefs() {
 
 // Oshpaz sevimlilari toggle — buyordashbord sahifasida
 window.toggleChefFavDash = function(btn, chefId, chefName) {
+    if (!chefId) {
+        chefId = makeChefFavoriteId({}, chefName || 'oshpaz', Date.now());
+        if (btn) btn.dataset.chefId = chefId;
+    }
+
     let favChefs = [];
     try { favChefs = JSON.parse(localStorage.getItem('qz_fav_chefs') || '[]'); } catch(e) {}
+    let chefMeta = {};
+    try { chefMeta = JSON.parse(localStorage.getItem('qz_fav_chef_meta') || '{}'); } catch(e) {}
 
     const isFav = favChefs.includes(chefId);
     if (isFav) {
         favChefs = favChefs.filter(id => id !== chefId);
+        delete chefMeta[chefId];
         btn.innerHTML = '🤍';
         btn.classList.remove('active');
         btn.style.transform = 'scale(0.85)';
@@ -623,6 +748,15 @@ window.toggleChefFavDash = function(btn, chefId, chefName) {
         showToast('info', 'Olib tashlandi', chefName + " sevimlilardan olib tashlandi");
     } else {
         favChefs.push(chefId);
+        const card = btn.closest('.chef-card');
+        chefMeta[chefId] = {
+            id: chefId,
+            name: chefName,
+            image: card?.querySelector('.chef-avatar')?.src || getChefFallbackImage(chefName, favChefs.length),
+            title: card?.querySelector('.chef-card-spec')?.textContent || 'Uy oshpazi',
+            rating: card?.querySelector('.chef-card-meta-line')?.textContent || '⭐ 5.0',
+            distance: card?.querySelector('.chef-distance-tag')?.textContent || ''
+        };
         btn.innerHTML = '❤️';
         btn.classList.add('active');
         btn.style.transform = 'scale(1.4)';
@@ -630,6 +764,8 @@ window.toggleChefFavDash = function(btn, chefId, chefName) {
         showToast('success', "Sevimlilarga qo'shildi", '❤️ ' + chefName + " sevimlilarga saqlandi!");
     }
     localStorage.setItem('qz_fav_chefs', JSON.stringify(favChefs));
+    localStorage.setItem('qz_fav_chef_meta', JSON.stringify(chefMeta));
+    updateFavBadge();
 };
 
 // ==========================================
@@ -710,9 +846,17 @@ function renderCartDrawer() {
     if (cartItems.length === 0) {
         body.innerHTML = `
             <div class="cart-empty-state">
-                <img src="https://img.icons8.com/fluency/96/shopping-basket-add.png" alt="Empty Basket" style="width: 72px; height: 72px; margin-bottom: 10px;">
-                <p style="font-weight: 800; font-size: 16px; color: var(--text);">Savatchangiz hozircha bo'sh</p>
-                <span style="font-size: 13px; color: var(--text-muted);">Mazali taomlar tanlab, savatga qo'shing!</span>
+                <div class="cart-empty-visual" aria-hidden="true">
+                    <svg viewBox="0 0 96 96" role="img" focusable="false">
+                        <path class="cart-empty-basket" d="M20 39h56l-6 33a8 8 0 0 1-7.9 6.6H33.9A8 8 0 0 1 26 72L20 39Z"/>
+                        <path class="cart-empty-handle" d="M35 39c1.4-10 6-18 13-18s11.6 8 13 18"/>
+                        <path class="cart-empty-line" d="M36 51v14M48 51v14M60 51v14"/>
+                        <circle class="cart-empty-plus-bg" cx="72" cy="26" r="13"/>
+                        <path class="cart-empty-plus" d="M72 19v14M65 26h14"/>
+                    </svg>
+                </div>
+                <p>Savatchangiz hozircha bo'sh</p>
+                <span>Mazali taomlar tanlab, savatga qo'shing!</span>
             </div>
         `;
         if (totalPriceEl) totalPriceEl.textContent = "0 so'm";
@@ -1024,6 +1168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchFoods();
     fetchChefs();
     renderFavorites();
+    syncFavoritesFromServer();
 
     // UI interactions
     initSeeMore();

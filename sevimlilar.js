@@ -4,6 +4,27 @@
 
 const SUPABASE_URL = 'https://usoekoycypxbcxzwoaea.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
+const favSupabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+let favCurrentUserId = null;
+
+/* Tizimga kirgan bo'lsa serverdagi (favorite_foods) ID'larni localStorage bilan birlashtirish */
+async function syncFavoriteIdsFromServer() {
+    if (!favSupabaseClient) return null;
+    try {
+        const { data: { user } } = await favSupabaseClient.auth.getUser();
+        if (!user) return null;
+        favCurrentUserId = user.id;
+        const { data, error } = await favSupabaseClient.from('favorite_foods').select('food_id').eq('user_id', user.id);
+        if (error || !data) return null;
+        const serverIds = data.map(row => String(row.food_id));
+        const merged = Array.from(new Set([...getFavoriteIds(), ...serverIds]));
+        saveFavoriteIds(merged);
+        return merged;
+    } catch (e) {
+        console.error('Sevimlilarni serverdan yuklashda xatolik:', e);
+        return null;
+    }
+}
 
 /* ---------- TABS ---------- */
 document.querySelectorAll('.tab').forEach(tab => {
@@ -25,13 +46,48 @@ function saveFavoriteIds(ids) {
 }
 
 /* ---------- FOOD CARD ---------- */
+const FOOD_PLACEHOLDER_IMAGE = './Traditional Uzbek Plov (1).svg';
+const FOOD_FALLBACK_IMAGES = [
+    'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1559622214-f8a9850965bb?auto=format&fit=crop&w=600&h=420&q=80'
+];
+
+function getFoodFallbackImage(name = '', category = '', index = 0) {
+    const key = `${name} ${category}`.toLowerCase();
+    if (key.includes('osh') || key.includes('palov') || key.includes('plov')) return FOOD_PLACEHOLDER_IMAGE;
+    if (key.includes('somsa')) return FOOD_FALLBACK_IMAGES[0];
+    if (key.includes('manti')) return FOOD_FALLBACK_IMAGES[2];
+    if (key.includes('shurva') || key.includes("sho'rva")) return FOOD_FALLBACK_IMAGES[1];
+    if (key.includes('shirin')) return FOOD_FALLBACK_IMAGES[4];
+    const seed = key.split('').reduce((sum, char) => sum + char.charCodeAt(0), index);
+    return FOOD_FALLBACK_IMAGES[Math.abs(seed) % FOOD_FALLBACK_IMAGES.length];
+}
+
+window.setFoodImageFallback = function(img, name = '', category = '', index = 0) {
+    const nextStep = Number(img.dataset.fallbackStep || 0);
+    if (nextStep === 0) {
+        img.dataset.fallbackStep = '1';
+        img.src = getFoodFallbackImage(name, category, index);
+        return;
+    }
+    if (nextStep <= FOOD_FALLBACK_IMAGES.length) {
+        img.dataset.fallbackStep = String(nextStep + 1);
+        img.src = FOOD_FALLBACK_IMAGES[(Math.abs(index) + nextStep - 1) % FOOD_FALLBACK_IMAGES.length];
+        return;
+    }
+    img.onerror = null;
+    img.src = FOOD_PLACEHOLDER_IMAGE;
+};
+
 function createFoodCard(food) {
     const price    = new Intl.NumberFormat('ru-RU').format(food.price || 0);
     const rating   = food.rating ?? 4.9;
     const reviews  = food.reviews_count ?? 0;
     const portions = food.portions_left ?? 0;
-    const imgUrl   = food.image_url || food.image
-        || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80';
+    const imgUrl   = food.image_url || food.image || getFoodFallbackImage(food.name, food.category, Number(food.id) || 0);
     const safeId   = String(food.id);
     const safeName = (food.name || '').replace(/'/g, "\\'");
     const safeChef = (food.chef_name || 'Oshpaz').replace(/'/g, "\\'");
@@ -41,7 +97,7 @@ function createFoodCard(food) {
     card.className = 'food-card';
     card.innerHTML = `
         <div class="food-img-wrap" onclick="window.location.href='food.detalis.html?id=${safeId}'">
-            <img src="${imgUrl}" alt="${food.name || ''}" onerror="this.src='./Traditional Uzbek Plov (1).svg'">
+            <img src="${imgUrl}" alt="${food.name || ''}" onerror="setFoodImageFallback(this, '${safeName}', '${String(food.category || '').replace(/'/g, "\\'")}', ${Number(food.id) || 0})">
             <div class="portions-badge">${portions} porsiya qoldi</div>
             <button class="fav-remove-btn" title="Sevimlilardan olib tashlash"
                 onclick="event.stopPropagation(); removeFavoriteCard(this, '${safeId}')">❤️</button>
@@ -69,11 +125,11 @@ function createRecentCard(item) {
     const card = document.createElement('div');
     card.className = 'food-card';
     card.onclick = () => { window.location.href = `food.detalis.html?id=${item.id}`; };
-    const imgUrl = item.image || './Traditional Uzbek Plov (1).svg';
+    const imgUrl = item.image || getFoodFallbackImage(item.name, '', Number(item.id) || 0);
     const price  = new Intl.NumberFormat('ru-RU').format(item.price || 0);
     card.innerHTML = `
         <div class="food-img-wrap">
-            <img src="${imgUrl}" alt="${item.name || ''}" onerror="this.src='./Traditional Uzbek Plov (1).svg'">
+            <img src="${imgUrl}" alt="${item.name || ''}" onerror="setFoodImageFallback(this, '${String(item.name || '').replace(/'/g, "\\'")}', '', ${Number(item.id) || 0})">
         </div>
         <div class="food-info">
             <div class="food-name">${item.name || ''}</div>
@@ -89,7 +145,8 @@ function createRecentCard(item) {
 /* ---------- LOAD FAVORITE FOODS ---------- */
 async function loadFavoriteFoods() {
     const panel  = document.getElementById('taomlar');
-    const favIds = getFavoriteIds();
+    const synced = await syncFavoriteIdsFromServer();
+    const favIds = synced || getFavoriteIds();
 
     if (favIds.length === 0) {
         panel.innerHTML = `
@@ -178,6 +235,14 @@ function loadRecentlyViewed() {
 window.removeFavoriteCard = function(btn, foodId) {
     const ids = getFavoriteIds().filter(id => id !== String(foodId));
     saveFavoriteIds(ids);
+    if (favSupabaseClient && favCurrentUserId) {
+        const numericId = parseInt(foodId, 10);
+        if (numericId) {
+            favSupabaseClient.from('favorite_foods').delete().eq('user_id', favCurrentUserId).eq('food_id', numericId).then(({ error }) => {
+                if (error) console.error("Sevimlilardan o'chirishda xatolik:", error);
+            });
+        }
+    }
 
     const card = btn.closest('.food-card');
     if (card) {
@@ -251,6 +316,11 @@ function getFavChefs() {
     catch(e) { return []; }
 }
 function saveFavChefs(arr) { localStorage.setItem('qz_fav_chefs', JSON.stringify(arr)); }
+function getFavChefMeta() {
+    try { return JSON.parse(localStorage.getItem('qz_fav_chef_meta') || '{}'); }
+    catch(e) { return {}; }
+}
+function saveFavChefMeta(meta) { localStorage.setItem('qz_fav_chef_meta', JSON.stringify(meta)); }
 
 /* Fav food meta (chef name bilan saqlanadi) */
 function getFavMeta() {
@@ -289,15 +359,26 @@ function updateAllChefBadges() {
 /* Oshpazni sevimliga qo'shish/olib tashlash */
 window.toggleChefFav = function(btn, chefId, chefName) {
     let favChefs = getFavChefs();
+    let chefMeta = getFavChefMeta();
     const isFav  = favChefs.includes(chefId);
 
     if (isFav) {
         favChefs = favChefs.filter(id => id !== chefId);
+        delete chefMeta[chefId];
         btn.textContent = '🤍';
         btn.classList.remove('active');
         showMiniToast(chefName + ' sevimlilardan olib tashlandi');
     } else {
         favChefs.push(chefId);
+        const card = btn.closest('.chef-card');
+        chefMeta[chefId] = {
+            id: chefId,
+            name: chefName,
+            image: card?.querySelector('.chef-img')?.dataset.image || '',
+            title: card?.querySelector('.chef-title')?.textContent || 'Uy oshpazi',
+            rating: card?.querySelector('.rating')?.textContent || '★ 5.0',
+            dish: card?.querySelector('.dish-name')?.textContent || ''
+        };
         btn.textContent = '❤️';
         btn.classList.add('active');
         btn.style.transform = 'scale(1.35)';
@@ -306,6 +387,8 @@ window.toggleChefFav = function(btn, chefId, chefName) {
     }
 
     saveFavChefs(favChefs);
+    saveFavChefMeta(chefMeta);
+    renderStoredChefCards();
     initChefFavorites();
 };
 
@@ -317,6 +400,7 @@ window.handleChefCardClick = function(event, card, href) {
 
 /* Sahifa ochilganda oshpaz tugmalarini to'g'ri holat bilan ko'rsatish */
 function initChefFavorites() {
+    renderStoredChefCards();
     const favChefs = getFavChefs();
     let visibleCount = 0;
 
@@ -368,5 +452,58 @@ function initChefFavorites() {
     } else {
         emptyMsg.style.display = 'none';
     }
+}
+
+function renderStoredChefCards() {
+    const panel = document.getElementById('oshpazlar');
+    if (!panel) return;
+
+    const favChefs = getFavChefs();
+    const chefMeta = getFavChefMeta();
+    const fallbackImages = [
+        'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=150',
+        'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=150',
+        'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=150'
+    ];
+
+    favChefs.forEach((chefId, index) => {
+        if (panel.querySelector(`.chef-card[data-chef-id="${chefId}"]`)) return;
+
+        const meta = chefMeta[chefId] || {};
+        const chefName = meta.name || chefId.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+        const image = meta.image || fallbackImages[index % fallbackImages.length];
+        const title = meta.title || 'Uy oshpazi';
+        const rating = meta.rating || '★ 5.0';
+        const dish = meta.dish || 'Bugungi yangi menyu';
+
+        const card = document.createElement('div');
+        card.className = 'chef-card';
+        card.dataset.chefId = chefId;
+        card.dataset.chefName = chefName;
+        card.setAttribute('onclick', "handleChefCardClick(event,this,'xurmoOpa.html')");
+        card.style.cursor = 'pointer';
+        card.innerHTML = `
+            <div class="image-container">
+                <div class="chef-img" data-image="${image}" style="background:url('${image}') center/cover;"></div>
+                <div class="badge-online">&#8226; Ochiq</div>
+                <div class="chef-fav-count" id="chef-count-${chefId}" style="display:none;"></div>
+            </div>
+            <div class="chef-info">
+                <div class="chef-header">
+                    <div>
+                        <div class="chef-name">${chefName}</div>
+                        <div class="chef-title">${title}</div>
+                        <div class="rating"><span class="star">&#9733;</span> ${rating.replace(/^★\s*/, '')}</div>
+                    </div>
+                    <button class="fav-btn chef-fav-btn active" id="fav-${chefId}" data-chef-id="${chefId}" onclick="event.stopPropagation();toggleChefFav(this,'${chefId}','${chefName.replace(/'/g, "\\'")}')">❤️</button>
+                </div>
+                <div class="today-dish">
+                    <div class="label">Bugungi taom</div>
+                    <div class="dish-name">${dish}</div>
+                </div>
+            </div>
+        `;
+        panel.insertBefore(card, document.getElementById('empty-chefs-msg'));
+    });
 }
 

@@ -1,284 +1,269 @@
-const mockDatabase = {
-  ahmad: {
-    name: "Chef Ahmad",
-    avatarClass: "ahmad-img",
-    role: "Bosh Oshpaz • Qozon Palov",
-    status: "Sizning buyurtmangiz tayyorlanmoqda",
-    suggestions: [
-      "Osh ajoyib chiqibdi!",
-      "Kuryer qachon keladi?",
-      "Rahmat, qo'lingiz dard ko'rmasin!",
-    ],
-    chatHistory: [
-      {
-        type: "alert",
-        title: "Tayyorlash jarayoni boshlandi",
-        body: "Chef Ahmad siz tanlagan maxsus masalliqlar bilan taomni tayyorlashga kirishdi.",
-      },
-      {
-        type: "incoming",
-        msg: "Assalomu alaykum! Buyurtmangiz qabul qilindi. Oshga xohishingizga ko'ra ko'proq achchiq muruch qo'shib, dimlab qo'ydim.",
-        time: "15:30",
-      },
-      {
-        type: "outgoing",
-        msg: "Vaalaykum assalom! Katta rahmat Ahmad aka, o'zi achchiqroq yaxshi ko'raman.",
-        time: "15:32",
-      },
-    ],
-    smartResponses: {
-      ajoyib:
-        "Yoqimli ishtaha! Biz uchun mijozlarimizning mamnunligi birinchi o'rinda turadi. Keyingi safar ham bundan-da mazali qilib tayyorlab beramiz!",
-      qachon:
-        "Buyurtma hozirgina kuryerga topshirildi. Issiq holatida 15-20 daqiqa atrofida manzilingizga yetib boradi. Xaritada kuzatib borishingiz mumkin.",
-      rahmat:
-        "Sizga ham ishonch bildirishganingiz uchun rahmat! Salomat bo'ling, har doim xizmatingizdamiz.",
-    },
-  },
-  nilufar: {
-    name: "Nilufar Opa",
-    avatarClass: "nilufar-img",
-    role: "Doimiy Mijoz",
-    status: "Buyurtma muvaffaqiyatli topshirildi",
-    suggestions: [
-      "Ertaga yana buyurtma beramiz",
-      "Manti ham bormi?",
-      "Sifat zo'r!",
-    ],
-    chatHistory: [
-      {
-        type: "incoming",
-        msg: "Salom, bugungi somsa va manti buyurtmalari vaqtida yetib keldi. Oilamiz bilan juda mamnun bo'ldik!",
-        time: "Kecha, 18:10",
-      },
-      {
-        type: "outgoing",
-        msg: "Yoqimli ishtaha, Nilufar opa! Har doim eng yangi va sifatli mahsulotlardan foydalanamiz.",
-        time: "Kecha, 18:15",
-      },
-    ],
-    smartResponses: {
-      ertaga:
-        "Albatta, ertangi menyu uchun buyurtmani hozirdan shakllantirib qo'ysangiz, o'z vaqtida issiqina yetkaziladi.",
-      manti:
-        "Ha, menyuyimizda go'shtli, qovoqli va dumi solingan oliy nav manti turlari mavljud. Istalgan vaqtda buyurtma berishingiz mumkin.",
-      sifat:
-        "Rahmat! Biz taomlarimiz tozaligi va sifatiga 100% kafolat beramiz.",
-    },
-  },
-  mahmud: {
-    name: "Mahmud Amaki",
-    avatarClass: "mahmud-img",
-    role: "VIP Mijoz",
-    status: "Yangi so'rov",
-    suggestions: ["Joy band qilish", "Menyuni ko'rish"],
-    chatHistory: [
-      {
-        type: "incoming",
-        msg: "Ertaga kechki payt 5 kishilik joy bormi? Oilaviy o'tirmoqchi edik.",
-        time: "12 Iyun",
-      },
-    ],
-    smartResponses: {
-      joy: "Assalomu alaykum, Mahmud amaki! Albatta, ertaga soat nechchiga va qaysi zalga (VIP yoki umumiy) joy bron qilib qo'yay?",
-      menyu:
-        "Ertangi maxsus menyuda: Shashlik, Tandir kabob va To'y oshi bo'ladi. Tanlovingizni aytsangiz, oldindan tayyorlab qo'yamiz.",
-    },
-  },
-};
-
-let currentUserId = "ahmad";
+/* ==========================================
+   QOZON — CHAT (public.conversations / public.chat_messages)
+   ========================================== */
+const SUPABASE_URL = 'https://usoekoycypxbcxzwoaea.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
+const chatClient = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 const messagesBox = document.getElementById("messagesBox");
 const dynamicHeader = document.getElementById("dynamicHeader");
 const suggestionsPanel = document.getElementById("suggestionsPanel");
 const chatInputField = document.getElementById("chatInputField");
 
-function loadChatWorkspace(userId) {
-  currentUserId = userId;
-  const user = mockDatabase[userId];
+let myUserId = null;      // auth.uid()
+let myChefId = null;      // agar oshpaz bo'lsa — chefs.id
+let isChef = false;
+let conversations = [];   // {id, customer_id, chef_id, order_id, customer_name, chef_name}
+let activeConversationId = null;
+let messagesChannel = null;
+
+function getClockTime(dateStr) {
+  const d = dateStr ? new Date(dateStr) : new Date();
+  return d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0");
+}
+
+/* ---------- ISHGA TUSHIRISH ---------- */
+async function bootChat() {
+  if (!chatClient) {
+    dynamicHeader.innerHTML = `<div style="padding:16px">Chat ishlamayapti (Supabase yuklanmadi).</div>`;
+    return;
+  }
+  const { data: { user } } = await chatClient.auth.getUser();
+  if (!user) {
+    dynamicHeader.innerHTML = `<div style="padding:16px">Chatdan foydalanish uchun tizimga kiring.</div>`;
+    return;
+  }
+  myUserId = user.id;
+
+  const { data: chefRow } = await chatClient.from('chefs').select('id').eq('user_id', myUserId).maybeSingle();
+  if (chefRow) {
+    isChef = true;
+    myChefId = chefRow.id;
+    await loadChefConversations();
+  } else {
+    isChef = false;
+    await loadOrCreateCustomerConversation();
+  }
+}
+
+/* ---------- OSHPAZ REJIMI: barcha suhbatlar ro'yxati ---------- */
+async function loadChefConversations() {
+  const list = document.querySelector('.conversation-list');
+  if (list) list.innerHTML = `<div style="padding:16px;color:var(--text2,#8b7355);font-size:13px">Yuklanmoqda...</div>`;
+
+  const { data, error } = await chatClient
+    .from('conversations')
+    .select('id, customer_id, chef_id, order_id, created_at')
+    .eq('chef_id', myChefId)
+    .order('created_at', { ascending: false });
+
+  if (error || !data || !data.length) {
+    conversations = [];
+    if (list) list.innerHTML = `<div style="padding:16px;color:var(--text2,#8b7355);font-size:13px">Hozircha suhbatlar yo'q.</div>`;
+    dynamicHeader.innerHTML = '';
+    messagesBox.innerHTML = '';
+    suggestionsPanel.innerHTML = '';
+    return;
+  }
+
+  const customerIds = Array.from(new Set(data.map(c => c.customer_id)));
+  const { data: profiles } = await chatClient.from('profiles').select('id, full_name').in('id', customerIds);
+  const namesById = {};
+  (profiles || []).forEach(p => { namesById[p.id] = p.full_name || 'Mijoz'; });
+
+  conversations = data.map(c => ({ ...c, customer_name: namesById[c.customer_id] || 'Mijoz' }));
+
+  if (list) {
+    list.innerHTML = conversations.map((c, i) => `
+      <div class="convo-item${i === 0 ? ' active' : ''}" data-conv-id="${c.id}" onclick="changeActiveChat(${c.id})">
+        <div class="avatar-ring${i === 0 ? ' online' : ''}">
+          <div class="user-avatar" style="display:flex;align-items:center;justify-content:center;background:#f0ad4e;color:#fff;font-weight:700;border-radius:50%;width:100%;height:100%;">${c.customer_name.charAt(0).toUpperCase()}</div>
+        </div>
+        <div class="convo-details">
+          <div class="convo-meta">
+            <h4>${c.customer_name}</h4>
+            <span class="time-stamp">${new Date(c.created_at).toLocaleDateString('uz')}</span>
+          </div>
+          <p class="preview-text" id="side-preview-${c.id}">Suhbatni ochish uchun bosing</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  subscribeToAllChefMessages();
+  if (conversations.length) openConversation(conversations[0].id);
+}
+
+/* ---------- MIJOZ REJIMI: bitta suhbatni topish/yaratish ---------- */
+async function loadOrCreateCustomerConversation() {
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get('orderId');
+  const sidebar = document.querySelector('.sidebar');
+  if (sidebar) sidebar.style.display = 'none';
+
+  if (!orderId) {
+    dynamicHeader.innerHTML = `<div style="padding:16px">Suhbat topilmadi. Buyurtma kuzatuvi orqali oshpazga xabar yozing.</div>`;
+    return;
+  }
+
+  const { data: order, error: orderErr } = await chatClient
+    .from('orders').select('id, chef_id, chef_name').eq('id', orderId).single();
+  if (orderErr || !order || !order.chef_id) {
+    dynamicHeader.innerHTML = `<div style="padding:16px">Bu buyurtma uchun oshpaz aniqlanmadi.</div>`;
+    return;
+  }
+
+  let { data: conv } = await chatClient
+    .from('conversations').select('id')
+    .eq('customer_id', myUserId).eq('chef_id', order.chef_id).eq('order_id', order.id)
+    .maybeSingle();
+
+  if (!conv) {
+    const { data: created, error: createErr } = await chatClient
+      .from('conversations')
+      .insert({ customer_id: myUserId, chef_id: order.chef_id, order_id: order.id })
+      .select().single();
+    if (createErr) {
+      dynamicHeader.innerHTML = `<div style="padding:16px">Suhbat ochilmadi: ${createErr.message}</div>`;
+      return;
+    }
+    conv = created;
+  }
+
+  conversations = [{ id: conv.id, chef_name: order.chef_name || 'Oshpaz' }];
+  openConversation(conv.id, order.chef_name || 'Oshpaz');
+}
+
+/* ---------- SUHBATNI OCHISH ---------- */
+async function openConversation(conversationId, headerName) {
+  activeConversationId = conversationId;
+  document.querySelectorAll('.convo-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.convId === String(conversationId));
+  });
+
+  const conv = conversations.find(c => c.id === conversationId);
+  const title = headerName || (conv ? (conv.customer_name || conv.chef_name) : 'Suhbat');
 
   dynamicHeader.innerHTML = `
-        <div class="active-user-meta" style="display: flex; align-items: center; gap: 10px;">
-            <button onclick="window.history.back()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: inherit; display: flex; align-items: center; justify-content: center; padding: 5px;">←</button>
-            <div class="avatar-ring online">
-                <div class="user-avatar ${user.avatarClass}"></div>
-            </div>
-            <div class="meta-info">
-                <h3>${user.name}</h3>
-                <p>${user.role}</p>
-            </div>
-        </div>
-        <div class="header-action-group">
-            <div class="status-capsule">${user.status}</div>
-            <button class="header-icon">📞</button>
-            <button class="header-icon">⋮</button>
-        </div>
-    `;
+    <div class="active-user-meta" style="display: flex; align-items: center; gap: 10px;">
+      <button onclick="window.history.back()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: inherit; display: flex; align-items: center; justify-content: center; padding: 5px;">←</button>
+      <div class="avatar-ring online"><div class="user-avatar" style="display:flex;align-items:center;justify-content:center;background:#f0ad4e;color:#fff;font-weight:700;border-radius:50%;width:100%;height:100%;">${(title || '?').charAt(0).toUpperCase()}</div></div>
+      <div class="meta-info"><h3>${title}</h3></div>
+    </div>
+  `;
+  suggestionsPanel.innerHTML = '';
 
-  suggestionsPanel.innerHTML = "";
-  user.suggestions.forEach((text) => {
-    const pill = document.createElement("button");
-    pill.classList.add("suggestion-pill");
-    pill.innerText = text;
-    pill.onclick = () => {
-      chatInputField.value = text;
-      handleMessageSubmit();
-    };
-    suggestionsPanel.appendChild(pill);
-  });
-
-  renderChatMessages();
+  await renderChatMessages();
+  subscribeToActiveConversation();
 }
 
-function renderChatMessages() {
-  messagesBox.innerHTML =
-    '<div class="timeline-center"><span>Bugun</span></div>';
-  const currentHistory = mockDatabase[currentUserId].chatHistory;
-
-  currentHistory.forEach((item) => {
-    if (item.type === "alert") {
-      messagesBox.innerHTML += `
-                <div class="luxury-alert">
-                    <div class="alert-badge-icon">✓</div>
-                    <div class="alert-text-node">
-                        <h5>${item.title}</h5>
-                        <p>${item.body}</p>
-                    </div>
-                </div>`;
-    } else {
-      const isOutgoing = item.type === "outgoing";
-      const checkIcon = isOutgoing
-        ? '<span class="double-check">✓✓</span>'
-        : "";
-      let content = item.isImg
-        ? `<img src="${item.msg}" class="uploaded-media-img">`
-        : item.msg;
-
-      const row = document.createElement("div");
-      row.classList.add("msg-wrapper", item.type);
-      row.innerHTML = `
-                <div class="premium-bubble">
-                    ${content}
-                    <span class="bubble-time">${item.time}${checkIcon}</span>
-                </div>`;
-      messagesBox.appendChild(row);
-    }
-  });
-  messagesBox.scrollHeight
-    ? (messagesBox.scrollTop = messagesBox.scrollHeight)
-    : null;
+function changeActiveChat(conversationId) {
+  openConversation(conversationId);
 }
 
-function changeActiveChat(userId) {
-  document
-    .querySelectorAll(".convo-item")
-    .forEach((el) => el.classList.remove("active"));
-  if (event?.currentTarget) event.currentTarget.classList.add("active");
-  loadChatWorkspace(userId);
-}
+/* ---------- XABARLARNI YUKLASH VA CHIZISH ---------- */
+async function renderChatMessages() {
+  if (!activeConversationId) return;
+  messagesBox.innerHTML = '<div class="timeline-center"><span>Yuklanmoqda...</span></div>';
 
-function getClockTime() {
-  const time = new Date();
-  return (
-    time.getHours().toString().padStart(2, "0") +
-    ":" +
-    time.getMinutes().toString().padStart(2, "0")
-  );
-}
+  const { data, error } = await chatClient
+    .from('chat_messages')
+    .select('*')
+    .eq('conversation_id', activeConversationId)
+    .order('created_at', { ascending: true });
 
-// AQLLI JAVOB BERISH TIZIMI (YANGILANDI)
-function handleMessageSubmit() {
-  const rawText = chatInputField.value.trim();
-  if (!rawText) return;
+  if (error || !data) { messagesBox.innerHTML = ''; return; }
 
-  saveMessageToDatabase(rawText, "outgoing", false);
-  chatInputField.value = "";
-
-  showTypingIndicator();
-
-  setTimeout(() => {
-    removeTypingIndicator();
-
-    const userObj = mockDatabase[currentUserId];
-    const lowerInput = rawText.toLowerCase();
-
-    let finalizedResponse = `${userObj.name} hozirgina xabaringizni ko'rdi, tez orada shaxsan javob beradi!`;
-    let found = false;
-
-    Object.keys(userObj.smartResponses).forEach((keyword) => {
-      if (lowerInput.includes(keyword)) {
-        finalizedResponse = userObj.smartResponses[keyword];
-        found = true;
-      }
-    });
-
-    // Agar foydalanuvchi "lavash" yoki bazada yo'q boshqa taomlarni so'rasa:
-    if (
-      !found &&
-      (lowerInput.includes("lavash") ||
-        lowerInput.includes("ovqat") ||
-        lowerInput.includes("taom") ||
-        lowerInput.includes("shashlik"))
-    ) {
-      finalizedResponse = `Hozirda menyuyimizda aynan shu taom tugab qolgan edi, lekin siz uchun maxsus buyurtma asosida oshpazimiz tayyorlab bera oladilar! 😊`;
-    }
-
-    saveMessageToDatabase(finalizedResponse, "incoming", false);
-  }, 1500);
-}
-
-function saveMessageToDatabase(payload, direction, isImg) {
-  mockDatabase[currentUserId].chatHistory.push({
-    type: direction,
-    msg: payload,
-    time: getClockTime(),
-    isImg: isImg,
-  });
-
-  const previewEl = document.getElementById(`side-preview-${currentUserId}`);
-  if (previewEl) {
-    previewEl.innerText = isImg ? "📷 Rasm yuborildi" : payload;
-  }
-
-  renderChatMessages();
-}
-
-function showTypingIndicator() {
-  const indRow = document.createElement("div");
-  indRow.classList.add("msg-wrapper", "incoming");
-  indRow.id = "typingIndicatorNode";
-  indRow.innerHTML = `
-        <div class="typing-indicator">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>`;
-  messagesBox.appendChild(indRow);
+  messagesBox.innerHTML = '<div class="timeline-center"><span>Suhbat</span></div>';
+  data.forEach(item => appendMessageToDOM(item));
   messagesBox.scrollTop = messagesBox.scrollHeight;
-}
 
-function removeTypingIndicator() {
-  const node = document.getElementById("typingIndicatorNode");
-  if (node) node.remove();
-}
-
-function mediaUploadHandler(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      saveMessageToDatabase(e.target.result, "outgoing", true);
-    };
-    reader.readAsDataURL(file);
+  const unreadIds = data.filter(m => !m.is_read && m.sender_id !== myUserId).map(m => m.id);
+  if (unreadIds.length) {
+    chatClient.from('chat_messages').update({ is_read: true }).in('id', unreadIds).then(() => {});
   }
+}
+
+function appendMessageToDOM(item) {
+  const isOutgoing = item.sender_id === myUserId;
+  const checkIcon = isOutgoing ? '<span class="double-check">✓✓</span>' : '';
+  const content = item.image_url ? `<img src="${item.image_url}" class="uploaded-media-img">` : (item.message || '');
+
+  const row = document.createElement('div');
+  row.classList.add('msg-wrapper', isOutgoing ? 'outgoing' : 'incoming');
+  row.innerHTML = `
+    <div class="premium-bubble">
+      ${content}
+      <span class="bubble-time">${getClockTime(item.created_at)}${checkIcon}</span>
+    </div>`;
+  messagesBox.appendChild(row);
+}
+
+/* ---------- XABAR YUBORISH ---------- */
+async function handleMessageSubmit() {
+  const rawText = chatInputField.value.trim();
+  if (!rawText || !activeConversationId) return;
+  chatInputField.value = '';
+  await sendMessage({ message: rawText });
+}
+
+async function mediaUploadHandler(event) {
+  const file = event.target.files[0];
+  if (!file || !activeConversationId) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => { await sendMessage({ image_url: e.target.result }); };
+  reader.readAsDataURL(file);
+}
+
+async function sendMessage(fields) {
+  const payload = { conversation_id: activeConversationId, sender_id: myUserId, message: null, image_url: null, ...fields };
+  const { data, error } = await chatClient.from('chat_messages').insert(payload).select().single();
+  if (error) { console.error('Xabar yuborishda xatolik:', error); return; }
+  appendMessageToDOM(data);
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+
+  const previewEl = document.getElementById(`side-preview-${activeConversationId}`);
+  if (previewEl) previewEl.innerText = fields.image_url ? '📷 Rasm yuborildi' : fields.message;
+}
+
+/* ---------- REALTIME ---------- */
+function subscribeToActiveConversation() {
+  if (messagesChannel) chatClient.removeChannel(messagesChannel);
+  messagesChannel = chatClient
+    .channel('chat-messages-' + activeConversationId)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `conversation_id=eq.${activeConversationId}` }, (payload) => {
+      if (payload.new.sender_id === myUserId) return; // o'zimiz allaqachon qo'shdik
+      appendMessageToDOM(payload.new);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+      chatClient.from('chat_messages').update({ is_read: true }).eq('id', payload.new.id).then(() => {});
+    })
+    .subscribe();
+}
+
+function subscribeToAllChefMessages() {
+  if (!myChefId) return;
+  chatClient
+    .channel('chef-inbox-' + myChefId)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
+      const conv = conversations.find(c => c.id === payload.new.conversation_id);
+      if (!conv) return; // boshqa oshpazga tegishli suhbat
+      const previewEl = document.getElementById(`side-preview-${conv.id}`);
+      if (previewEl && payload.new.conversation_id !== activeConversationId) {
+        previewEl.innerText = payload.new.image_url ? '📷 Rasm' : payload.new.message;
+      }
+      if (payload.new.conversation_id === activeConversationId && payload.new.sender_id !== myUserId) {
+        appendMessageToDOM(payload.new);
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+      }
+    })
+    .subscribe();
 }
 
 function handleInputKey(e) {
   if (e.key === "Enter") handleMessageSubmit();
 }
 
-// EMOJI PANEL FUNKSIYALARI
+/* ---------- EMOJI PANEL ---------- */
 function toggleEmojiPicker(event) {
   event.stopPropagation();
   const picker = document.getElementById("customEmojiPicker");
@@ -294,71 +279,9 @@ function insertEmoji(emoji) {
 document.addEventListener("click", function (event) {
   const picker = document.getElementById("customEmojiPicker");
   const toggleBtn = document.getElementById("emojiToggleBtn");
-
   if (picker && !picker.contains(event.target) && event.target !== toggleBtn) {
     picker.classList.remove("show");
   }
 });
 
-function bootChatFromParams() {
-  const params = new URLSearchParams(window.location.search);
-  const customer = params.get("customer");
-  const order = params.get("order");
-
-  if (!customer && !order) {
-    loadChatWorkspace("ahmad");
-    return;
-  }
-
-  const id = `order-${(order || customer || "new").toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-  mockDatabase[id] = {
-    name: customer || "Yangi mijoz",
-    avatarClass: "mahmud-img",
-    role: order ? `Buyurtma ${order}` : "Buyurtma bo'yicha suhbat",
-    status: "Buyurtma konteksti ochildi",
-    suggestions: ["Buyurtmangiz tayyorlanmoqda", "Yetkazish vaqtini aniqlayman", "Rahmat!"],
-    chatHistory: [
-      {
-        type: "alert",
-        title: "Buyurtma chatga ulandi",
-        body: order
-          ? `${order} raqamli buyurtma bo'yicha suhbat ochildi.`
-          : "Mijoz bilan suhbat ochildi.",
-      },
-    ],
-    smartResponses: {
-      tayyor: "Buyurtmangiz tayyorlanish jarayonida. Tayyor bo'lishi bilan darhol xabar beramiz.",
-      yetkazish: "Yetkazish vaqtini tekshiryapman, odatda 15-20 daqiqa ichida manzilga yetib boradi.",
-      rahmat: "Sizga ham rahmat! Yoqimli ishtaha.",
-    },
-  };
-
-  const list = document.querySelector(".conversation-list");
-  if (list) {
-    const item = document.createElement("div");
-    item.className = "convo-item active";
-    item.onclick = () => changeActiveChat(id);
-    item.innerHTML = `
-      <div class="avatar-ring online">
-        <div class="user-avatar mahmud-img"></div>
-      </div>
-      <div class="convo-details">
-        <div class="convo-meta">
-          <h4>${mockDatabase[id].name}</h4>
-          <span class="time-stamp">Hozir</span>
-        </div>
-        <p class="preview-text" id="side-preview-${id}">${mockDatabase[id].role}</p>
-        <div class="tag-row"><span class="badge-status priority">Buyurtma chat</span></div>
-      </div>
-    `;
-    list.prepend(item);
-    document.querySelectorAll(".convo-item").forEach((el) => {
-      if (el !== item) el.classList.remove("active");
-    });
-  }
-
-  loadChatWorkspace(id);
-}
-
-// Start
-bootChatFromParams();
+bootChat();

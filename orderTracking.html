@@ -19,14 +19,14 @@
 
 <body>
 
-    <div class="container">
+    <div class="page-shell">
 <header>
     <div class="container header-flex">
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <a href="buyordashbord.html" style="background: #f1f1f1; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #2d1b0e; font-weight: bold; border: 1.5px solid #eaeaea;" title="Orqaga qaytish">
-                <i class="fas fa-chevron-left" style="font-size: 13px;"></i>
+        <div class="brand-group">
+            <a href="buyordashbord.html" class="back-btn" title="Orqaga qaytish" aria-label="Orqaga qaytish">
+                <i class="fas fa-chevron-left"></i>
             </a>
-            <a href="buyordashbord.html" style="display: flex; align-items: center;"><img src="./Text (5).svg" alt="Qozon Logo"></a>
+            <a href="buyordashbord.html" class="header-logo"><img src="./Text (5).svg" alt="Qozon Logo"></a>
         </div>
 
         <button class="burger-menu" id="burgerBtn" aria-label="Menyu">
@@ -52,12 +52,12 @@
 </header>
         <main>
             <section>
-                <div class="div-1">
-                    <p>✅ Buyurtma qabul qilindi!</p>
+                <div class="div-1" id="trackingSummaryCard">
+                    <p id="trackingSummaryTitle">⏳ Oshpaz javobini kutmoqda</p>
                     <p id="orderNumber">Sizning buyurtmangiz raqami: #QZ-0000</p>
                     <div class="div-ichi">
-                        <p>TAYYOR BO'LISH VAQTI</p>
-                        <p>🕰️ Tayyorlanmoqda...</p>
+                        <p id="trackingSummaryEyebrow">JARAYON HOLATI</p>
+                        <p id="trackingSummaryMeta">Oshpaz qabul qilishi kutilmoqda...</p>
                     </div>
                 </div>
 
@@ -67,14 +67,21 @@
                         <div class="order-progress-fill"></div>
                     </div>
 
-                    <div class="order-step step-completed">
+                    <div class="order-step step-active">
+                        <div class="order-icon">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                        <div class="order-text">Kutilmoqda</div>
+                    </div>
+
+                    <div class="order-step step-pending">
                         <div class="order-icon">
                             <i class="fa-solid fa-check"></i>
                         </div>
                         <div class="order-text">Qabul qilindi</div>
                     </div>
 
-                    <div class="order-step step-active">
+                    <div class="order-step step-pending">
                         <div class="order-icon">
                             <i class="fa-solid fa-utensils"></i>
                         </div>
@@ -116,7 +123,7 @@
                                 <p>⭐ 4.9 (124)</p>
                             </div>
                         </a>
-                        <button>📞 Qo'ng'iroq qilish</button>
+                        <button id="contactChefBtn" type="button">📞 Qo'ng'iroq qilish</button>
                         
 
                     </div>
@@ -136,7 +143,7 @@
                     </div>
 
                     <div class="card status-card">
-                        <h3>Status yangilanishlari</h3>
+                        <h3 class="status-card-title">Status yangilanishlari <span class="live-status-badge">Jonli</span></h3>
 
                         <div class="timeline">
                             <div class="timeline-item active">
@@ -194,6 +201,7 @@
         </div>
     </footer>
 
+    <div class="tracking-toast-container" id="trackingToastContainer" aria-live="polite" aria-atomic="true"></div>
 
 
     <script src="orderTracking.js"></script>

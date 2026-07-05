@@ -19,6 +19,102 @@ let allFoods = [];
 let allChefs = [];
 let cart = [];
 let activeTab = 'taomlar'; // 'taomlar' | 'oshpazlar'
+const CHEF_PLACEHOLDER_ICON = 'images/chef-placeholder.svg';
+const FOOD_PLACEHOLDER_IMAGE = './Traditional Uzbek Plov (1).svg';
+const FOOD_FALLBACK_IMAGES = [
+    'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1559622214-f8a9850965bb?auto=format&fit=crop&w=600&h=420&q=80',
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&h=420&q=80'
+];
+const CHEF_FALLBACK_IMAGES = [
+    'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=160&h=160&q=80',
+    'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=160&h=160&q=80',
+    'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=160&h=160&q=80',
+    'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=160&h=160&q=80',
+    'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=160&h=160&q=80'
+];
+
+function getChefFallbackImage(name = '', index = 0) {
+    const seed = String(name).split('').reduce((sum, char) => sum + char.charCodeAt(0), index);
+    return CHEF_FALLBACK_IMAGES[Math.abs(seed) % CHEF_FALLBACK_IMAGES.length];
+}
+
+function makeChefFavoriteId(chef = {}, fallbackName = '', index = 0) {
+    const rawId = chef.id || chef.user_id || chef.profile_id || fallbackName || chef.full_name || chef.name || `oshpaz-${index}`;
+    const raw = String(rawId).trim().toLowerCase();
+    const slug = raw
+        .trim()
+        .replace(/['`’]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    if (slug) return slug;
+
+    const hash = raw.split('').reduce((sum, char) => ((sum * 31) + char.charCodeAt(0)) >>> 0, index + 17);
+    return `chef-${hash.toString(36)}`;
+}
+
+function getFavChefs() {
+    try {
+        return JSON.parse(localStorage.getItem('qz_fav_chefs') || '[]');
+    } catch (e) {
+        return [];
+    }
+}
+
+function getFavChefMeta() {
+    try {
+        return JSON.parse(localStorage.getItem('qz_fav_chef_meta') || '{}');
+    } catch (e) {
+        return {};
+    }
+}
+
+function saveFavChefs(favChefs, chefMeta) {
+    localStorage.setItem('qz_fav_chefs', JSON.stringify(favChefs));
+    localStorage.setItem('qz_fav_chef_meta', JSON.stringify(chefMeta));
+}
+
+window.setChefImageFallback = function(img, name = '', index = 0) {
+    const nextStep = Number(img.dataset.fallbackStep || 0);
+    if (nextStep < CHEF_FALLBACK_IMAGES.length) {
+        img.dataset.fallbackStep = String(nextStep + 1);
+        img.src = CHEF_FALLBACK_IMAGES[(Math.abs(index) + nextStep) % CHEF_FALLBACK_IMAGES.length];
+        return;
+    }
+    img.onerror = null;
+    img.src = CHEF_PLACEHOLDER_ICON;
+};
+
+function getFoodFallbackImage(name = '', category = '', index = 0) {
+    const key = `${name} ${category}`.toLowerCase();
+    if (key.includes('osh') || key.includes('palov') || key.includes('plov')) return './Traditional Uzbek Plov (1).svg';
+    if (key.includes('somsa')) return 'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&h=420&q=80';
+    if (key.includes('manti')) return 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&h=420&q=80';
+    if (key.includes('shurva') || key.includes("sho'rva") || key.includes('soup')) return 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&h=420&q=80';
+    if (key.includes('salat')) return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&h=420&q=80';
+    if (key.includes('shirin') || key.includes('dessert')) return 'https://images.unsplash.com/photo-1559622214-f8a9850965bb?auto=format&fit=crop&w=600&h=420&q=80';
+    const seed = key.split('').reduce((sum, char) => sum + char.charCodeAt(0), index);
+    return FOOD_FALLBACK_IMAGES[Math.abs(seed) % FOOD_FALLBACK_IMAGES.length];
+}
+
+window.setFoodImageFallback = function(img, name = '', category = '', index = 0) {
+    const nextStep = Number(img.dataset.fallbackStep || 0);
+    if (nextStep === 0) {
+        img.dataset.fallbackStep = '1';
+        img.src = getFoodFallbackImage(name, category, index);
+        return;
+    }
+    if (nextStep <= FOOD_FALLBACK_IMAGES.length) {
+        img.dataset.fallbackStep = String(nextStep + 1);
+        img.src = FOOD_FALLBACK_IMAGES[(Math.abs(index) + nextStep - 1) % FOOD_FALLBACK_IMAGES.length];
+        return;
+    }
+    img.onerror = null;
+    img.src = FOOD_PLACEHOLDER_IMAGE;
+};
 const initialParams = new URLSearchParams(window.location.search);
 let pageQuery = (initialParams.get('q') || '').trim().toLowerCase();
 let pageCategory = (initialParams.get('category') || '').trim().toLowerCase();
@@ -72,13 +168,14 @@ function renderFoods(foods) {
 
     resultsCount.textContent = `${foods.length} ta taom topildi`;
 
-    foods.forEach(food => {
+    foods.forEach((food, index) => {
         const price = Number(food.price).toLocaleString('uz-UZ');
         const rating = food.rating ?? 5.0;
+        const foodName = food.name || 'Taom';
+        const foodCategory = food.category || '';
+        const imageSrc = food.image_url || food.image || getFoodFallbackImage(foodName, foodCategory, index);
 
-        const imgEl = food.image_url
-            ? `<img src="${food.image_url}" alt="${food.name}" loading="lazy">`
-            : `<div class="card-image-placeholder">🍽️</div>`;
+        const imgEl = `<img src="${imageSrc}" alt="${foodName}" loading="lazy" onerror="setFoodImageFallback(this, '${foodName.replace(/'/g, "\\'")}', '${String(foodCategory).replace(/'/g, "\\'")}', ${index})">`;
 
         const card = document.createElement('div');
         card.className = 'product-card';
@@ -137,22 +234,27 @@ function renderChefs(chefs) {
 
     resultsCount.textContent = `${chefs.length} ta oshpaz topildi`;
 
-    chefs.forEach(chef => {
+    chefs.forEach((chef, index) => {
         const rating = chef.rating ?? 5.0;
+        const chefName = chef.full_name || chef.name || 'Oshpaz';
+        const chefId = makeChefFavoriteId(chef, chefName, index);
+        const favChefs = getFavChefs();
+        const isFavChef = favChefs.includes(chefId);
 
-        const avatarEl = chef.avatar_url
-            ? `<img class="chef-avatar" src="${chef.avatar_url}" alt="${chef.full_name}" loading="lazy">`
-            : `<div class="chef-avatar-placeholder">👨‍🍳</div>`;
+        const avatarSrc = chef.avatar_url || chef.image_url || chef.image || getChefFallbackImage(chefName, index);
+        const avatarEl = `<img class="chef-avatar" src="${avatarSrc}" alt="${chefName}" loading="lazy" onerror="setChefImageFallback(this, '${chefName.replace(/'/g, "\\'")}', ${index})">`;
 
         const card = document.createElement('div');
         card.className = 'chef-card';
         card.dataset.rating = rating;
+        card.dataset.chefId = chefId;
+        card.dataset.chefName = chefName;
 
         card.innerHTML = `
             ${avatarEl}
             <div class="chef-info">
                 <div class="chef-name">
-                    ${chef.full_name}
+                    ${chefName}
                     ${chef.is_verified ? ' ✅' : ''}
                 </div>
                 <div class="chef-spec">${chef.speciality || 'Oshpaz'}</div>
@@ -160,16 +262,43 @@ function renderChefs(chefs) {
                     <span class="star">★</span> ${rating}
                 </div>
             </div>
-            <button class="like-btn" style="position:static; background:#F5F0EF;">🤍</button>`;
+            <button class="like-btn chef-like-btn ${isFavChef ? 'active' : ''}" style="position:static; background:#F5F0EF;">${isFavChef ? '❤️' : '🤍'}</button>`;
 
         productsGrid.appendChild(card);
     });
 
     // Like tugmalari
-    productsGrid.querySelectorAll('.like-btn').forEach(btn => {
+    productsGrid.querySelectorAll('.chef-like-btn').forEach(btn => {
         btn.addEventListener('click', e => {
             e.stopPropagation();
-            btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+            const card = btn.closest('.chef-card');
+            const chefId = card?.dataset.chefId;
+            const chefName = card?.dataset.chefName || 'Oshpaz';
+            if (!chefId) return;
+
+            let favChefs = getFavChefs();
+            const chefMeta = getFavChefMeta();
+
+            if (favChefs.includes(chefId)) {
+                favChefs = favChefs.filter(id => id !== chefId);
+                delete chefMeta[chefId];
+                btn.textContent = '🤍';
+                btn.classList.remove('active');
+            } else {
+                favChefs.push(chefId);
+                chefMeta[chefId] = {
+                    id: chefId,
+                    name: chefName,
+                    image: card.querySelector('.chef-avatar')?.src || getChefFallbackImage(chefName, favChefs.length),
+                    title: card.querySelector('.chef-spec')?.textContent?.trim() || 'Oshpaz',
+                    rating: card.querySelector('.chef-rating')?.textContent?.trim() || '★ 5.0',
+                    dish: 'Bugungi yangi menyu'
+                };
+                btn.textContent = '❤️';
+                btn.classList.add('active');
+            }
+
+            saveFavChefs(favChefs, chefMeta);
         });
     });
 }

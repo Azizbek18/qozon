@@ -251,11 +251,24 @@ const translations = {
             });
         }
 
-        function applyPromo() {
+        const PROMO_SUPABASE_URL = 'https://usoekoycypxbcxzwoaea.supabase.co';
+        const PROMO_SUPABASE_KEY = 'sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
+        const promoSupabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(PROMO_SUPABASE_URL, PROMO_SUPABASE_KEY) : null;
+
+        async function applyPromo() {
             const input = document.getElementById('promoInput').value.trim().toUpperCase();
             const display = document.getElementById('discountDisplay');
-            if (input === "BIRINCHI10") {
-                display.innerText = translations[currentLang].discountVal;
+            if (!promoSupabaseClient) { display.innerText = "0"; return; }
+
+            const { data: promo, error } = await promoSupabaseClient
+                .from('promo_codes').select('*').eq('code', input).eq('is_active', true).single();
+            const now = new Date();
+            const valid = promo && !error && (!promo.valid_until || new Date(promo.valid_until) > now);
+
+            if (valid) {
+                display.innerText = promo.discount_type === 'percent'
+                    ? `-${promo.discount_value}%`
+                    : `-${Number(promo.discount_value).toLocaleString('ru-RU')} so'm`;
                 show3DToast(translations[currentLang].toastSuccess, translations[currentLang].toastPromoOk, "success");
             } else {
                 display.innerText = "0";
