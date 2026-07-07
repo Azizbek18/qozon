@@ -7,11 +7,17 @@
     const SUPABASE_URL = 'https://usoekoycypxbcxzwoaea.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_BL1ADSdK5cXfmXI4rrTmRA_eixc8I0-';
 
+    // Eski hisoblarga tasodifan yozib qo'yilgan umumiy placeholder rasm —
+    // haqiqiy profil surati emas, shu sabab icon fallback ko'rsatiladi.
+    function isRealAvatar(url) {
+        return !!url && !url.includes('user-male-circle');
+    }
+
     function setAvatar(container, url) {
         const img = container.querySelector('.header-avatar-img');
         const icon = container.querySelector('.header-avatar-fallback');
         if (!img || !icon) return;
-        if (url) {
+        if (isRealAvatar(url)) {
             img.src = url;
             img.style.display = 'block';
             icon.style.display = 'none';

@@ -43,8 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const avatarImg = document.getElementById("avatarImg");
     const avatarFallbackIcon = document.getElementById("avatarFallbackIcon");
 
+    // Eski hisoblarga tasodifan yozib qo'yilgan umumiy placeholder rasm —
+    // haqiqiy profil surati emas, shu sabab icon fallback ko'rsatiladi.
+    function isRealAvatar(url) {
+        return !!url && !url.includes('user-male-circle');
+    }
+
     function setAvatar(url) {
-        if (url) {
+        if (isRealAvatar(url)) {
             avatarImg.src = url;
             avatarImg.style.display = "block";
             avatarFallbackIcon.style.display = "none";

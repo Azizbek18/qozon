@@ -1154,11 +1154,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Eski hisoblarga tasodifan yozib qo'yilgan umumiy placeholder rasm —
+        // haqiqiy profil surati emas, shu sabab icon fallback ko'rsatiladi.
+        function isRealAvatar(url) {
+            return !!url && !url.includes('user-male-circle');
+        }
+
         function setHeaderAvatar(url) {
             const imgEl = document.getElementById("headerAvatarImg");
             const fallbackEl = document.getElementById("headerAvatarFallback");
             if (!imgEl || !fallbackEl) return;
-            if (url) {
+            if (isRealAvatar(url)) {
                 imgEl.src = url;
                 imgEl.style.display = "block";
                 fallbackEl.style.display = "none";
@@ -1186,9 +1192,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     .eq('id', session.user.id)
                     .single()
                     .then(({ data: profile }) => {
-                        if (!profile) return;
-                        if (profile.full_name && nameEl) nameEl.textContent = profile.full_name;
-                        setHeaderAvatar(profile.avatar_url || "");
+                        if (profile && profile.full_name && nameEl) nameEl.textContent = profile.full_name;
+                        setHeaderAvatar(profile?.avatar_url || "");
                     })
                     .catch(err => console.error("Error fetching header profile:", err));
             }).catch(err => console.error("Error fetching session for header avatar:", err));
