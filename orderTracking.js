@@ -133,30 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- HEADER FOYDALANUVCHI ISMI ---
-    try {
-        let loggedInUser = null;
-        for (const key of ['tn_user', 'qz_current', 'mk_user', 'user']) {
-            try {
-                const data = JSON.parse(localStorage.getItem(key));
-                if (data && (data.name || data.full_name || data.email)) {
-                    loggedInUser = data; break;
-                }
-            } catch(e) {}
-        }
-        if (loggedInUser) {
-            const nameText = (loggedInUser.user_metadata && loggedInUser.user_metadata.full_name)
-                || loggedInUser.full_name || loggedInUser.name || loggedInUser.email;
-            const avatarUrl = (loggedInUser.user_metadata && loggedInUser.user_metadata.avatar_url)
-                || loggedInUser.avatar_url || loggedInUser.avatar
-                || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80';
-            const menuActions = document.querySelector('.menu-actions');
-            if (menuActions) {
-                menuActions.innerHTML = '<a href="buyordashbord.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;"><span style="font-weight:700;font-size:15px;">' + nameText + '</span><img src="' + avatarUrl + '" alt="Avatar" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #e8ddd0;cursor:pointer;"></a>';
-            }
-        }
-    } catch(e) {}
-
     // --- BUYURTMA MA'LUMOTLARINI YUKLASH ---
     const orderNumber = localStorage.getItem('qz_current_order_number') || '#QZ-0000';
     currentOrderId = localStorage.getItem('qz_current_order_id') || null;
