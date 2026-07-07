@@ -622,7 +622,7 @@ async function updateOrderStatusInDB(orderId, newStatus) {
 }
 
 // ==========================================================================
-// INTERACTIVE LIVE MAP (YANDEX MAPS API)
+// INTERACTIVE LIVE MAP (YANDEX MAPS API WITH ACTUAL ROAD ROUTING)
 // ==========================================================================
 let myMap = null;
 let chefPlacemark = null;
@@ -650,11 +650,13 @@ function initTrackingMap() {
         if (deliveryAddressEl && foodData.delivery_address) {
             deliveryAddressEl.textContent = foodData.delivery_address;
         }
-        if (mapViewLink) mapViewLink.style.display = 'none';
     } else {
         if (addressCardTitle) addressCardTitle.textContent = 'Olib ketish manzili';
-        if (mapViewLink) mapViewLink.style.display = 'none';
+        if (deliveryAddressEl) {
+            deliveryAddressEl.textContent = "Toshkent sh., Chilonzor tumani, 5-mavze, 24-uy, 12-xonadon";
+        }
     }
+    if (mapViewLink) mapViewLink.style.display = 'none';
 
     if (typeof ymaps === 'undefined') return;
 
@@ -663,8 +665,8 @@ function initTrackingMap() {
     }
 
     ymaps.ready(() => {
-        const chefCoords = [41.311081, 69.240562];
-        const customerCoords = isCourier ? [41.3642, 69.2882] : [41.311081, 69.240562];
+        const chefCoords = [41.311081, 69.240562]; // Chorsu (Oshpaz)
+        const customerCoords = [41.2858, 69.2036]; // Chilonzor 5-mavze (Mijoz)
 
         if (!myMap) {
             myMap = new ymaps.Map("liveMap", {
@@ -685,16 +687,61 @@ function initTrackingMap() {
         });
         myMap.geoObjects.add(chefPlacemark);
 
-        if (isCourier) {
-            customerPlacemark = new ymaps.Placemark(customerCoords, {
-                balloonContent: '<b>Mijoz (Sizning manzilingiz)</b>'
-            }, {
-                preset: 'islands#greenHomeIcon',
-                iconColor: '#58CC02'
-            });
-            myMap.geoObjects.add(customerPlacemark);
+        customerPlacemark = new ymaps.Placemark(customerCoords, {
+            balloonContent: '<b>Mijoz (Sizning manzilingiz)</b>'
+        }, {
+            preset: 'islands#greenHomeIcon',
+            iconColor: '#58CC02'
+        });
+        myMap.geoObjects.add(customerPlacemark);
 
-            // Route Line
+        // Calculate and draw the real shortest road route
+        ymaps.route([chefCoords, customerCoords], {
+            routingMode: 'auto',
+            mapStateAutoApply: true
+        }).then(function (route) {
+            // Hide default start/end waypoints flags
+            route.getWayPoints().options.set('visible', false);
+
+            // Style the route polyline path
+            route.getPaths().options.set({
+                strokeColor: '#e63946',
+                strokeWidth: 5,
+                opacity: 0.7
+            });
+
+            // Add the route path to the map
+            myMap.geoObjects.add(route);
+
+            // If it is Courier delivery, add moving Courier marker along the path!
+            if (isCourier) {
+                // Get all coordinates along the calculated route path for smooth movement!
+                const routePoints = [];
+                const paths = route.getPaths();
+                for (let i = 0; i < paths.getLength(); i++) {
+                    const path = paths.get(i);
+                    const segments = path.getSegments();
+                    for (let j = 0; j < segments.length; j++) {
+                        const coords = segments[j].getCoordinates();
+                        routePoints.push(...coords);
+                    }
+                }
+
+                courierPlacemark = new ymaps.Placemark(chefCoords, {
+                    balloonContent: '<b>Kuryer yo\'lda</b>'
+                }, {
+                    preset: 'islands#yellowDeliveryIcon',
+                    iconColor: '#ffb703'
+                });
+                myMap.geoObjects.add(courierPlacemark);
+
+                // Start road-following courier animation!
+                animateCourierAlongRoute(routePoints);
+            }
+        }, function (error) {
+            console.error("Yandex routing failed, falling back to straight line:", error);
+            
+            // Fallback straight line
             routePolyline = new ymaps.Polyline([chefCoords, customerCoords], {}, {
                 strokeColor: "#e63946",
                 strokeWidth: 4,
@@ -703,27 +750,46 @@ function initTrackingMap() {
             });
             myMap.geoObjects.add(routePolyline);
 
-            // Courier Placemark
-            courierPlacemark = new ymaps.Placemark(chefCoords, {
-                balloonContent: '<b>Kuryer yo\'lda</b>'
-            }, {
-                preset: 'islands#yellowDeliveryIcon',
-                iconColor: '#ffb703'
-            });
-            myMap.geoObjects.add(courierPlacemark);
-
-            // Auto fit bounds
-            myMap.setBounds(myMap.geoObjects.getBounds(), {
-                checkZoomRange: true,
-                zoomMargin: 40
-            });
-
-            // Start Animation
-            animateCourierPlacemark(chefCoords, customerCoords);
-        } else {
-            myMap.setCenter(chefCoords, 15);
-        }
+            if (isCourier) {
+                courierPlacemark = new ymaps.Placemark(chefCoords, {
+                    balloonContent: '<b>Kuryer yo\'lda</b>'
+                }, {
+                    preset: 'islands#yellowDeliveryIcon',
+                    iconColor: '#ffb703'
+                });
+                myMap.geoObjects.add(courierPlacemark);
+                animateCourierPlacemark(chefCoords, customerCoords);
+            }
+        });
     });
+}
+
+function animateCourierAlongRoute(routePoints) {
+    if (courierAnimationInterval) clearInterval(courierAnimationInterval);
+    if (!routePoints || routePoints.length === 0) return;
+
+    let index = 0;
+    let direction = 1;
+
+    courierAnimationInterval = setInterval(() => {
+        const status = lastKnownStatus || 'pending';
+
+        if (status === 'pending' || status === 'accepted' || status === 'cooking') {
+            if (courierPlacemark) courierPlacemark.geometry.setCoordinates(routePoints[0]);
+        } else if (status === 'ready' || status === 'shipping' || status === 'delivering') {
+            index += direction;
+            if (index >= routePoints.length) {
+                index = routePoints.length - 1;
+                direction = -1; // Drive back
+            } else if (index <= 0) {
+                index = 0;
+                direction = 1;
+            }
+            if (courierPlacemark) courierPlacemark.geometry.setCoordinates(routePoints[index]);
+        } else if (status === 'completed' || status === 'delivered') {
+            if (courierPlacemark) courierPlacemark.geometry.setCoordinates(routePoints[routePoints.length - 1]);
+        }
+    }, 150);
 }
 
 function animateCourierPlacemark(chefCoords, customerCoords) {
@@ -755,5 +821,7 @@ function animateCourierPlacemark(chefCoords, customerCoords) {
         }
     }, 100);
 }
+
+
 
 
