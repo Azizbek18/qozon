@@ -37,37 +37,10 @@ body {
     text-decoration: none;
 }
 
-.nav-links a {
-    text-decoration: none;
-    color: #666;
-    margin: 0 15px;
-    font-weight: 500;
-    font-size: 15px;
-    transition: color 0.2s;
-}
-
-.nav-links a:hover, .nav-links a.active {
-    color: #c90a2a;
-}
-
-.nav-links a.active {
-    border-bottom: 2px solid #c90a2a;
-    padding-bottom: 4px;
-}
-
-.btn-order {
-    background-color: #c90a2a;
-    color: white;
-    border: none;
-    padding: 10px 22px;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.btn-order:hover {
-    background-color: #a30822;
+.page-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2d2d2d;
 }
 
 /* CONTAINER */
@@ -640,167 +613,6 @@ body {
 .footer-links-group a:hover {
     color: #ffffff;
 }
-/* ==========================================================
-   DESKTOP HEADER STYLES (ASOSIY SOZLAMALAR)
-   ========================================================== */
-.header {
-    background-color: #ffffff;
-    border-bottom: 1px solid #f0eae4;
-    padding: 15px 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.header-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: 800;
-    color: #c90a2a; /* Qozon qizil rangi */
-    text-decoration: none;
-}
-
-/* Burger tugmasi desktopda ko'rinmaydi */
-.burger-btn {
-    display: none; 
-    background: none;
-    border: none;
-    color: #c90a2a;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 5px;
-}
-
-.nav-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.nav-links a {
-    text-decoration: none;
-    color: #666;
-    margin: 0 15px;
-    font-weight: 500;
-    font-size: 15px;
-    transition: color 0.2s;
-}
-
-.nav-links a:hover, .nav-links a.active {
-    color: #c90a2a;
-}
-
-.nav-links a.active {
-    border-bottom: 2px solid #c90a2a;
-    padding-bottom: 4px;
-}
-
-.btn-order {
-    background-color: #c90a2a;
-    color: white;
-    border: none;
-    padding: 10px 22px;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.btn-order:hover {
-    background-color: #a30822;
-}
-@media (max-width: 768px) {
-    .burger-btn {
-        display: block !important; /* Mobilda aniq ko'rinishi uchun */
-        z-index: 1001; /* Menyudan ham yuqorida turishi kerak */
-        position: relative;
-    }
-
-    .nav-wrapper {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 280px;
-        height: 100vh;
-        background: #ffffff;
-        z-index: 1000; /* Boshqa elementlardan ustun turishi shart */
-        transform: translateX(100%); /* Yashirin holat */
-        transition: transform 0.3s ease-in-out;
-    }
-
-    /* JS qo'shadigan klass */
-    .nav-wrapper.open {
-        transform: translateX(0) !important; /* Ekranda paydo bo'lishi uchun */
-    }
-}
-/* ==========================================================
-   RESPONSIVE HEADER (768px dan kichik ekranlar uchun)
-   ========================================================== */
-@media (max-width: 768px) {
-    .burger-btn {
-        display: block; /* Mobilda burger tugmasi ko'rinadi */
-        z-index: 1000;
-    }
-
-    /* YONDAN OCHILADIGAN MENYU (SIDE DRAWER) */
-    .nav-wrapper {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 280px;
-        height: 100vh;
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 80px 20px 24px 20px;
-        gap: 30px;
-        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
-        
-        /* Dastlab o'ng tomonda yashirin turadi */
-        transform: translateX(100%); 
-        transition: transform 0.3s ease-in-out;
-        z-index: 999;
-    }
-
-    /* JS orqali ".open" klassi qo'shilganda ekranga chiqadi */
-    .nav-wrapper.open {
-        transform: translateX(0);
-    }
-
-    .nav-links {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        gap: 20px;
-    }
-
-    .nav-links a {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 600;
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-        color: #333;
-    }
-
-    .btn-order {
-        width: 100%;
-        padding: 12px 0;
-        text-align: center;
-    }
-}
 /* RESPONSIVE (Mobil qurilmalar uchun) */
 @media (max-width: 992px) {
     .dashboard-grid-top, .dashboard-grid-bottom {
@@ -808,6 +620,12 @@ body {
     }
     .footer-container {
         grid-template-columns: 1fr 1fr;
+    }
+    .header {
+        padding: 12px 0;
+    }
+    .header-container {
+        padding: 0 16px;
     }
 }
 /* RESPONSIVE DIZAYN (MOBIL VA PLANSHETLAR UCHUN) */
@@ -817,7 +635,7 @@ body {
         grid-template-columns: 1fr;
         gap: 16px;
     }
-    
+
     /* Pastki qism: Amaliyotlar va To'lov usullari 1 ta ustun bo'ladi */
     .dashboard-grid-bottom {
         grid-template-columns: 1fr;
@@ -830,30 +648,11 @@ body {
 }
 
 @media (max-width: 768px) {
-    /* Header qismini mobilga moslash (Navigatsiya va tugmani joylashtirish) */
-    .header-container {
-        flex-direction: column;
-        gap: 12px;
-        text-align: center;
-    }
-
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .nav-links a {
-        margin: 0 5px;
-        font-size: 13px;
-    }
-
     /* Diagramma ustunlari mobil ekranda siqilib ketmasligi uchun */
     .chart-placeholder {
         padding: 10px 5px 25px 5px;
     }
-    
+
     .bar {
         width: 24px; /* Ustunlar sal ingichkaroq bo'ladi */
     }
@@ -871,162 +670,13 @@ body {
         grid-template-columns: 1fr; /* Hamma narsa 1 qator bo'lib tushadi */
         text-align: center;
     }
-    
+
     .balance-amount {
         font-size: 26px; /* Balans matni sig'ishi uchun */
     }
-}
-/* ==========================================================
-   BIRINCHI RASM (`image_0d595c.png`) HEADER RESONSIVE CODE
-   ========================================================== */
 
-@media (max-width: 992px) {
-    .header {
-        padding: 12px 0;
-    }
-    
-    .header-container {
-        padding: 0 16px;
-    }
-
-    /* Linklar shriftini biroz kichraytiramiz */
-    .nav-links a {
-        margin: 0 10px;
-        font-size: 14px;
-    }
-    
-    .btn-order {
-        padding: 8px 18px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 768px) {
-    /* Ekran planshet yoki katta telefonga o'tganda hamma narsani tartib bilan joylashtiramiz */
-    .header-container {
-        flex-direction: column; /* Logotip, menyu va tugma ustma-ust tushadi */
-        gap: 14px;
-        align-items: center;
-        text-align: center;
-    }
-
-    /* Menyu linklarini chiroyli markazlashtirilgan blok shakliga keltiramiz */
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap; /* Agar ekran juda kichik bo'lsa linklar 2 qatorga chiroyli sinadi */
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .nav-links a {
-        margin: 4px 8px;
-        font-size: 14px;
-        padding-bottom: 2px;
-    }
-    
-    /* Aktiv link chizig'i mobil ekranda ham chiroyli turishi uchun */
-    .nav-links a.active {
-        border-bottom-width: 2px;
-        padding-bottom: 2px;
-    }
-
-    /* Buyurtma berish tugmasi mobilda to'liq kenglikni egallashi yoki chiroyli ko'rinishi uchun */
-    .btn-order {
-        width: 80%; /* Butun ekranni to'ldirib yubormasligi uchun 80% */
-        max-width: 280px;
-        padding: 10px 0;
-    }
-}
-
-@media (max-width: 480px) {
-    /* Eng kichik mobil telefonlar uchun (Masalan: iPhone SE) */
     .logo {
         font-size: 22px;
-    }
-
-    .nav-links a {
-        font-size: 13px; /* Shrift yana biroz ixchamlashadi */
-        margin: 2px 6px;
-    }
-    
-    .btn-order {
-        width: 100%; /* Kichik telefonlarda tugma to'liq kenglikda chiroyli turadi */
-    }
-}
-@media (max-width: 768px) {
-    /* Logotip va Burger tugmasini bir qatorda saqlash */
-    .header-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-        position: relative;
-    }
-
-    .burger-btn {
-        display: block;
-        background: none;
-        border: none;
-        color: #c90a2a;
-        font-size: 24px;
-        cursor: pointer;
-        padding: 5px;
-        z-index: 1000; /* Tugma menyu ustida ko'rinib turishi uchun */
-    }
-
-    /* YONDAN OCHILADIGAN MENYU (SIDE DRAWER) */
-    .nav-wrapper {
-        position: fixed; /* Butun ekran bo'ylab muqim turishi uchun */
-        top: 0;
-        right: 0; /* O'ng tomonga yopishtiramiz */
-        width: 280px; /* Menyuning eni */
-        height: 100vh; /* Butun ekran balandligi */
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 80px 20px 24px 20px; /* Tepadan burger tugmasi uchun joy tashlaymiz */
-        gap: 30px;
-        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
-        
-        /* O'ng tomondan yashirin holatda turadi */
-        transform: translateX(100%); 
-        transition: transform 0.3s ease-in-out;
-        z-index: 999;
-    }
-
-    /* JS orqali ".open" klassi qo'shilganda o'ngdan sirg'alib chiqadi */
-    .nav-wrapper.open {
-        transform: translateX(0);
-    }
-
-    /* Navigatsiya linklari */
-    .nav-links {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        gap: 20px;
-    }
-
-    .nav-links a {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 600;
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-        color: #333;
-        text-decoration: none;
-    }
-
-    /* "Buyurtma berish" tugmasini menyu pastrog'iga moslash */
-    .btn-order {
-        width: 100%;
-        padding: 12px 0;
-        text-align: center;
     }
 }
 

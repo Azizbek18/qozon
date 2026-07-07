@@ -214,21 +214,4 @@ notifTabs.querySelectorAll('.notif-tab').forEach(tab => {
     });
 });
 
-/* ==================== BURGER MENYU (daromad/menu bilan bir xil) ==================== */
-document.addEventListener('DOMContentLoaded', () => {
-    const burgerToggle = document.getElementById('burger-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    if (burgerToggle && mobileMenu) {
-        const icon = burgerToggle.querySelector('i');
-        burgerToggle.addEventListener('click', () => {
-            mobileMenu.classList.toggle('open');
-            if (icon) {
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-xmark');
-            }
-        });
-    }
-});
-
 boot();

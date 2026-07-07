@@ -125,37 +125,4 @@ document.addEventListener("DOMContentLoaded", function () {
     if (barsWrapper) {
         renderChart("hafta");
     }
-
-    // ==========================================================
-    // 4. BURGER MENYU LOGIKASI
-    // ==========================================================
-    const burgerToggle = document.getElementById("burger-toggle");
-    const mobileMenu = document.getElementById("mobile-menu");
-
-    if (burgerToggle && mobileMenu) {
-        const icon = burgerToggle.querySelector("i");
-
-        burgerToggle.addEventListener("click", function () {
-            // Menyuni ochish/yopish klassini almashtirish
-            mobileMenu.classList.toggle("open");
-            
-            // Ikonkani o'zgartirish (bars <-> xmark)
-            if (icon) {
-                icon.classList.toggle("fa-bars");
-                icon.classList.toggle("fa-xmark");
-            }
-        });
-
-        // Menyu ichidagi linklar bosilganda menyuni yopish
-        const menuLinks = mobileMenu.querySelectorAll(".nav-links a, .btn-order");
-        menuLinks.forEach(link => {
-            link.addEventListener("click", () => {
-                mobileMenu.classList.remove("open");
-                if (icon) {
-                    icon.classList.remove("fa-xmark");
-                    icon.classList.add("fa-bars");
-                }
-            });
-        });
-    }
 });
