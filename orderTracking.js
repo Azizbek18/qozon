@@ -622,13 +622,13 @@ async function updateOrderStatusInDB(orderId, newStatus) {
 }
 
 // ==========================================================================
-// INTERACTIVE LIVE MAP (LEAFLET.JS)
+// INTERACTIVE LIVE MAP (YANDEX MAPS API)
 // ==========================================================================
-let map = null;
-let chefMarker = null;
-let customerMarker = null;
-let courierMarker = null;
-let mapRouteLine = null;
+let myMap = null;
+let chefPlacemark = null;
+let customerPlacemark = null;
+let courierPlacemark = null;
+let routePolyline = null;
 let courierAnimationInterval = null;
 
 function initTrackingMap() {
@@ -650,95 +650,83 @@ function initTrackingMap() {
         if (deliveryAddressEl && foodData.delivery_address) {
             deliveryAddressEl.textContent = foodData.delivery_address;
         }
-        if (mapViewLink) mapViewLink.style.display = 'none'; // Map is embedded, hide external link
+        if (mapViewLink) mapViewLink.style.display = 'none';
     } else {
         if (addressCardTitle) addressCardTitle.textContent = 'Olib ketish manzili';
-        if (mapViewLink) mapViewLink.style.display = 'none'; // Map is embedded, hide external link
+        if (mapViewLink) mapViewLink.style.display = 'none';
     }
 
-    // Leaflet map initialization
-    if (typeof L === 'undefined') return;
+    if (typeof ymaps === 'undefined') return;
 
-    // Show map container
     if (liveMapContainer) {
         liveMapContainer.style.display = 'block';
     }
 
-    // coordinates (Chorsu as Chef, Yunusobod 5-mavze as Customer)
-    const chefCoords = [41.311081, 69.240562];
-    const customerCoords = isCourier ? [41.3642, 69.2882] : [41.311081, 69.240562];
+    ymaps.ready(() => {
+        const chefCoords = [41.311081, 69.240562];
+        const customerCoords = isCourier ? [41.3642, 69.2882] : [41.311081, 69.240562];
 
-    if (!map) {
-        map = L.map('liveMap', {
-            zoomControl: false,
-            scrollWheelZoom: false
-        }).setView(chefCoords, 13);
+        if (!myMap) {
+            myMap = new ymaps.Map("liveMap", {
+                center: chefCoords,
+                zoom: 13,
+                controls: ['zoomControl']
+            });
+        } else {
+            myMap.geoObjects.removeAll();
+        }
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
+        // Create Placemarks
+        chefPlacemark = new ymaps.Placemark(chefCoords, {
+            balloonContent: '<b>Oshpaz (Chorsu)</b>'
+        }, {
+            preset: 'islands#redFoodIcon',
+            iconColor: '#e63946'
+        });
+        myMap.geoObjects.add(chefPlacemark);
 
-        L.control.zoom({
-            position: 'bottomright'
-        }).addTo(map);
-    }
+        if (isCourier) {
+            customerPlacemark = new ymaps.Placemark(customerCoords, {
+                balloonContent: '<b>Mijoz (Sizning manzilingiz)</b>'
+            }, {
+                preset: 'islands#greenHomeIcon',
+                iconColor: '#58CC02'
+            });
+            myMap.geoObjects.add(customerPlacemark);
 
-    // Custom FontAwesome Icons for Leaflet
-    const chefIcon = L.divIcon({
-        html: '<div style="background-color: #e63946; color: white; width: 40px; height: 40px; border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2);"><i class="fa-solid fa-utensils"></i></div>',
-        className: 'custom-map-icon',
-        iconSize: [40, 40],
-        iconAnchor: [20, 20]
+            // Route Line
+            routePolyline = new ymaps.Polyline([chefCoords, customerCoords], {}, {
+                strokeColor: "#e63946",
+                strokeWidth: 4,
+                strokeOpacity: 0.6,
+                strokeStyle: 'shortdash'
+            });
+            myMap.geoObjects.add(routePolyline);
+
+            // Courier Placemark
+            courierPlacemark = new ymaps.Placemark(chefCoords, {
+                balloonContent: '<b>Kuryer yo\'lda</b>'
+            }, {
+                preset: 'islands#yellowDeliveryIcon',
+                iconColor: '#ffb703'
+            });
+            myMap.geoObjects.add(courierPlacemark);
+
+            // Auto fit bounds
+            myMap.setBounds(myMap.geoObjects.getBounds(), {
+                checkZoomRange: true,
+                zoomMargin: 40
+            });
+
+            // Start Animation
+            animateCourierPlacemark(chefCoords, customerCoords);
+        } else {
+            myMap.setCenter(chefCoords, 15);
+        }
     });
-
-    const customerIcon = L.divIcon({
-        html: '<div style="background-color: #58CC02; color: white; width: 40px; height: 40px; border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2);"><i class="fa-solid fa-house"></i></div>',
-        className: 'custom-map-icon',
-        iconSize: [40, 40],
-        iconAnchor: [20, 20]
-    });
-
-    const courierIcon = L.divIcon({
-        html: '<div style="background-color: #ffb703; color: white; width: 44px; height: 44px; border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: pulse 1.5s infinite;"><i class="fa-solid fa-motorcycle" style="font-size: 16px;"></i></div>',
-        className: 'custom-map-icon',
-        iconSize: [44, 44],
-        iconAnchor: [22, 22]
-    });
-
-    // Clear existing markers
-    if (chefMarker) map.removeLayer(chefMarker);
-    if (customerMarker) map.removeLayer(customerMarker);
-    if (courierMarker) map.removeLayer(courierMarker);
-    if (mapRouteLine) map.removeLayer(mapRouteLine);
-
-    chefMarker = L.marker(chefCoords, { icon: chefIcon }).addTo(map).bindPopup('<b>Oshpaz (Chorsu)</b>');
-
-    if (isCourier) {
-        customerMarker = L.marker(customerCoords, { icon: customerIcon }).addTo(map).bindPopup('<b>Mijoz (Sizning manzilingiz)</b>');
-
-        // Draw route line
-        mapRouteLine = L.polyline([chefCoords, customerCoords], {
-            color: '#e63946',
-            weight: 4,
-            opacity: 0.6,
-            dashArray: '8, 8'
-        }).addTo(map);
-
-        courierMarker = L.marker(chefCoords, { icon: courierIcon }).addTo(map).bindPopup('<b>Kuryer yo\'lda</b>');
-
-        // Adjust view to fit all markers
-        const group = new L.featureGroup([chefMarker, customerMarker]);
-        map.fitBounds(group.getBounds().pad(0.15));
-
-        // Start animation based on status
-        animateCourierMarker(chefCoords, customerCoords);
-    } else {
-        map.setView(chefCoords, 15);
-        chefMarker.openPopup();
-    }
 }
 
-function animateCourierMarker(chefCoords, customerCoords) {
+function animateCourierPlacemark(chefCoords, customerCoords) {
     if (courierAnimationInterval) clearInterval(courierAnimationInterval);
 
     let progress = 0;
@@ -748,14 +736,12 @@ function animateCourierMarker(chefCoords, customerCoords) {
         const status = lastKnownStatus || 'pending';
 
         if (status === 'pending' || status === 'accepted' || status === 'cooking') {
-            // Courier stays at chef
-            courierMarker.setLatLng(chefCoords);
+            if (courierPlacemark) courierPlacemark.geometry.setCoordinates(chefCoords);
         } else if (status === 'ready' || status === 'shipping' || status === 'delivering') {
-            // Courier drives back and forth or moves forward
             progress += 0.005 * direction;
             if (progress >= 1) {
                 progress = 1;
-                direction = -1; // Go back
+                direction = -1;
             } else if (progress <= 0) {
                 progress = 0;
                 direction = 1;
@@ -763,10 +749,11 @@ function animateCourierMarker(chefCoords, customerCoords) {
             
             const currentLat = chefCoords[0] + progress * (customerCoords[0] - chefCoords[0]);
             const currentLng = chefCoords[1] + progress * (customerCoords[1] - chefCoords[1]);
-            courierMarker.setLatLng([currentLat, currentLng]);
+            if (courierPlacemark) courierPlacemark.geometry.setCoordinates([currentLat, currentLng]);
         } else if (status === 'completed' || status === 'delivered') {
-            // Courier arrives at customer
-            courierMarker.setLatLng(customerCoords);
+            if (courierPlacemark) courierPlacemark.geometry.setCoordinates(customerCoords);
         }
     }, 100);
 }
+
+
