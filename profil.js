@@ -111,6 +111,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let authUser = null;
     let userProfile = null;
 
+    // Eski hisoblarga tasodifan yozib qo'yilgan umumiy placeholder rasm —
+    // haqiqiy profil surati emas, shu sabab e'tiborga olinmaydi.
+    function isRealAvatar(url) {
+        return !!url && !url.includes('user-male-circle');
+    }
+
     async function loadUserData() {
         try {
             const { data: { session } } = await client.auth.getSession();
@@ -142,7 +148,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const fullName = userProfile?.full_name || authUser.user_metadata?.full_name || "Oshpaz";
         const phone = userProfile?.phone || authUser.user_metadata?.phone || "";
         const email = authUser.email || "";
-        const avatarUrl = userProfile?.avatar_url || authUser.user_metadata?.avatar_url || "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=120&h=120";
+        const avatarUrl = [userProfile?.avatar_url, authUser.user_metadata?.avatar_url].find(isRealAvatar)
+            || "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=120&h=120";
 
         // Sidebar update
         const sidebarName = document.querySelector(".profile-name");

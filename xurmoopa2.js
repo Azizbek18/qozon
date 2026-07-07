@@ -37,7 +37,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         // Update UI name
                         document.querySelectorAll('.profile-name').forEach(el => el.textContent = chefName);
                     }
-                    if (profile.avatar_url) {
+                    // Eski hisoblarga tasodifan yozib qo'yilgan umumiy placeholder
+                    // rasm — haqiqiy profil surati emas, shu sabab e'tiborga olinmaydi.
+                    if (profile.avatar_url && !profile.avatar_url.includes('user-male-circle')) {
                         document.querySelectorAll('.profile-img').forEach(el => el.src = profile.avatar_url);
                     }
                 }
