@@ -1051,43 +1051,58 @@ body {
 /* ==========================================================================
    SMALL MOBILE VIEWPORTS (RESPONSIVE ACTION BAR FIX)
    ========================================================================== */
-@media (max-width: 400px) {
+@media (max-width: 480px) {
     .sticky-action-bar {
-        padding: 10px 12px 18px !important;
+        padding: 12px 16px 20px !important;
     }
     .action-bar-inner {
-        gap: 8px !important;
+        gap: 12px !important;
     }
     .counter-container {
-        padding: 2px !important;
-        gap: 6px !important;
+        padding: 3px !important;
+        gap: 8px !important;
     }
     .counter-btn {
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 13px !important;
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 14px !important;
     }
     .counter-value {
-        font-size: 14px !important;
-        min-width: 18px !important;
+        font-size: 15px !important;
+        min-width: 20px !important;
     }
     .buy-btn {
-        padding: 10px 12px !important;
-        font-size: 13px !important;
-        gap: 4px !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 12px 14px !important;
+        border-radius: 30px !important;
+    }
+    .buy-btn-price {
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 0 !important;
+        margin: 0 !important;
     }
     .buy-btn-label {
-        font-size: 8px !important;
+        display: none !important;
     }
     .calculated-sum {
-        font-size: 13px !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
     }
     .buy-btn-text {
-        font-size: 12px !important;
-        gap: 4px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        gap: 0 !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.3) !important;
+        padding-left: 10px !important;
+        color: #ffffff !important;
     }
     .buy-btn-icon {
-        font-size: 14px !important;
+        display: none !important;
     }
 }
 
