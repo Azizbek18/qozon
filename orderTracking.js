@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // QOZON - BUYURTMA KUZATISH (REAL-TIME)
 // ==========================================
 
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelBtn) {
         cancelBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            showCancelConfirmToast();
+            showCancelConfirmModal();
         });
     }
 
@@ -231,33 +231,60 @@ function showTrackingToast(type, title, message, options = {}) {
     return toast;
 }
 
-function showCancelConfirmToast() {
-    if (document.querySelector('.tracking-toast-confirm')) return;
+function showCancelConfirmModal() {
+    if (document.getElementById('cancelModal')) return;
 
-    const toast = showTrackingToast(
-        'danger',
-        'Buyurtmani bekor qilasizmi?',
-        "Bu amal buyurtma holatini bekor qilingan deb belgilaydi.",
-        {
-            icon: '!',
-            persist: true,
-            actions: `
-                <div class="tracking-toast-actions">
-                    <button class="tracking-toast-secondary" type="button" data-toast-cancel>Yo'q</button>
-                    <button class="tracking-toast-danger" type="button" data-order-cancel>Ha, bekor qilish</button>
+    const backdrop = document.createElement('div');
+    backdrop.id = 'cancelModal';
+    backdrop.className = 'modal-backdrop';
+    
+    backdrop.innerHTML = `
+        <div class="modal-card">
+            <button class="modal-close-btn" type="button" aria-label="Yopish">&times;</button>
+            <div class="modal-header-layout">
+                <div class="modal-icon-danger">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
-            `
-        }
-    );
-    toast.classList.add('tracking-toast-confirm');
+                <div class="modal-title-group">
+                    <h3 class="modal-title">Buyurtmani bekor qilasizmi?</h3>
+                    <p class="modal-subtitle">Bu amal buyurtma holatini bekor qilingan deb belgilaydi.</p>
+                </div>
+            </div>
+            <div class="modal-actions-layout">
+                <button class="btn-modal-danger" type="button" data-order-cancel>Ha, bekor qilish</button>
+                <button class="btn-modal-secondary" type="button" data-modal-close>Yo'q</button>
+            </div>
+        </div>
+    `;
 
-    toast.querySelector('[data-toast-cancel]')?.addEventListener('click', () => removeTrackingToast(toast));
-    toast.querySelector('[data-order-cancel]')?.addEventListener('click', async (event) => {
+    document.body.appendChild(backdrop);
+    
+    setTimeout(() => {
+        backdrop.classList.add('show');
+    }, 10);
+
+    const closeModal = () => {
+        backdrop.classList.remove('show');
+        setTimeout(() => {
+            backdrop.remove();
+        }, 300);
+    };
+
+    backdrop.querySelector('.modal-close-btn').addEventListener('click', closeModal);
+    backdrop.querySelector('[data-modal-close]').addEventListener('click', closeModal);
+    
+    backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) {
+            closeModal();
+        }
+    });
+
+    backdrop.querySelector('[data-order-cancel]').addEventListener('click', async (event) => {
         const btn = event.currentTarget;
         btn.disabled = true;
-        btn.textContent = 'Bekor qilinmoqda...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Bekor qilinmoqda...';
         await cancelCurrentOrder();
-        removeTrackingToast(toast);
+        closeModal();
     });
 }
 
