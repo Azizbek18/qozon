@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             updateTotal();
+            updatePaymentHint();
         });
     });
 
@@ -134,6 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
             option.classList.add("active");
             const radioInput = option.querySelector('input[type="radio"]');
             if (radioInput) radioInput.checked = true;
+            updatePaymentHint();
         });
     });
 
@@ -143,8 +145,52 @@ document.addEventListener("DOMContentLoaded", () => {
         grandTotalElement.innerText = `${totalSum.toLocaleString('ru-RU')} so'm`;
     }
 
+    function updatePaymentHint() {
+        const cashInput = document.querySelector('input[value="cash"]');
+        if (cashInput) {
+            const parentLabel = cashInput.closest('.payment-option-row');
+            const nameEl = parentLabel?.querySelector('.payment-name');
+            const descEl = parentLabel?.querySelector('.payment-desc');
+            
+            if (nameEl && descEl) {
+                const activeDeliveryCard = document.querySelector(".delivery-selector-grid .method-select-card.active");
+                const deliveryMethodTitle = activeDeliveryCard?.querySelector(".method-meta h4")?.innerText || "";
+                
+                if (deliveryMethodTitle.includes("Yetkazib berish")) {
+                    nameEl.innerText = "To'lov kuryerga beriladi";
+                    descEl.innerText = "Kuryer olib kelganda naqd to'lash";
+                } else {
+                    nameEl.innerText = "To'lov oshpazning o'ziga qilinadi";
+                    descEl.innerText = "O'zingiz olib ketganda naqd to'lash";
+                }
+            }
+        }
+
+        const hintCard = document.getElementById("cash-payment-hint-card");
+        const hintText = document.getElementById("cash-hint-text");
+        if (!hintCard || !hintText) return;
+
+        // Check selected payment method
+        const selectedPayment = document.querySelector('input[name="payment"]:checked')?.value;
+        
+        if (selectedPayment === 'cash') {
+            const activeDeliveryCard = document.querySelector(".delivery-selector-grid .method-select-card.active");
+            const deliveryMethodTitle = activeDeliveryCard?.querySelector(".method-meta h4")?.innerText || "";
+            
+            if (deliveryMethodTitle.includes("Yetkazib berish")) {
+                hintText.innerText = "To'lov kuryerga beriladi";
+            } else {
+                hintText.innerText = "To'lov oshpazning o'ziga qilinadi";
+            }
+            hintCard.style.display = "flex";
+        } else {
+            hintCard.style.display = "none";
+        }
+    }
+
     // Dastlabki hisob-kitobni yangilash
     updateTotal();
+    updatePaymentHint();
 
     // Premium bildirishnoma chiqarish
     function triggerPremiumToast(title, method, time, payment, total) {

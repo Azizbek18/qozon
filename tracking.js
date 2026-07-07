@@ -62,6 +62,8 @@ let pollingInterval = null;
 let realtimeClient = null;
 let realtimeChannel = null;
 let courierWobbleTimer = null;
+let mapLiveTimer = null;
+let currentOrder = null;
 let currentFoodData = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -159,6 +161,10 @@ function stopLiveTracking() {
         realtimeClient.removeChannel(realtimeChannel);
         realtimeChannel = null;
     }
+    if (mapLiveTimer) {
+        clearInterval(mapLiveTimer);
+        mapLiveTimer = null;
+    }
 }
 
 function setupRealtime() {
@@ -197,12 +203,14 @@ async function fetchOrder() {
 }
 
 function processOrder(order, source) {
+    currentOrder = order || null;
     const nextStatus = order.status || 'pending';
     if (order.order_number) currentOrderNumber = order.order_number;
     mergeOrderDetails(order);
     renderStatus(nextStatus, {
         updatedAt: order.updated_at || order.created_at,
         createdAt: order.created_at,
+        order,
         silent: nextStatus === currentStatus,
         source
     });
@@ -227,7 +235,8 @@ function renderStatus(status, options = {}) {
     addHistory(safeStatus, options.updatedAt || new Date().toISOString(), options.createdAt);
     renderTimeline(safeStatus);
     updateCourierCard(safeStatus);
-    updateMapProgress(safeStatus);
+    updateMapProgress(safeStatus, options.order);
+    startMapTicker();
     updateEta(safeStatus);
 
     if (!options.silent && previous !== safeStatus) {
@@ -323,11 +332,11 @@ function updateCourierCard(status) {
     });
 }
 
-function updateMapProgress(status) {
+function updateMapProgress(status, order = currentOrder) {
     const courier = document.getElementById('movingCourier');
     if (!courier) return;
 
-    const progress = STATUS_META[status]?.progress ?? 0;
+    const progress = getLiveMapProgress(status, order);
     const start = { top: 25, left: 50 };
     const end = { top: 60, left: 80 };
     const top = start.top + ((end.top - start.top) * progress / 100);
@@ -335,6 +344,8 @@ function updateMapProgress(status) {
     courier.style.top = top + '%';
     courier.style.left = left + '%';
     courier.classList.toggle('is-waiting', progress < 45);
+    courier.setAttribute('aria-label', `Kuryer xaritada ${Math.round(progress)} foiz masofani bosib o'tdi`);
+    updateMapLiveStatus(progress, status, order);
 
     if (courierWobbleTimer) clearInterval(courierWobbleTimer);
     let wobble = 0;
@@ -344,6 +355,80 @@ function updateMapProgress(status) {
         if (wobble > 3 || wobble < -3) direction *= -1;
         courier.style.transform = `translate(calc(-50% + ${wobble}px), calc(-50% + ${wobble * 0.45}px))`;
     }, 150);
+}
+
+function updateMapLiveStatus(progress, status, order) {
+    const statusEl = document.getElementById('mapLiveStatus');
+    if (!statusEl) return;
+    const hasLiveSource = order && (
+        order.delivery_progress !== undefined ||
+        order.courier_progress !== undefined ||
+        order.progress !== undefined ||
+        order.courier_lat !== undefined
+    );
+    const sourceText = hasLiveSource
+        ? 'real malumot'
+        : 'status va vaqt';
+    statusEl.innerHTML = `<span></span> Jonli xarita: ${Math.round(progress)}% (${sourceText})`;
+    statusEl.classList.toggle('is-paused', status === 'pending' || status === 'cancelled');
+}
+
+function startMapTicker() {
+    if (mapLiveTimer) return;
+    mapLiveTimer = setInterval(() => {
+        if (currentStatus === 'delivered' || currentStatus === 'cancelled') {
+            clearInterval(mapLiveTimer);
+            mapLiveTimer = null;
+            return;
+        }
+        updateMapProgress(currentStatus, currentOrder);
+    }, 2500);
+}
+
+function getLiveMapProgress(status, order) {
+    const fromOrder = Number(order?.delivery_progress ?? order?.courier_progress ?? order?.progress);
+    if (Number.isFinite(fromOrder)) return clamp(fromOrder, 0, 100);
+
+    const coordProgress = getCoordinateProgress(order);
+    if (coordProgress !== null) return coordProgress;
+
+    const metaProgress = STATUS_META[status]?.progress ?? 0;
+    if (!order?.updated_at && !order?.created_at) return metaProgress;
+
+    const startedAt = new Date(order.updated_at || order.created_at).getTime();
+    const elapsedMinutes = Math.max(0, (Date.now() - startedAt) / 60000);
+    const nextStatus = STATUS_FLOW[STATUS_FLOW.indexOf(status) + 1];
+    const nextProgress = STATUS_META[nextStatus]?.progress ?? metaProgress;
+    const segmentProgress = clamp(elapsedMinutes / 12, 0, 0.85);
+    return clamp(metaProgress + ((nextProgress - metaProgress) * segmentProgress), 0, 100);
+}
+
+function getCoordinateProgress(order) {
+    const chef = readPoint(order, ['chef_lat', 'chef_lng'], ['restaurant_lat', 'restaurant_lng']);
+    const customer = readPoint(order, ['customer_lat', 'customer_lng'], ['delivery_lat', 'delivery_lng']);
+    const courier = readPoint(order, ['courier_lat', 'courier_lng'], ['driver_lat', 'driver_lng']);
+    if (!chef || !customer || !courier) return null;
+
+    const total = distance(chef, customer);
+    if (!total) return null;
+    const remaining = distance(courier, customer);
+    return clamp(((total - remaining) / total) * 100, 0, 100);
+}
+
+function readPoint(source, primaryKeys, fallbackKeys) {
+    const lat = Number(source?.[primaryKeys[0]] ?? source?.[fallbackKeys[0]]);
+    const lng = Number(source?.[primaryKeys[1]] ?? source?.[fallbackKeys[1]]);
+    return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+}
+
+function distance(a, b) {
+    const lat = a.lat - b.lat;
+    const lng = a.lng - b.lng;
+    return Math.sqrt((lat * lat) + (lng * lng));
+}
+
+function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
 }
 
 function updateEta(status) {

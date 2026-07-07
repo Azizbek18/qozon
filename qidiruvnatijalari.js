@@ -56,6 +56,20 @@ function makeChefFavoriteId(chef = {}, fallbackName = '', index = 0) {
     return `chef-${hash.toString(36)}`;
 }
 
+function buildChefProfileUrl(chef = {}, fallbackName = '', index = 0) {
+    const params = new URLSearchParams();
+    const rawId = chef.id || chef.user_id || chef.profile_id;
+    const name = fallbackName || chef.full_name || chef.name || '';
+    if (rawId !== undefined && rawId !== null && String(rawId).trim()) {
+        params.set('id', String(rawId).trim());
+    }
+    if (name) params.set('name', name);
+    if (!params.has('id') && !params.has('name')) {
+        params.set('name', `Oshpaz ${index + 1}`);
+    }
+    return `xurmoOpa.html?${params.toString()}`;
+}
+
 function getFavChefs() {
     try {
         return JSON.parse(localStorage.getItem('qz_fav_chefs') || '[]');
@@ -249,6 +263,11 @@ function renderChefs(chefs) {
         card.dataset.rating = rating;
         card.dataset.chefId = chefId;
         card.dataset.chefName = chefName;
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (event) => {
+            if (event.target.closest('.chef-like-btn')) return;
+            window.location.href = buildChefProfileUrl(chef, chefName, index);
+        });
 
         card.innerHTML = `
             ${avatarEl}

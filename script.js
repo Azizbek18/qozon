@@ -163,15 +163,16 @@ function renderChefs(chefsList) {
     if (!chefContainer) return;
     chefContainer.innerHTML = '';
 
-    chefsList.forEach(chef => {
+    chefsList.forEach((chef, index) => {
         const name     = chef.name || chef.full_name || "Noma'lum oshpaz";
         const image    = chef.avatar_url || chef.image_url || chef.image || 'https://cdn.dribbble.com/userupload/37942659/file/original-e75e34cb44361a6425fd82f51f07777b.png?resize=752x&vertical=center';
         const location = chef.location || chef.address || "Manzil ko'rsatilmagan";
         const meals    = chef.meal_count || chef.meals || 0;
         const rating   = chef.rating_score || chef.rating || '5.0';
+        const profileUrl = buildChefProfileUrl(chef, name, index);
 
         const html = `
-            <div class="chef-card" onclick="window.location.href='xurmoOpa.html'" style="cursor: pointer;">
+            <div class="chef-card" onclick="window.location.href='${profileUrl}'" style="cursor: pointer;">
                 <img src="${image}" alt="${name}">
                 <h3>${name}</h3>
                 <p class="chef-location">📍 ${location}</p>
@@ -188,6 +189,20 @@ function renderChefs(chefsList) {
     setTimeout(() => {
         chefContainer.querySelectorAll('.chef-card').forEach(el => el.classList.add('visible'));
     }, 60);
+}
+
+function buildChefProfileUrl(chef = {}, fallbackName = '', index = 0) {
+    const params = new URLSearchParams();
+    const rawId = chef.id || chef.user_id || chef.profile_id;
+    const name = fallbackName || chef.full_name || chef.name || '';
+    if (rawId !== undefined && rawId !== null && String(rawId).trim()) {
+        params.set('id', String(rawId).trim());
+    }
+    if (name) params.set('name', name);
+    if (!params.has('id') && !params.has('name')) {
+        params.set('name', `Oshpaz ${index + 1}`);
+    }
+    return `xurmoOpa.html?${params.toString()}`;
 }
 
 

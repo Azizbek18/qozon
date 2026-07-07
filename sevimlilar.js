@@ -398,6 +398,15 @@ window.handleChefCardClick = function(event, card, href) {
     window.location.href = href;
 };
 
+function buildChefProfileUrlFromMeta(chefId, chefName) {
+    const params = new URLSearchParams();
+    if (chefId && !String(chefId).startsWith('chef-')) {
+        params.set('id', chefId);
+    }
+    if (chefName) params.set('name', chefName);
+    return `xurmoOpa.html?${params.toString()}`;
+}
+
 /* Sahifa ochilganda oshpaz tugmalarini to'g'ri holat bilan ko'rsatish */
 function initChefFavorites() {
     renderStoredChefCards();
@@ -480,7 +489,7 @@ function renderStoredChefCards() {
         card.className = 'chef-card';
         card.dataset.chefId = chefId;
         card.dataset.chefName = chefName;
-        card.setAttribute('onclick', "handleChefCardClick(event,this,'xurmoOpa.html')");
+        card.setAttribute('onclick', `handleChefCardClick(event,this,'${buildChefProfileUrlFromMeta(chefId, chefName)}')`);
         card.style.cursor = 'pointer';
         card.innerHTML = `
             <div class="image-container">
@@ -506,4 +515,3 @@ function renderStoredChefCards() {
         panel.insertBefore(card, document.getElementById('empty-chefs-msg'));
     });
 }
-

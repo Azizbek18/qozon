@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -9,8 +9,9 @@
     <title>Buyurtma Rasmiylashtirish — Qozon</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="chekout.css">
-    <link rel="stylesheet" href="header-avatar.css">
+    <link rel="stylesheet" href="chekout.css?v=4">
+    <link rel="stylesheet" href="header-avatar.css?v=4">
+    <link rel="stylesheet" href="./qozon-light-theme.css?v=4">
 </head>
 <body class="theme-light">
 
@@ -20,7 +21,7 @@
         <!-- HEADER -->
         <header class="checkout-header">
             <button class="back-action-btn" onclick="window.location.href='buyordashbord.html'">
-                <i class="fas fa-chevron-left"></i> Orqaga qaytish
+                <i class="fas fa-chevron-left"></i> <span class="back-btn-text">Orqaga qaytish</span>
             </button>
             <a href="buyordashbord.html" class="logo-link">
                 <span class="logo-icon"><img src="https://img.icons8.com/fluency/48/cooking-pot.png" alt="Logo" style="width: 24px; height: 24px; vertical-align: middle;"></span>
@@ -93,30 +94,12 @@
                 <section class="checkout-card-section">
                     <h3 class="checkout-card-title"><i class="fas fa-wallet"></i> To'lov turi</h3>
                     <div class="payment-selector-list">
-                        <label class="payment-option-row">
-                            <input type="radio" name="payment" value="card">
-                            <div class="payment-icon">💳</div>
-                            <div class="payment-details">
-                                <span class="payment-name">Karta orqali onlayn</span>
-                                <span class="payment-desc">Uzcard, Humo, Visa orqali</span>
-                            </div>
-                            <span class="custom-radio-indicator"></span>
-                        </label>
                         <label class="payment-option-row active">
-                            <input type="radio" name="payment" value="click" checked>
-                            <div class="payment-icon">📲</div>
-                            <div class="payment-details">
-                                <span class="payment-name">Click / Payme / Apelsin</span>
-                                <span class="payment-desc">To'lov ilovalari orqali tezkor</span>
-                            </div>
-                            <span class="custom-radio-indicator"></span>
-                        </label>
-                        <label class="payment-option-row">
-                            <input type="radio" name="payment" value="cash">
+                            <input type="radio" name="payment" value="cash" checked>
                             <div class="payment-icon">💵</div>
                             <div class="payment-details">
-                                <span class="payment-name">Naqd pul orqali</span>
-                                <span class="payment-desc">Taomni olganda to'lov qilish</span>
+                                <span class="payment-name">To'lov oshpazning o'ziga qilinadi</span>
+                                <span class="payment-desc">O'zingiz olib ketganda naqd to'lash</span>
                             </div>
                             <span class="custom-radio-indicator"></span>
                         </label>
@@ -165,7 +148,7 @@
         </main>
     </div>
 
-    <script src="checkout.js"></script>
-    <script src="header-avatar.js"></script>
+    <script src="checkout.js?v=4"></script>
+    <script src="header-avatar.js?v=4"></script>
 </body>
 </html>

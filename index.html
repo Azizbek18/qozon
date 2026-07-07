@@ -9,10 +9,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./qozon-light-theme.css">
     <link rel="stylesheet" href="index.css">
 </head>
 
-<body class="loader-active">
+<body class="loader-active landing-page">
 
     <!-- Page-level grain texture overlay -->
     <div class="grain-overlay" aria-hidden="true"></div>
@@ -40,8 +41,8 @@
 
     <!-- ==================== HEADER ==================== -->
     <header class="header" id="main-header">
-        <a href="index.html" class="header-logo" style="text-decoration: none;">
-            <span class="logo-emoji">🍲</span>
+        <a href="index.html" class="header-logo" style="text-decoration: none;" aria-label="Qozon bosh sahifa">
+            <span class="logo-emoji"><img src="images/qozon-pot-logo.svg?v=2" alt=""></span>
             <span class="logo-text">qozon</span>
         </a>
         <nav class="header-nav" id="mobile-menu">
@@ -70,10 +71,19 @@
             
             <!-- Logged in: show Profil and Buyurtma berish -->
             <div class="profile-dropdown-container" id="header-profile-btn" style="display: none;">
-                <a href="javascript:void(0)" class="profile-link" id="profileTriggerBtn">
-                    <img src="https://img.icons8.com/fluency/48/user-male-circle.png" alt="Profile" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 6px;">
-                    <span id="header-profile-name">Profil</span>
-                    <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 6px; transition: 0.2s;" id="profile-chevron"></i>
+                <a href="javascript:void(0)" class="profile-link landing-avatar-trigger" id="profileTriggerBtn" aria-label="Profil menyusi">
+                    <span class="header-avatar-fallback" id="headerAvatarFallback">
+                        <svg class="profile-fallback-svg" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 12.25c2.35 0 4.25-1.9 4.25-4.25S14.35 3.75 12 3.75 7.75 5.65 7.75 8 9.65 12.25 12 12.25Z" fill="currentColor"/>
+                            <path d="M4.75 19.25c.82-3.5 3.6-5.5 7.25-5.5s6.43 2 7.25 5.5c.18.77-.43 1.5-1.22 1.5H5.97c-.79 0-1.4-.73-1.22-1.5Z" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <img class="header-avatar" id="headerAvatarImg" alt="Avatar" style="display:none;">
+                    <span id="profile-chevron" aria-hidden="true">
+                        <svg viewBox="0 0 16 16">
+                            <path d="M4.25 6.25 8 10l3.75-3.75" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
                 </a>
                 <div class="profile-dropdown-menu" id="profileDropdownMenu">
                     <div class="dropdown-header">
@@ -87,32 +97,47 @@
                     <ul class="dropdown-links">
                         <li>
                             <a href="mijozProfil.html" id="dropdown-profile-settings-link">
-                                <i class="fa-solid fa-user-gear"></i>
+                                <svg class="dropdown-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 12.25c2.35 0 4.25-1.9 4.25-4.25S14.35 3.75 12 3.75 7.75 5.65 7.75 8 9.65 12.25 12 12.25Z" fill="currentColor"/>
+                                    <path d="M4.75 20.25c.78-3.68 3.58-5.75 7.25-5.75 3.67 0 6.47 2.07 7.25 5.75" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
                                 <span>Profil sozlamalari</span>
                             </a>
                         </li>
                         <li>
                             <a href="kirish.html?screen=orders">
-                                <i class="fa-solid fa-receipt"></i>
+                                <svg class="dropdown-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M7 3.75h10A2.25 2.25 0 0 1 19.25 6v14.25l-2.5-1.4-2.5 1.4-2.25-1.4-2.25 1.4-2.5-1.4-2.5 1.4V6A2.25 2.25 0 0 1 7 3.75Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                                    <path d="M8.5 8.25h7M8.5 12h7M8.5 15.75h4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
                                 <span>Buyurtmalar tarixi</span>
                             </a>
                         </li>
                         <li>
                             <a href="sevimlilar.html">
-                                <i class="fa-solid fa-heart"></i>
+                                <svg class="dropdown-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 20.25s-7.25-4.37-7.25-10.03A4.32 4.32 0 0 1 9.08 5.9c1.35 0 2.34.62 2.92 1.4.58-.78 1.57-1.4 2.92-1.4a4.32 4.32 0 0 1 4.33 4.32C19.25 15.88 12 20.25 12 20.25Z" fill="currentColor"/>
+                                </svg>
                                 <span>Sevimlilar</span>
                             </a>
                         </li>
                         <li id="dropdown-chef-dashboard-link" style="display: none;">
                             <a href="chefDashboard.html">
-                                <i class="fa-solid fa-store"></i>
+                                <svg class="dropdown-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4.75 10.25h14.5l-1-4.5H5.75l-1 4.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                                    <path d="M6.25 10.25V19h11.5v-8.75M9 19v-5h6v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                                    <path d="M4.75 10.25c0 1.1.9 2 2 2s2-.9 2-2c0 1.1.9 2 2 2s2-.9 2-2c0 1.1.9 2 2 2s2-.9 2-2c0 1.1.9 2 2 2s2-.9 2-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
                                 <span>Oshpaz paneli</span>
                             </a>
                         </li>
                     </ul>
                     <div class="dropdown-divider"></div>
                     <button class="dropdown-logout-btn" id="dropdownLogoutBtn">
-                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <svg class="dropdown-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M10 5H6.75A2.75 2.75 0 0 0 4 7.75v8.5A2.75 2.75 0 0 0 6.75 19H10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M15 8.25 18.75 12 15 15.75M8.5 12h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                         <span>Tizimdan chiqish</span>
                     </button>
                 </div>
@@ -140,7 +165,7 @@
             <div class="hero-left fade-up">
                 <button class="hero-badge">
                     <span class="badge-shine"></span>
-                    🏠 MAHALLLADAGI ENG YAXSHI OSHXONA
+                    🏠 MAHALLADAGI ENG YAXSHI OSHXONA
                 </button>
                 <h1 class="text-gradient">Uyda pishirilgan, yurakdan tayyorlangan</h1>
                 <p class="hero-desc">Sog'lom va mazali taomlar endi qo'shningizning oshxonasidan to'g'ridan-to'g'ri stolingizga. O'zingizga qadrdon bo'lgan haqiqiy uy ta'mini his qiling.</p>
@@ -425,9 +450,22 @@
             <h2 class="cta-title fade-up">Sog'ingan ta'mingiz bir tugma masofasida</h2>
             <p class="cta-subtitle fade-up">Sevimli oshpazlaringizdan issiqgina milliy va yevropa taomlari. Hoziroq buyurtma bering va uyingizgacha yetkazib beramiz!</p>
             <div class="cta-buttons fade-up">
-                <button class="cta-btn-primary btn-shimmer" onclick="window.location.href='buyordashbord.html'"><i class="fa-solid fa-bag-shopping"></i> Hoziroq buyurtma bering</button>
+                <button class="cta-btn-primary btn-shimmer" onclick="window.location.href='buyordashbord.html'">
+                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 8.25V7a5 5 0 0 1 10 0v1.25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M5.25 8.25h13.5l-1 11A2.25 2.25 0 0 1 15.51 21H8.49a2.25 2.25 0 0 1-2.24-1.75l-1-11Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M9 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Hoziroq buyurtma bering
+                </button>
                 <a href="https://play.google.com/store/games?hl=en" target="_blank" rel="noopener">
-                    <button class="cta-btn-secondary btn-shimmer"><i class="fa-solid fa-mobile-screen-button"></i> Ilovani yuklash</button>
+                    <button class="cta-btn-secondary btn-shimmer">
+                        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="7" y="2.75" width="10" height="18.5" rx="2.25" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M10.5 6h3M11.25 17.75h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Ilovani yuklash
+                    </button>
                 </a>
             </div>
         </section>
@@ -439,14 +477,36 @@
         <div class="footer-container">
             <div class="footer-column brand-info">
                 <div class="footer-logo">
-                    <span class="footer-logo-icon"><i class="fa-solid fa-fire-burner"></i></span>
+                    <span class="footer-logo-icon">
+                        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M8.25 7.5c0-2.4 1.95-4.35 4.35-4.35 1.95 0 3.5 1.03 4.18 2.68" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M5 10.25h14M6.5 10.25l1.25 8.25A2.25 2.25 0 0 0 10 20.5h4a2.25 2.25 0 0 0 2.25-2l1.25-8.25" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M9.25 14.25h5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </span>
                     <h2>qozon</h2>
                 </div>
                 <p class="brand-desc">Mahallangizdagi eng mazali uy taomlarini yetkazib beruvchi platforma.</p>
                 <div class="social-links">
-                    <a href="#" class="social-btn" aria-label="Vebsayt"><i class="fa-solid fa-globe"></i></a>
-                    <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="social-btn" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="social-btn" aria-label="Vebsayt">
+                        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M3.75 12h16.5M12 3.5c2.2 2.35 3.25 5.2 3.25 8.5S14.2 18.15 12 20.5C9.8 18.15 8.75 15.3 8.75 12S9.8 5.85 12 3.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="Instagram">
+                        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="4" y="4" width="16" height="16" rx="4.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="12" cy="12" r="3.25" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="16.75" cy="7.25" r="1" fill="currentColor"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="Telegram">
+                        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20.25 4.75 3.9 11.2c-.9.35-.84 1.65.1 1.9l4.25 1.1 1.55 4.55c.3.9 1.45 1.05 1.98.27l2.1-3.02 4.1 3.02c.75.55 1.82.12 2-.8L22 5.85c.15-.82-.98-1.42-1.75-1.1Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M8.25 14.2 20.2 5.05" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
             <div class="footer-column">
@@ -472,7 +532,11 @@
                 <p class="sub-text">Yangiliklar va chegirmalardan xabardor bo'ling.</p>
                 <form class="subscribe-form">
                     <input type="email" placeholder="Emailingiz" required>
-                    <button type="submit" class="sub-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button type="submit" class="sub-btn" aria-label="Yuborish">
+                        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m9 5.5 6.5 6.5L9 18.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                 </form>
             </div>
         </div>

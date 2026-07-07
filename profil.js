@@ -577,7 +577,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 9. THEME SWITCHER
     // ══════════════════════════════════════════════════
     const themeButtons = document.querySelectorAll(".theme-btn");
-    const savedTheme = localStorage.getItem("xurmo-glass-theme") || "dark";
+    const savedTheme = "light";
+    localStorage.setItem("xurmo-glass-theme", "light");
 
     if (savedTheme === "light") {
         document.body.classList.remove("theme-dark");
@@ -589,19 +590,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     themeButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-            const theme = btn.dataset.theme;
             document.body.classList.remove("theme-dark", "theme-light");
-            document.body.classList.add(`theme-${theme}`);
+            document.body.classList.add("theme-light", "chef-light");
             themeButtons.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
-            localStorage.setItem("xurmo-glass-theme", theme);
+            localStorage.setItem("xurmo-glass-theme", "light");
 
-            // Iconlarni yangilash
-            const iconMap = {
-                "dark": "🌙",
-                "light": "☀️"
-            };
-            showToast("Rejim o'zgartirildi", `${theme === 'dark' ? 'Qorong\'u' : 'Yorug\''} rejim faollashtirildi.`, iconMap[theme]);
+            showToast("Yagona dizayn", "Sahifa och-qizil Qozon uslubida ishlayapti.", "OK");
         });
     });
 

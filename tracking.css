@@ -121,6 +121,37 @@ body {
     font-weight: 800;
 }
 
+.map-live-chip {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(230, 57, 70, 0.18);
+    color: #2d1b0e;
+    font-size: 12px;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(45, 27, 14, 0.08);
+}
+
+.map-live-chip span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #58cc02;
+    box-shadow: 0 0 0 5px rgba(88, 204, 2, 0.12);
+}
+
+.map-live-chip.is-paused span {
+    background: #ff9600;
+    box-shadow: 0 0 0 5px rgba(255, 150, 0, 0.12);
+}
+
 .live-badge::before {
     content: '';
     width: 7px;

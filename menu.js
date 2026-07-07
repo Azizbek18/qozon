@@ -177,31 +177,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // 6. THEME TOGGLER (Dark / Light)
+    // 6. THEME TOGGLER
     // ==========================================
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     if (themeToggleBtn) {
-        const savedTheme = localStorage.getItem("xurmo-glass-theme") || "dark";
-        
-        // Dastlabki temani yuklash
-        if (savedTheme === "light") {
-            document.body.classList.remove("theme-dark");
-            document.body.classList.add("theme-light");
-        } else {
-            document.body.classList.remove("theme-light");
-            document.body.classList.add("theme-dark");
-        }
+        document.body.classList.remove("theme-dark");
+        document.body.classList.add("theme-light", "chef-light");
+        localStorage.setItem("xurmo-glass-theme", "light");
 
         themeToggleBtn.addEventListener('click', () => {
-            if (document.body.classList.contains("theme-dark")) {
-                document.body.classList.remove("theme-dark");
-                document.body.classList.add("theme-light");
-                localStorage.setItem("xurmo-glass-theme", "light");
-            } else {
-                document.body.classList.remove("theme-light");
-                document.body.classList.add("theme-dark");
-                localStorage.setItem("xurmo-glass-theme", "dark");
-            }
+            document.body.classList.remove("theme-dark");
+            document.body.classList.add("theme-light", "chef-light");
+            localStorage.setItem("xurmo-glass-theme", "light");
+            showToast("Yagona dizayn", "Sahifa och-qizil Qozon uslubida ishlayapti.", "OK");
         });
     }
 });

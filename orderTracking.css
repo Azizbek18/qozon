@@ -603,22 +603,38 @@ header .menu-actions button:hover {
 
 .tracking-toast-actions button {
     border: 0;
-    border-radius: 999px;
-    padding: 9px 14px;
-    font-size: 12px;
-    font-weight: 900;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .tracking-toast-secondary {
-    background: #f7efe6;
-    color: var(--text-muted);
+    background: #f1f5f9;
+    color: var(--text-light);
+    border: 1px solid var(--border-light) !important;
+}
+
+.tracking-toast-secondary:hover {
+    background: #e2e8f0;
 }
 
 .tracking-toast-danger {
     background: var(--brand-red);
     color: #fff;
-    box-shadow: 0 8px 18px rgba(230, 57, 70, 0.22);
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.2);
+}
+
+.tracking-toast-danger:hover {
+    background: var(--brand-red-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(230, 57, 70, 0.3);
+}
+
+.tracking-toast-danger:active {
+    transform: translateY(1px);
 }
 
 .tracking-toast-danger:disabled {
@@ -887,15 +903,22 @@ footer p:hover {
     }
     
     header {
-        padding: 16px 0 !important;
-        margin-bottom: 25px !important;
-        position: relative;
+        padding: 8px 0 !important;
+        margin-bottom: 20px !important;
+        height: 72px !important;
+        position: relative !important;
+        z-index: 100000 !important;
+        background: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(45, 27, 14, 0.04) !important;
+    }
+    .header-flex {
+        min-height: 56px !important;
+        height: 56px !important;
     }
     header img {
         height: 28px !important;
     }
 
-    /* BURGER TUGMASI */
     .burger-menu {
         display: flex !important;
         flex-direction: column;
@@ -907,7 +930,8 @@ footer p:hover {
         padding: 0 !important;
         box-shadow: none !important;
         cursor: pointer;
-        z-index: 101;
+        position: relative !important;
+        z-index: 100000 !important;
     }
     .burger-menu span {
         width: 100%;
@@ -928,58 +952,74 @@ footer p:hover {
 
     /* NAVIGATSIYA MENYUSI MOBILDA */
     header nav {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 280px;
-        height: 100vh;
-        background: var(--bg-card);
-        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.05);
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        width: 280px !important;
+        height: 100vh !important;
+        background: #ffffff !important;
+        box-shadow: -10px 0 35px rgba(45, 27, 14, 0.08) !important;
         padding: 90px 24px 40px 24px !important;
-        z-index: 99;
+        z-index: 99999 !important;
         display: flex !important;
-        flex-direction: column;
-        justify-content: space-between;
-        transform: translateX(100%);
-        opacity: 0;
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        transform: translateX(100%) !important;
+        opacity: 0 !important;
+        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.3s ease !important;
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        margin: 0 !important;
     }
     header nav.active {
-        transform: translateX(0);
-        opacity: 1;
+        transform: translateX(0) !important;
+        opacity: 1 !important;
     }
     header nav ul {
+        display: flex !important;
         flex-direction: column !important;
-        gap: 22px !important;
+        gap: 0 !important;
         align-items: flex-start !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    header nav ul li {
+        width: 100% !important;
+        list-style: none !important;
     }
     header nav ul li a {
-        font-size: 16px !important;
+        font-size: 17px !important;
         font-weight: 700 !important;
         color: var(--text-dark) !important;
-        width: 100%;
-        display: block;
+        width: 100% !important;
+        display: block !important;
+        padding: 16px 0 !important;
+        border-bottom: 1.5px solid #f5ebe0 !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+    }
+    header nav ul li a:hover {
+        color: var(--brand-red) !important;
+        padding-left: 8px !important;
     }
     .menu-actions {
         display: flex !important;
         flex-direction: column !important;
+        align-items: center !important;
         gap: 16px !important;
         width: 100% !important;
-        margin-top: auto;
-        border-top: 1px solid var(--border-light);
-        padding-top: 24px;
+        margin-top: auto !important;
+        border-top: 1.5px solid #f5ebe0 !important;
+        padding-top: 24px !important;
     }
     .menu-actions a {
-        width: 100%;
-        text-align: center;
-        font-size: 15px !important;
-        font-weight: 700;
-        color: var(--text-dark) !important;
-    }
-    .menu-actions button {
-        width: 100% !important;
-        padding: 12px !important;
-        border-radius: 50px !important;
+        width: auto !important;
+        text-align: center !important;
+        display: inline-flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
     /* KARTALARNI MOBILDA TO'G'RILASH */
@@ -1063,6 +1103,8 @@ footer p:hover {
     }
     .tracking-toast-actions {
         flex-direction: column-reverse;
+        gap: 10px !important;
+        margin-top: 16px !important;
     }
     .tracking-toast-actions button {
         width: 100%;

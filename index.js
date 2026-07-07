@@ -46,6 +46,20 @@ function makeChefFavoriteId(chef = {}, fallbackName = '', index = 0) {
     return `chef-${hash.toString(36)}`;
 }
 
+function buildChefProfileUrl(chef = {}, fallbackName = '', index = 0) {
+    const params = new URLSearchParams();
+    const rawId = chef.id || chef.user_id || chef.profile_id;
+    const name = fallbackName || chef.full_name || chef.name || '';
+    if (rawId !== undefined && rawId !== null && String(rawId).trim()) {
+        params.set('id', String(rawId).trim());
+    }
+    if (name) params.set('name', name);
+    if (!params.has('id') && !params.has('name')) {
+        params.set('name', `Oshpaz ${index + 1}`);
+    }
+    return `xurmoOpa.html?${params.toString()}`;
+}
+
 window.setChefImageFallback = function(img, name = '', index = 0) {
     const nextStep = Number(img.dataset.fallbackStep || 0);
     if (nextStep < CHEF_FALLBACK_IMAGES.length) {
@@ -700,7 +714,7 @@ function renderChefs() {
         // Navigate faqat fav tugmaga bosilmasa
         card.onclick = (e) => {
             if (e.target.closest('.chef-card-fav-btn')) return;
-            window.location.href = `xurmoOpa.html?id=${chef.id}`;
+            window.location.href = buildChefProfileUrl(chef, name, index);
         };
 
         card.innerHTML = `
@@ -1163,15 +1177,18 @@ document.addEventListener('DOMContentLoaded', () => {
         function setHeaderAvatar(url) {
             const imgEl = document.getElementById("headerAvatarImg");
             const fallbackEl = document.getElementById("headerAvatarFallback");
+            const dropdownAvatarEl = document.getElementById("dropdown-avatar-img");
             if (!imgEl || !fallbackEl) return;
             if (isRealAvatar(url)) {
                 imgEl.src = url;
                 imgEl.style.display = "block";
                 fallbackEl.style.display = "none";
+                if (dropdownAvatarEl) dropdownAvatarEl.src = url;
             } else {
                 imgEl.style.display = "none";
                 imgEl.removeAttribute("src");
                 fallbackEl.style.display = "flex";
+                if (dropdownAvatarEl) dropdownAvatarEl.src = "https://img.icons8.com/fluency/48/user-male-circle.png";
             }
         }
 
