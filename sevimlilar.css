@@ -15,7 +15,9 @@ header {
     z-index: 100;
     box-shadow: 0 2px 12px rgba(45,27,14,0.06);
 }
-.logo { color: #e63946; font-size: 24px; font-weight: 800; text-decoration: none; }
+.logo { display: flex; align-items: center; gap: 6px; color: #e63946; font-size: 24px; font-weight: 800; text-decoration: none; }
+.logo-icon { font-size: 24px; line-height: 1; }
+.logo-text { font-size: 24px; font-weight: 800; color: #e63946; letter-spacing: -0.5px; }
 nav { display: flex; gap: 25px; }
 nav a { text-decoration: none; color: #555; font-size: 14px; font-weight: 500; transition: color 0.2s; }
 nav a:hover { color: #e63946; }

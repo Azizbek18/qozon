@@ -4,7 +4,9 @@ body { background: #FAF6F5; color: #1A1A1A; display: flex; flex-direction: colum
 /* NAVBAR */
 .navbar { background: #fff; padding: 14px 5%; display: flex; align-items: center; gap: 20px; border-bottom: 1px solid #EAEAEA; position: sticky; top: 0; z-index: 100; }
 .nav-left { display: flex; align-items: center; gap: 16px; flex: 1; }
-.logo { color: #D31D28; font-size: 22px; font-weight: 700; text-decoration: none; }
+.logo { display: flex; align-items: center; gap: 6px; color: #D31D28; font-size: 22px; font-weight: 700; text-decoration: none; }
+.logo-icon { font-size: 24px; line-height: 1; }
+.logo-text { font-size: 22px; font-weight: 900; color: #D31D28; letter-spacing: -0.5px; }
 .search-box { display: flex; align-items: center; background: #F5F0EF; border-radius: 10px; padding: 10px 14px; gap: 8px; flex: 1; max-width: 400px; }
 .search-box input { border: none; background: transparent; outline: none; font-size: 14px; width: 100%; color: #1A1A1A; }
 .nav-menu { display: flex; gap: 22px; }
