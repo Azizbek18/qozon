@@ -900,6 +900,144 @@ footer p:hover {
 }
 
 /* ==========================================================================
+   MODAL WINDOW (CANCEL CONFIRMATION)
+   ========================================================================== */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(45, 27, 14, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-card {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    width: min(440px, calc(100vw - 32px));
+    box-shadow: 0 20px 45px rgba(45, 27, 14, 0.16);
+    position: relative;
+    transform: translateY(20px) scale(0.96);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-backdrop.show .modal-card {
+    transform: translateY(0) scale(1);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    border: none;
+    background: rgba(45, 27, 14, 0.05);
+    color: var(--text-muted);
+    font-size: 20px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.modal-close-btn:hover {
+    background: rgba(45, 27, 14, 0.1);
+}
+
+.modal-header-layout {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+}
+
+.modal-icon-danger {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: #ffebeb;
+    color: var(--brand-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.modal-title-group {
+    flex: 1;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+}
+
+.modal-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.modal-actions-layout {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.modal-actions-layout button {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-modal-danger {
+    background: var(--brand-red);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.2);
+}
+
+.btn-modal-danger:hover {
+    background: #d62839;
+    box-shadow: 0 6px 16px rgba(230, 57, 70, 0.3);
+}
+
+.btn-modal-secondary {
+    background: #f1f5f9;
+    color: var(--text-muted);
+    border: 1px solid var(--border-light) !important;
+}
+
+.btn-modal-secondary:hover {
+    background: #e2e8f0;
+}
+
+/* ==========================================================================
    RESPONSIVE DESIGN (MEDIA QUERIES)
    ========================================================================== */
 @media (max-width: 768px) {
@@ -1134,6 +1272,15 @@ footer p:hover {
     .tracking-toast-actions button {
         width: 100%;
     }
+
+    .modal-actions-layout {
+        flex-direction: column-reverse;
+        gap: 10px !important;
+    }
+    .modal-actions-layout button {
+        width: 100% !important;
+    }
+
     footer .container {
         grid-template-columns: 1fr !important;
         text-align: center !important;
