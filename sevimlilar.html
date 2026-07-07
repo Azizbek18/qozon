@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="./sevimlilar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="header-avatar.css">
 </head>
 <body>
 
@@ -25,7 +27,10 @@
             <a href="orderTracking.html">Buyurtmalar</a>
         </nav>
         <div class="header-actions">
-            <a href="kirish.html" class="btn-login">Kirish</a>
+            <a href="mijozProfil.html" class="header-avatar-link" data-header-avatar title="Profil">
+                <span class="header-avatar-fallback"><i class="fa-solid fa-user"></i></span>
+                <img class="header-avatar-img" alt="Profil" style="display:none;">
+            </a>
             <a href="buyordashbord.html" class="btn-order">Buyurtma berish</a>
         </div>
     </header>
@@ -151,5 +156,6 @@
     </footer>
 
     <script src="./sevimlilar.js"></script>
+    <script src="header-avatar.js"></script>
 </body>
 </html>

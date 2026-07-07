@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
     <link rel="stylesheet" href="chekout.css">
+    <link rel="stylesheet" href="header-avatar.css">
 </head>
 <body class="theme-light">
 
@@ -26,10 +27,16 @@
                 <span class="logo-text">qozon</span>
             </a>
             
-            <div class="theme-toggle-switch" onclick="toggleCheckoutTheme()">
-                <div class="theme-slider"></div>
-                <span class="theme-icon sun-icon">☀️</span>
-                <span class="theme-icon moon-icon">🌙</span>
+            <div class="checkout-header-right">
+                <div class="theme-toggle-switch" onclick="toggleCheckoutTheme()">
+                    <div class="theme-slider"></div>
+                    <span class="theme-icon sun-icon">☀️</span>
+                    <span class="theme-icon moon-icon">🌙</span>
+                </div>
+                <a href="mijozProfil.html" class="header-avatar-link" data-header-avatar title="Profil">
+                    <span class="header-avatar-fallback"><i class="fa-solid fa-user"></i></span>
+                    <img class="header-avatar-img" alt="Profil" style="display:none;">
+                </a>
             </div>
         </header>
 
@@ -159,5 +166,6 @@
     </div>
 
     <script src="checkout.js"></script>
+    <script src="header-avatar.js"></script>
 </body>
 </html>

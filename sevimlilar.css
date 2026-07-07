@@ -20,7 +20,6 @@ nav { display: flex; gap: 25px; }
 nav a { text-decoration: none; color: #555; font-size: 14px; font-weight: 500; transition: color 0.2s; }
 nav a:hover { color: #e63946; }
 .header-actions { display: flex; align-items: center; gap: 16px; }
-.btn-login { text-decoration: none; color: #e63946; font-size: 14px; font-weight: 600; }
 .btn-order { background: #e63946; color: #fff; padding: 10px 22px; border-radius: 20px; text-decoration: none; font-size: 14px; font-weight: 700; }
 
 /* --- MAIN --- */

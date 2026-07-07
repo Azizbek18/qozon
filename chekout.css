@@ -110,6 +110,12 @@ body {
     letter-spacing: -0.5px;
 }
 
+.checkout-header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
 /* Theme Switcher */
 .theme-toggle-switch {
     position: relative;

@@ -1,0 +1,39 @@
+/* ==========================================
+   QOZON — Header profil-avatar (barcha mijoz sahifalari uchun umumiy)
+   ========================================== */
+.header-avatar-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-decoration: none;
+    line-height: 0;
+}
+
+.header-avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(230, 57, 70, 0.08);
+    color: #ff6b81;
+    border: 2px solid #e8ddd0;
+    font-size: 15px;
+    transition: transform 0.15s ease;
+}
+
+.header-avatar-img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e8ddd0;
+    transition: transform 0.15s ease;
+}
+
+.header-avatar-link:hover .header-avatar-fallback,
+.header-avatar-link:hover .header-avatar-img {
+    transform: scale(1.08);
+}

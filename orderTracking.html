@@ -15,6 +15,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="header-avatar.css">
 </head>
 
 <body>
@@ -44,8 +45,10 @@
             </ul>
             
             <div class="menu-actions">
-                <a href="kirish.html">Kirish</a>
-                <button onclick="window.location.href='oshpazlarOnboard.html'">Ro'yxatdan o'tish</button>
+                <a href="mijozProfil.html" class="header-avatar-link" data-header-avatar title="Profil">
+                    <span class="header-avatar-fallback"><i class="fa-solid fa-user"></i></span>
+                    <img class="header-avatar-img" alt="Profil" style="display:none;">
+                </a>
             </div>
         </nav>
     </div>
@@ -205,6 +208,7 @@
 
 
     <script src="orderTracking.js"></script>
+    <script src="header-avatar.js"></script>
 </body>
 
 </html>

@@ -59,6 +59,12 @@ body {
     text-decoration: none;
 }
 
+.header-right-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 /* MAIN CONTENT GRID */
 .tracking-container {
     max-width: 1200px;

@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
     <link rel="stylesheet" href="tracking.css">
+    <link rel="stylesheet" href="header-avatar.css">
 </head>
 <body>
 
@@ -19,7 +20,13 @@
                 <a href="buyordashbord.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
                 <span class="page-title">Buyurtma Kuzatuvi</span>
             </div>
-            <a href="chat.html?customer=Support&order=tracking-help" class="help-icon" title="Yordam"><i class="fa-regular fa-circle-question"></i></a>
+            <div class="header-right-group">
+                <a href="chat.html?customer=Support&order=tracking-help" class="help-icon" title="Yordam"><i class="fa-regular fa-circle-question"></i></a>
+                <a href="mijozProfil.html" class="header-avatar-link" data-header-avatar title="Profil">
+                    <span class="header-avatar-fallback"><i class="fa-solid fa-user"></i></span>
+                    <img class="header-avatar-img" alt="Profil" style="display:none;">
+                </a>
+            </div>
         </div>
     </header>
 
@@ -164,5 +171,6 @@
     <div class="tracking-toast-container" id="trackingToastContainer" aria-live="polite" aria-atomic="true"></div>
 
     <script src="tracking.js"></script>
+    <script src="header-avatar.js"></script>
 </body>
 </html>

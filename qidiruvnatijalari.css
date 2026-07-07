@@ -13,7 +13,6 @@ body { background: #FAF6F5; color: #1A1A1A; display: flex; flex-direction: colum
 .nav-actions { display: flex; align-items: center; gap: 12px; }
 .icon-btn { background: #F5F0EF; border: none; border-radius: 50%; width: 38px; height: 38px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; position: relative; }
 .cart-badge { position: absolute; top: -4px; right: -4px; background: #D31D28; color: #fff; font-size: 10px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.profile-avatar img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #F1EAE8; }
 
 /* MAIN LAYOUT */
 .main-container { display: flex; gap: 28px; padding: 32px 5%; flex: 1; align-items: flex-start; }
