@@ -226,14 +226,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (existing) {
       mainCount = existing.quantity;
       if (counterValue) counterValue.innerText = mainCount;
-      if (buyBtnTextSpan) buyBtnTextSpan.textContent = "Buyurtma berish";
+      if (buyBtnTextSpan) buyBtnTextSpan.textContent = window.innerWidth <= 480 ? "Buyurtma" : "Buyurtma berish";
       if (buyBtnIconSpan) buyBtnIconSpan.textContent = "⚡";
       if (mainCartActionBtn) {
         mainCartActionBtn.classList.add("view-cart-mode");
       }
     } else {
       if (counterValue) counterValue.innerText = mainCount;
-      if (buyBtnTextSpan) buyBtnTextSpan.textContent = "Savatga qo'shish";
+      if (buyBtnTextSpan) buyBtnTextSpan.textContent = window.innerWidth <= 480 ? "Savatga" : "Savatga qo'shish";
       if (buyBtnIconSpan) buyBtnIconSpan.textContent = "🛍️";
       if (mainCartActionBtn) {
         mainCartActionBtn.classList.remove("view-cart-mode");
