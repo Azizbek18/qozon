@@ -24,15 +24,25 @@ function getClockTime(dateStr) {
   return d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0");
 }
 
+const AVATAR_PALETTE = ['#e63946', '#ff8a5b', '#ffb703', '#2a9d8f', '#457b9d', '#8e44ad', '#e07a5f', '#3a86ff'];
+function avatarColorFor(name) {
+  const code = (name || '').trim().charCodeAt(0) || 0;
+  return AVATAR_PALETTE[code % AVATAR_PALETTE.length];
+}
+function avatarInitialHTML(name) {
+  const letter = (name || '?').trim().charAt(0).toUpperCase() || '?';
+  return `<div class="user-avatar" style="display:flex;align-items:center;justify-content:center;background:${avatarColorFor(name)};color:#fff;font-weight:700;">${letter}</div>`;
+}
+
 /* ---------- ISHGA TUSHIRISH ---------- */
 async function bootChat() {
   if (!chatClient) {
-    dynamicHeader.innerHTML = `<div style="padding:16px">Chat ishlamayapti (Supabase yuklanmadi).</div>`;
+    messagesBox.innerHTML = `<div class="chat-empty-state">Chat ishlamayapti (Supabase yuklanmadi).</div>`;
     return;
   }
   const { data: { user } } = await chatClient.auth.getUser();
   if (!user) {
-    dynamicHeader.innerHTML = `<div style="padding:16px">Chatdan foydalanish uchun tizimga kiring.</div>`;
+    messagesBox.innerHTML = `<div class="chat-empty-state">Chatdan foydalanish uchun tizimga kiring.</div>`;
     return;
   }
   myUserId = user.id;
@@ -51,7 +61,7 @@ async function bootChat() {
 /* ---------- OSHPAZ REJIMI: barcha suhbatlar ro'yxati ---------- */
 async function loadChefConversations() {
   const list = document.querySelector('.conversation-list');
-  if (list) list.innerHTML = `<div style="padding:16px;color:var(--text2,#8b7355);font-size:13px">Yuklanmoqda...</div>`;
+  if (list) list.innerHTML = `<div class="convo-list-placeholder">Yuklanmoqda...</div>`;
 
   const { data, error } = await chatClient
     .from('conversations')
@@ -61,9 +71,9 @@ async function loadChefConversations() {
 
   if (error || !data || !data.length) {
     conversations = [];
-    if (list) list.innerHTML = `<div style="padding:16px;color:var(--text2,#8b7355);font-size:13px">Hozircha suhbatlar yo'q.</div>`;
+    if (list) list.innerHTML = `<div class="convo-list-placeholder">Hozircha suhbatlar yo'q.</div>`;
     dynamicHeader.innerHTML = '';
-    messagesBox.innerHTML = '';
+    messagesBox.innerHTML = `<div class="chat-empty-state"><i class="fa-regular fa-comments" style="font-size:28px;display:block;margin-bottom:10px;color:var(--text-faint)"></i>Hozircha suhbatlar yo'q.</div>`;
     suggestionsPanel.innerHTML = '';
     return;
   }
@@ -79,7 +89,7 @@ async function loadChefConversations() {
     list.innerHTML = conversations.map((c, i) => `
       <div class="convo-item${i === 0 ? ' active' : ''}" data-conv-id="${c.id}" onclick="changeActiveChat(${c.id})">
         <div class="avatar-ring${i === 0 ? ' online' : ''}">
-          <div class="user-avatar" style="display:flex;align-items:center;justify-content:center;background:#f0ad4e;color:#fff;font-weight:700;border-radius:50%;width:100%;height:100%;">${c.customer_name.charAt(0).toUpperCase()}</div>
+          ${avatarInitialHTML(c.customer_name)}
         </div>
         <div class="convo-details">
           <div class="convo-meta">
@@ -105,16 +115,19 @@ async function loadOrCreateCustomerConversation() {
   const orderId = params.get('orderId') || localStorage.getItem('qz_current_order_id');
   const sidebar = document.querySelector('.sidebar');
   if (sidebar) sidebar.style.display = 'none';
+  document.querySelector('.premium-app')?.classList.add('mobile-chat-open');
 
   if (!orderId) {
-    dynamicHeader.innerHTML = `<div style="padding:16px">Suhbat topilmadi. Buyurtma kuzatuvi orqali oshpazga xabar yozing.</div>`;
+    dynamicHeader.innerHTML = '';
+    messagesBox.innerHTML = `<div class="chat-empty-state"><i class="fa-regular fa-comment-dots" style="font-size:28px;display:block;margin-bottom:10px;color:var(--text-faint)"></i>Suhbat topilmadi. Buyurtma kuzatuvi orqali oshpazga xabar yozing.</div>`;
     return;
   }
 
   const { data: order, error: orderErr } = await chatClient
     .from('orders').select('id, chef_id, chef_name').eq('id', orderId).single();
   if (orderErr || !order || !order.chef_id) {
-    dynamicHeader.innerHTML = `<div style="padding:16px">Bu buyurtma uchun oshpaz aniqlanmadi.</div>`;
+    dynamicHeader.innerHTML = '';
+    messagesBox.innerHTML = `<div class="chat-empty-state">Bu buyurtma uchun oshpaz aniqlanmadi.</div>`;
     return;
   }
 
@@ -129,7 +142,8 @@ async function loadOrCreateCustomerConversation() {
       .insert({ customer_id: myUserId, chef_id: order.chef_id, order_id: order.id })
       .select().single();
     if (createErr) {
-      dynamicHeader.innerHTML = `<div style="padding:16px">Suhbat ochilmadi: ${createErr.message}</div>`;
+      dynamicHeader.innerHTML = '';
+      messagesBox.innerHTML = `<div class="chat-empty-state">Suhbat ochilmadi: ${createErr.message}</div>`;
       return;
     }
     conv = created;
@@ -149,12 +163,13 @@ async function openConversation(conversationId, headerName) {
 
   const conv = conversations.find(c => c.id === conversationId);
   const title = headerName || (conv ? (conv.customer_name || conv.chef_name) : 'Suhbat');
+  const roleLabel = isChef ? 'Mijoz' : 'Oshpaz';
 
   dynamicHeader.innerHTML = `
-    <div class="active-user-meta" style="display: flex; align-items: center; gap: 10px;">
-      <button onclick="window.history.back()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: inherit; display: flex; align-items: center; justify-content: center; padding: 5px;">←</button>
-      <div class="avatar-ring online"><div class="user-avatar" style="display:flex;align-items:center;justify-content:center;background:#f0ad4e;color:#fff;font-weight:700;border-radius:50%;width:100%;height:100%;">${(title || '?').charAt(0).toUpperCase()}</div></div>
-      <div class="meta-info"><h3>${title}</h3></div>
+    <div class="active-user-meta">
+      <button class="header-back-btn" onclick="handleChatBack()"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="avatar-ring online">${avatarInitialHTML(title)}</div>
+      <div class="meta-info"><h3>${title}</h3><p>${roleLabel}</p></div>
     </div>
   `;
   suggestionsPanel.innerHTML = '';
@@ -164,7 +179,20 @@ async function openConversation(conversationId, headerName) {
 }
 
 function changeActiveChat(conversationId) {
+  document.querySelector('.premium-app')?.classList.add('mobile-chat-open');
   openConversation(conversationId);
+}
+
+/* Mobilda: suhbat ochilgan bo'lsa ro'yxatga qaytish, aks holda haqiqiy orqaga navigatsiya */
+function handleChatBack() {
+  const app = document.querySelector('.premium-app');
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarAvailable = sidebar && sidebar.style.display !== 'none';
+  if (app && sidebarAvailable && app.classList.contains('mobile-chat-open')) {
+    app.classList.remove('mobile-chat-open');
+  } else {
+    window.history.back();
+  }
 }
 
 /* ---------- XABARLARNI YUKLASH VA CHIZISH ---------- */

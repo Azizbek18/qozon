@@ -18,7 +18,7 @@
         <aside class="sidebar">
             <div class="sidebar-brand">
                 <a href="index.html" class="logo-text" style="text-decoration: none;">qozon<span>.com</span></a>
-                <div class="user-profile-mini"></div>
+                <a href="profil.html" class="user-profile-mini" title="Profil"><i class="fa-solid fa-user"></i></a>
             </div>
 
             <nav class="sidebar-menu chat-dashboard-nav" aria-label="Oshpaz paneli">
@@ -41,18 +41,12 @@
             </nav>
 
             <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-ico"></i>
                 <input type="text" placeholder="Suhbatlarni qidirish...">
-                <span class="search-hint">⌘K</span>
-            </div>
-
-            <div class="chat-tabs">
-                <button class="tab-btn active">Barchasi</button>
-                <button class="tab-btn">Guruhlar</button>
-                <button class="tab-btn">Tizim</button>
             </div>
 
             <div class="conversation-list">
-                <div style="padding:16px;color:#8b7355;font-size:13px">Yuklanmoqda...</div>
+                <div class="convo-list-placeholder">Yuklanmoqda...</div>
             </div>
         </aside>
 
@@ -70,10 +64,12 @@
             <footer class="input-container-footer">
                 <div class="input-pill-wrapper" style="position: relative;">
                     <input type="file" id="mediaUpload" hidden onchange="mediaUploadHandler(event)">
-                    <button class="icon-control-btn" onclick="document.getElementById('mediaUpload').click()">📎</button>
-                    
-                    <input type="text" id="chatInputField" placeholder="Xabarni yozing..." onkeypress="handleInputKey(event)">
-                    
+                    <button class="icon-control-btn" onclick="document.getElementById('mediaUpload').click()" title="Fayl biriktirish">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+
+                    <input type="text" id="chatInputField" placeholder="Xabar yozing..." onkeypress="handleInputKey(event)">
+
                     <div class="custom-emoji-picker" id="customEmojiPicker">
                         <span onclick="insertEmoji('😊')">😊</span>
                         <span onclick="insertEmoji('😂')">😂</span>
@@ -85,10 +81,12 @@
                         <span onclick="insertEmoji('🎯')">🎯</span>
                     </div>
 
-                    <button class="icon-control-btn" id="emojiToggleBtn" onclick="toggleEmojiPicker(event)">😊</button>
-                    
-                    <button class="premium-send-btn" onclick="handleMessageSubmit()">
-                        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+                    <button class="icon-control-btn" id="emojiToggleBtn" onclick="toggleEmojiPicker(event)" title="Emoji">
+                        <i class="fa-regular fa-face-smile"></i>
+                    </button>
+
+                    <button class="premium-send-btn" onclick="handleMessageSubmit()" title="Yuborish">
+                        <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>
             </footer>
