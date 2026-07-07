@@ -1287,3 +1287,15 @@ footer p:hover {
         gap: 24px !important;
     }
 }
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 183, 3, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 183, 3, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 183, 3, 0);
+    }
+}

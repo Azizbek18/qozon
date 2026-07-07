@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="orderTracking.css?v=7">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
@@ -142,10 +143,13 @@
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
                             <div class="address-info">
-                                <h3>Olib ketish manzili</h3>
-                                <p>Toshkent sh., Chilonzor tumani, 5-mavze, 24-uy, 12-xonadon</p>
-                                <a href="tracking.html" class="map-link"><i class="fa-solid fa-map"></i> Xaritada ko'rish</a>
+                                <h3 id="addressCardTitle">Olib ketish manzili</h3>
+                                <p id="deliveryAddress">Toshkent sh., Chilonzor tumani, 5-mavze, 24-uy, 12-xonadon</p>
+                                <a href="tracking.html" class="map-link" id="mapViewLink" style="display:none;"><i class="fa-solid fa-map"></i> Xaritada ko'rish</a>
                             </div>
+                        </div>
+                        <div id="liveMapContainer" style="display:none; margin-top: 20px; border-radius: 16px; overflow: hidden; height: 320px; border: 1.5px solid var(--border-light); position: relative; z-index: 1;">
+                            <div id="liveMap" style="width: 100%; height: 100%;"></div>
                         </div>
                     </div>
 
@@ -211,6 +215,7 @@
     <div class="tracking-toast-container" id="trackingToastContainer" aria-live="polite" aria-atomic="true"></div>
 
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="orderTracking.js?v=7"></script>
     <script src="header-avatar.js?v=7"></script>
 </body>
