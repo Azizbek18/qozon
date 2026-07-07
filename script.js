@@ -755,11 +755,16 @@ function updateHeaderUI(user) {
                         
                         const chefLink = document.getElementById('dropdown-chef-dashboard-link');
                         const profileSettingsLink = document.getElementById('dropdown-profile-settings-link');
+                        const mobileProfileSettingsLink = document.getElementById('mobile-profile-settings-link');
+                        const profileHref = (profile.role === 'oshpaz') ? 'profil.html' : 'mijozProfil.html';
                         if (chefLink) {
                             chefLink.style.display = (profile.role === 'oshpaz') ? 'block' : 'none';
                         }
                         if (profileSettingsLink) {
-                            profileSettingsLink.href = (profile.role === 'oshpaz') ? 'profil.html' : 'kirish.html';
+                            profileSettingsLink.href = profileHref;
+                        }
+                        if (mobileProfileSettingsLink) {
+                            mobileProfileSettingsLink.href = profileHref;
                         }
                     }
                 }).catch(err => console.error("Error fetching header user profile details:", err));

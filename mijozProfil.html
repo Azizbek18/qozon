@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth_guard.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qozon — Mening profilim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="mijozProfil.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" id="pageHeader">
+        <div class="header-container">
+            <div class="header-row">
+                <a href="buyordashbord.html" class="logo">
+                    <span class="logo-icon">🍲</span>
+                    <span class="logo-text">qozon</span>
+                </a>
+                <nav class="header-nav">
+                    <a href="buyordashbord.html"><i class="fa-solid fa-house"></i> Bosh sahifa</a>
+                    <a href="orderTracking.html"><i class="fa-solid fa-receipt"></i> Buyurtmalarim</a>
+                    <a href="sevimlilar.html"><i class="fa-solid fa-heart"></i> Sevimlilar</a>
+                </nav>
+                <button class="duo-btn-outline header-logout-btn" id="btnHeaderLogout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Chiqish</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="profile-main">
+
+        <!-- ═══════ PROFILE HERO CARD ═══════ -->
+        <section class="card hero-card">
+            <div class="hero-avatar-wrap">
+                <div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()">
+                    <i class="fa-solid fa-user avatar-fallback-icon" id="avatarFallbackIcon"></i>
+                    <img class="avatar-img" id="avatarImg" alt="Profil rasmi" style="display:none;">
+                    <div class="avatar-edit-overlay"><i class="fa-solid fa-camera"></i></div>
+                </div>
+                <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+            </div>
+            <div class="hero-info">
+                <div class="hero-name-row">
+                    <h1 id="displayName">Foydalanuvchi</h1>
+                    <span class="role-badge"><i class="fa-solid fa-user"></i> Mijoz</span>
+                </div>
+                <p class="hero-email" id="displayEmail">email@example.com</p>
+                <p class="hero-joined" id="displayJoined"><i class="fa-solid fa-calendar-days"></i> A'zo bo'lgan sana: —</p>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-val" id="statOrders">0</span>
+                    <span class="hero-stat-label">Buyurtma</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-val" id="statFavorites">0</span>
+                    <span class="hero-stat-label">Sevimli</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="profile-grid">
+            <!-- ═══════ LEFT COLUMN ═══════ -->
+            <div class="profile-col">
+
+                <!-- SHAXSIY MA'LUMOTLAR -->
+                <section class="card form-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-id-card"></i> Shaxsiy ma'lumotlar</h3>
+                        <button class="btn-edit" id="btnEditPersonal" title="Tahrirlash">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                    </div>
+
+                    <div class="form-grid" id="personalForm">
+                        <div class="form-group">
+                            <label>Ism va Familiya</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-user"></i>
+                                <input type="text" id="inputFullName" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefon raqam</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-phone"></i>
+                                <input type="tel" id="inputPhone" placeholder="+998 90 123 45 67" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-envelope"></i>
+                                <input type="email" id="inputEmail" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Yetkazish manzili</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <input type="text" id="inputAddress" placeholder="Tuman, ko'cha, uy raqami" disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions hidden" id="personalActions">
+                        <button class="duo-btn-outline" id="btnCancelPersonal">Bekor qilish</button>
+                        <button class="duo-btn" id="btnSavePersonal">
+                            <i class="fa-solid fa-check"></i> Saqlash
+                        </button>
+                    </div>
+                </section>
+
+                <!-- XAVFSIZLIK -->
+                <section class="card form-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-shield-halved"></i> Xavfsizlik</h3>
+                        <button class="btn-edit" id="btnEditSecurity" title="Parolni o'zgartirish">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                    </div>
+
+                    <div class="form-grid" id="securityForm">
+                        <div class="form-group full-width">
+                            <label>Yangi parol</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-key"></i>
+                                <input type="password" id="inputNewPass" placeholder="Kamida 8 ta belgi" disabled>
+                                <button class="toggle-pass" data-target="inputNewPass" title="Ko'rsatish">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Yangi parol (takror)</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-check-double"></i>
+                                <input type="password" id="inputConfirmPass" placeholder="Parolni qayta kiriting" disabled>
+                                <button class="toggle-pass" data-target="inputConfirmPass" title="Ko'rsatish">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions hidden" id="securityActions">
+                        <button class="duo-btn-outline" id="btnCancelSecurity">Bekor qilish</button>
+                        <button class="duo-btn" id="btnSaveSecurity">
+                            <i class="fa-solid fa-shield-halved"></i> Parolni yangilash
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- ═══════ RIGHT COLUMN ═══════ -->
+            <div class="profile-col">
+
+                <!-- BILDIRISHNOMALAR -->
+                <section class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-sliders"></i> Afzalliklar</h3>
+                    </div>
+                    <div class="pref-list">
+                        <div class="pref-item">
+                            <div class="pref-info">
+                                <div class="pref-icon red-glow"><i class="fa-solid fa-bell"></i></div>
+                                <div>
+                                    <h4>Push bildirishnomalar</h4>
+                                    <p>Buyurtma holati haqida xabar oling</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked data-pref="notifications">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="pref-item">
+                            <div class="pref-info">
+                                <div class="pref-icon green-glow"><i class="fa-solid fa-volume-high"></i></div>
+                                <div>
+                                    <h4>Ovozli signal</h4>
+                                    <p>Buyurtma tayyor bo'lganda ovozli eslatma</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked data-pref="sound">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TEZKOR HARAKATLAR -->
+                <section class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-bolt"></i> Tezkor harakatlar</h3>
+                    </div>
+                    <div class="quick-actions">
+                        <a href="orderTracking.html" class="quick-action-btn">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>Buyurtmalarim</span>
+                        </a>
+                        <a href="sevimlilar.html" class="quick-action-btn">
+                            <i class="fa-solid fa-heart"></i>
+                            <span>Sevimlilar</span>
+                        </a>
+                        <a href="buyordashbord.html" class="quick-action-btn">
+                            <i class="fa-solid fa-house"></i>
+                            <span>Bosh sahifa</span>
+                        </a>
+                        <button class="quick-action-btn" id="btnQuickLogout">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Chiqish</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- DANGER ZONE -->
+                <section class="card danger-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-triangle-exclamation"></i> Xavfli zona</h3>
+                    </div>
+                    <p class="danger-text">Akkauntni o'chirish — barcha ma'lumotlar va buyurtmalar tarixi butunlay yo'qoladi. Bu amalni qaytarib bo'lmaydi.</p>
+                    <button class="btn-danger" id="btnDeleteAccount">
+                        <i class="fa-solid fa-trash-can"></i> Akkauntni o'chirish
+                    </button>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
+
+    <!-- DELETE MODAL -->
+    <div class="modal-overlay hidden" id="deleteModal">
+        <div class="modal-box">
+            <div class="modal-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3>Akkauntni o'chirish</h3>
+            <p>Siz rostdan ham akkauntni o'chirmoqchimisiz? Barcha ma'lumotlaringiz yo'qoladi va bu amalni orqaga qaytarib bo'lmaydi.</p>
+            <div class="modal-actions">
+                <button class="duo-btn-outline" id="btnModalCancel">Bekor qilish</button>
+                <button class="btn-danger" id="btnModalConfirm">
+                    <i class="fa-solid fa-trash-can"></i> O'chirish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="mijozProfil.js"></script>
+</body>
+</html>

@@ -1714,6 +1714,24 @@ input:focus-visible {
     transform: scale(1.08);
 }
 
+.header-avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red-softer);
+    color: var(--red-light);
+    border: 2px solid var(--border);
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.header-avatar-fallback:hover {
+    transform: scale(1.08);
+}
+
 /* Welcome Red Banner */
 .welcome-banner {
     background: var(--red) !important;
@@ -2204,7 +2222,8 @@ input:focus-visible {
         padding: 2px 5px !important;
     }
     
-    .header-avatar {
+    .header-avatar,
+    .header-avatar-fallback {
         width: 34px !important;
         height: 34px !important;
     }

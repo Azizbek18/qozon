@@ -1153,9 +1153,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch(e){}
             }
         }
-        if (userAvatar) {
-            const imgEl = document.querySelector(".header-avatar");
-            if (imgEl) imgEl.src = userAvatar;
+
+        function setHeaderAvatar(url) {
+            const imgEl = document.getElementById("headerAvatarImg");
+            const fallbackEl = document.getElementById("headerAvatarFallback");
+            if (!imgEl || !fallbackEl) return;
+            if (url) {
+                imgEl.src = url;
+                imgEl.style.display = "block";
+                fallbackEl.style.display = "none";
+            } else {
+                imgEl.style.display = "none";
+                imgEl.removeAttribute("src");
+                fallbackEl.style.display = "flex";
+            }
+        }
+
+        const headerAvatarImgEl = document.getElementById("headerAvatarImg");
+        if (headerAvatarImgEl) {
+            headerAvatarImgEl.addEventListener("error", () => setHeaderAvatar(""));
+        }
+
+        setHeaderAvatar(userAvatar);
+
+        // Authoritative sync: real avatar/full_name from the "profiles" table
+        if (favSupabaseClient) {
+            favSupabaseClient.auth.getSession().then(({ data: { session } }) => {
+                if (!session) return;
+                favSupabaseClient
+                    .from('profiles')
+                    .select('full_name, avatar_url')
+                    .eq('id', session.user.id)
+                    .single()
+                    .then(({ data: profile }) => {
+                        if (!profile) return;
+                        if (profile.full_name && nameEl) nameEl.textContent = profile.full_name;
+                        setHeaderAvatar(profile.avatar_url || "");
+                    })
+                    .catch(err => console.error("Error fetching header profile:", err));
+            }).catch(err => console.error("Error fetching session for header avatar:", err));
         }
     } catch (e) {
         console.error("Error reading local user details:", e);
